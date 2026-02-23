@@ -1,0 +1,221 @@
+import React, { useEffect, useState, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import DashboardLayout from '../components/DashboardLayout';
+import { AuthContext } from '../context/AuthContext';
+import '../styles/courseDetail.css';
+
+const API_BASE_URL = 'http://localhost:8000';
+
+export default function CourseDetail() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { token } = useContext(AuthContext);
+
+  const [course, setCourse] = useState(null);
+  const [announcements, setAnnouncements] = useState([]);
+  const [assignments, setAssignments] = useState([]);
+  const [resources, setResources] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('announcements');
+
+  useEffect(() => {
+    if (!id || id === 'undefined') {
+      setError('Invalid course ID');
+      setLoading(false);
+      return;
+    }
+
+    async function load() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const headers = token
+          ? { Authorization: `Bearer ${token}`, Accept: 'application/json' }
+          : { Accept: 'application/json' };
+
+        const courseRes = await axios.get(`${API_BASE_URL}/api/courses/${id}`, { headers });
+        const courseData = courseRes.data;
+        setCourse(courseData);
+
+        const [annRes, assRes, resRes] = await Promise.all([
+          axios.get(`${API_BASE_URL}/api/courses/${id}/announcements`, { headers, validateStatus: () => true }),
+          axios.get(`${API_BASE_URL}/api/courses/${id}/assignments`, { headers, validateStatus: () => true }),
+          axios.get(`${API_BASE_URL}/api/courses/${id}/resources`, { headers, validateStatus: () => true })
+        ]);
+
+        if (annRes.status === 200) {
+          const data = annRes.data;
+          setAnnouncements(Array.isArray(data) ? data : []);
+        }
+
+        if (assRes.status === 200) {
+          const data = assRes.data;
+          setAssignments(Array.isArray(data) ? data : []);
+        }
+
+        if (resRes.status === 200) {
+          const data = resRes.data;
+          setResources(Array.isArray(data) ? data : []);
+        }
+      } catch (err) {
+        console.error('Error loading course:', err);
+        setError(err.response?.data?.message || err.message || 'Failed to load course');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    load();
+  }, [id, token]);
+
+  const formatDate = (date) => {
+    if (!date) return '';
+    return new Date(date).toLocaleDateString();
+  };
+
+  const formatTime = (time) => {
+    if (!time) return '';
+    if (typeof time === 'string') {
+      return time.substring(0, 5);
+    }
+    return new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="course-detail-loading">
+          <p>Loading course...</p>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (error || !course) {
+    return (
+      <DashboardLayout>
+        <div className="course-detail-error">
+          <p>{error || 'Course not found'}</p>
+          <button onClick={() => navigate('/courses')}>
+            Back to Courses
+          </button>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  return (
+    <DashboardLayout>
+      <div className="course-detail-page">
+
+        <div className="course-header-section">
+          <div className="course-header-top">
+            <div>
+              <h1>{course.title}</h1>
+              <div className="course-meta">
+                <span>📘 Code: {course.course_code || 'N/A'}</span>
+                <span>👥 {course.students_enrolled || 0} Students</span>
+                <span>📌 Status: {course.status || 'draft'}</span>
+              </div>
+            </div>
+            <div className="course-actions">
+              <button onClick={() => navigate(`/courses/${id}/edit`)} className="btn-edit">
+                Edit
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="course-description">
+          <p>{course.description || 'No description provided.'}</p>
+        </div>
+
+        {course.schedules && course.schedules.length > 0 && (
+          <div className="course-schedules">
+            <h3>Schedule</h3>
+            <div className="schedules-list">
+              {course.schedules.map(schedule => (
+                <div key={schedule.schedule_ID} className="schedule-item">
+                  <strong>{schedule.day_in_week}</strong>
+                  <span>{formatTime(schedule.start_time)} - {formatTime(schedule.end_time)}</span>
+                  {schedule.recurrence_pattern && (
+                    <span className="recurrence">({schedule.recurrence_pattern})</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="course-tabs">
+          {['announcements', 'assignments', 'resources'].map(tab => (
+            <button
+              key={tab}
+              className={activeTab === tab ? 'active' : ''}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
+          <button 
+            className="btn-create-item"
+            onClick={() => navigate(`/courses/${id}/${activeTab}/create`)}
+          >
+            + Add {activeTab.slice(0, -1)}
+          </button>
+        </div>
+
+        <div className="course-content">
+
+          {activeTab === 'announcements' &&
+            (announcements.length === 0 ? (
+              <p>No announcements yet</p>
+            ) : (
+              announcements.map(a => (
+                <div key={a.announcement_ID} className="announcement-card">
+                  <h3>{a.title}</h3>
+                  <span>{formatDate(a.created_at)}</span>
+                  <p>{a.content}</p>
+                </div>
+              ))
+            ))}
+
+          {activeTab === 'assignments' &&
+            (assignments.length === 0 ? (
+              <p>No assessments yet</p>
+            ) : (
+              assignments.map(a => (
+                <div key={a.assessment_ID} className="assignment-card">
+                  <h3>Assessment</h3>
+                  <span>Due {formatDate(a.due_date)}</span>
+                  <span className="status-badge">{a.status}</span>
+                </div>
+              ))
+            ))}
+
+          {activeTab === 'resources' &&
+            (resources.length === 0 ? (
+              <p>No materials yet</p>
+            ) : (
+              resources.map(r => (
+                <div key={r.id} className="resource-card">
+                  <h3>Material: {r.materials_type}</h3>
+                  {r.content && <p>{r.content}</p>}
+                </div>
+              ))
+            ))}
+        </div>
+
+        <div className="course-footer">
+          <button onClick={() => navigate('/courses')}>
+            ← Back to Courses
+          </button>
+        </div>
+
+      </div>
+    </DashboardLayout>
+  );
+}

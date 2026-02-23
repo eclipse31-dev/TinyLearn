@@ -1,0 +1,11 @@
+/* App.css - Global app styles */
+
+#root {
+  min-height: 100vh;
+}
+
+h1 {
+  color: #111827;
+  font-size: 2rem;
+  font-weight: 700;
+}

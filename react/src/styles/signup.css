@@ -1,0 +1,65 @@
+/* Signup component styles - using shared auth styles from login.css */
+@import './login.css';
+.signup-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.signup-button {
+  width: 100%;
+  margin-top: 1.5rem;
+  background: linear-gradient(to right, #4f46e5, #4338ca);
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.signup-button:hover:not(:disabled) {
+  background: linear-gradient(to right, #4338ca, #3730a3);
+  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+}
+
+.signup-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1), 0 0 0 2px #4f46e5;
+}
+
+.signup-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.signup-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.signup-link {
+  color: #4f46e5;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.signup-link:hover {
+  color: #4338ca;
+}

@@ -1,0 +1,262 @@
+.resources-page {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  color: #2d3748;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+}
+
+.page-header p {
+  color: #718096;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.resources-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.resources-toolbar {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  flex-wrap: wrap;
+}
+
+.toolbar-group {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-input,
+.filter-select {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+}
+
+.search-input:focus,
+.filter-select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.filter-select {
+  background: white;
+  cursor: pointer;
+}
+
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.resource-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  border: 1px solid #e2e8f0;
+}
+
+.resource-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+}
+
+.resource-header {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.resource-icon {
+  font-size: 1.75rem;
+}
+
+.resource-type {
+  background: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #667eea;
+  text-transform: uppercase;
+}
+
+.resource-body {
+  padding: 1rem;
+  flex: 1;
+}
+
+.resource-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+  line-height: 1.4;
+}
+
+.resource-description {
+  margin: 0 0 0.75rem 0;
+  color: #718096;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.resource-meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: #a0aec0;
+}
+
+.course-name {
+  background: #edf2f7;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  color: #2d3748;
+}
+
+.file-size {
+  background: #e6fffa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  color: #234e52;
+  font-weight: 500;
+}
+
+.resource-footer {
+  padding: 0 1rem 1rem 1rem;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 0.75rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  width: 100%;
+  text-align: center;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+.error-message {
+  background: #fed7d7;
+  border: 1px solid #fc8181;
+  color: #c53030;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 3rem;
+  color: #718096;
+  font-size: 1.1rem;
+}
+
+.no-resources {
+  background: white;
+  border-radius: 12px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  color: #718096;
+}
+
+.no-resources p {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.resources-summary {
+  text-align: center;
+  padding: 1rem;
+  color: #718096;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .resources-toolbar {
+    flex-direction: column;
+  }
+
+  .toolbar-group {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .search-input,
+  .filter-select {
+    width: 100%;
+  }
+
+  .resources-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .page-header p {
+    font-size: 0.9rem;
+  }
+
+  .resource-card {
+    margin: 0;
+  }
+}
