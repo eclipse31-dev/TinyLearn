@@ -1,0 +1,87 @@
+/* Progress Bar Styles */
+.progress-container {
+  width: 100%;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.progress-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #2d3748;
+}
+
+.progress-percentage {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #718096;
+}
+
+.progress-bar {
+  width: 100%;
+  background: #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-small .progress-bar {
+  height: 4px;
+}
+
+.progress-medium .progress-bar {
+  height: 8px;
+}
+
+.progress-large .progress-bar {
+  height: 12px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 0.5rem;
+}
+
+.progress-primary {
+  background: linear-gradient(90deg, #ec4899 0%, #f472b6 100%);
+}
+
+.progress-success {
+  background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+}
+
+.progress-warning {
+  background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+}
+
+.progress-danger {
+  background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+}
+
+.progress-text {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: white;
+}
+
+.dark-mode .progress-bar {
+  background: var(--bg-tertiary);
+}
+
+.dark-mode .progress-label {
+  color: var(--text-primary);
+}
+
+.dark-mode .progress-percentage {
+  color: var(--text-tertiary);
+}

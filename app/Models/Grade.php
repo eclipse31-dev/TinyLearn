@@ -9,11 +9,14 @@ class Grade extends Model
 {
     use HasFactory;
 
+    protected $table = 'grade';
+    protected $primaryKey = 'grade_ID';
+
     protected $fillable = [
-        'submission_id',
+        'submission_ID',
         'score',
         'feedback',
-        'graded_at',
+        'graded_by',
     ];
 
     protected $casts = [
@@ -25,6 +28,36 @@ class Grade extends Model
      */
     public function submission()
     {
-        return $this->belongsTo(Submission::class);
+        return $this->belongsTo(Submission::class, 'submission_ID', 'submission_ID');
+    }
+
+    /**
+     * Get the assignment through submission.
+     */
+    public function assignment()
+    {
+        return $this->hasOneThrough(
+            Assignment::class,
+            Submission::class,
+            'submission_ID',
+            'assignment_ID',
+            'submission_ID',
+            'assignment_ID'
+        );
+    }
+
+    /**
+     * Get the student through submission.
+     */
+    public function student()
+    {
+        return $this->hasOneThrough(
+            User::class,
+            Submission::class,
+            'submission_ID',
+            'user_ID',
+            'submission_ID',
+            'student_ID'
+        );
     }
 }

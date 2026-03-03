@@ -182,22 +182,21 @@ class SubmissionController extends Controller
                 'feedback' => 'nullable|string',
             ]);
 
-            // Create or update grade record in the new grades table
+            // Create or update grade record
             $grade = Grade::updateOrCreate(
-                ['submission_id' => $id],
+                ['submission_ID' => $id],
                 [
                     'score' => $validated['score'],
                     'feedback' => $validated['feedback'],
-                    'graded_at' => now(),
+                    'graded_by' => auth()->user()->user_ID,
                 ]
             );
 
+            // Broadcast the grade update event
+            event(new \App\Events\GradeUpdated($grade));
+
             // Update submission status
-            $submission->update([
-                'status' => 'graded',
-                'grade' => $validated['score'],
-                'feedback' => $validated['feedback'],
-            ]);
+            $submission->update(['status' => 'graded']);
 
             return response()->json([
                 'message' => 'Submission graded successfully',

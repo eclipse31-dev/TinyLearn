@@ -12,35 +12,48 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $validated = $request->validate([
-            'FName' => 'required|string|max:255',
-            'LName' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users,username',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:teacher,student',
-        ]);
+        try {
+            $validated = $request->validate([
+                'FName' => 'required|string|max:255',
+                'LName' => 'required|string|max:255',
+                'username' => 'required|string|max:255|unique:users,username',
+                'email' => 'required|string|email|max:255|unique:users,email',
+                'password' => 'required|string|min:8|confirmed',
+                'role' => 'required|in:teacher,student,admin',
+            ]);
 
-        $user = User::create([
-            'FName' => $validated['FName'],
-            'LName' => $validated['LName'],
-            'username' => $validated['username'],
-            'email' => $validated['email'],
-            'password' => $validated['password'], // auto-hashed
-        ]);
+            $user = User::create([
+                'FName' => $validated['FName'],
+                'LName' => $validated['LName'],
+                'username' => $validated['username'],
+                'email' => $validated['email'],
+                'password' => $validated['password'], // auto-hashed by model
+            ]);
 
-        $role = Role::where('role', $validated['role'])->first();
+            // Find or create the role
+            $role = Role::firstOrCreate(['role' => $validated['role']]);
 
-        if ($role) {
-            $user->roles()->attach($role->role_ID);
+            if ($role) {
+                $user->roles()->attach($role->role_ID);
+            }
+
+            $token = $user->createToken('api-token')->plainTextToken;
+
+            return response()->json([
+                'user' => $user->load('roles'),
+                'token' => $token,
+            ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Registration failed',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        $token = $user->createToken('api-token')->plainTextToken;
-
-        return response()->json([
-            'user' => $user->load('roles'),
-            'token' => $token,
-        ], 201);
     }
 
     public function login(Request $request)

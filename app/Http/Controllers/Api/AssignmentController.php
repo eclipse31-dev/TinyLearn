@@ -35,6 +35,9 @@ class AssignmentController extends Controller
 
             $assignment = Assignment::create($validated);
 
+            // Broadcast the event
+            event(new \App\Events\AssignmentCreated($assignment));
+
             return response()->json([
                 'message' => 'Assignment created successfully',
                 'assignment' => $assignment,

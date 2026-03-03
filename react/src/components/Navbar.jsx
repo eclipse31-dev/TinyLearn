@@ -1,6 +1,10 @@
 import React, { useContext, useState, useMemo, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import GlobalSearch from './GlobalSearch';
+import NotificationsCenter from './NotificationsCenter';
+import OnlineUsers from './OnlineUsers';
+import ThemeToggle from './ThemeToggle';
 import '../styles/navbar.css';
 
 export default function Navbar() {
@@ -9,13 +13,11 @@ export default function Navbar() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Compute first name safely
   const firstName = useMemo(() => {
     if (!user) return '';
     return user.FName || user.username || '';
   }, [user]);
 
-  // Avatar letter
   const avatarLetter = useMemo(() => {
     if (user?.FName) return user.FName.charAt(0).toUpperCase();
     if (user?.username) return user.username.charAt(0).toUpperCase();
@@ -27,7 +29,6 @@ export default function Navbar() {
     navigate('/login');
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -51,15 +52,14 @@ export default function Navbar() {
             Hi <span className="navbar-greeting-name">{firstName},</span>
           </div>
 
-          <div className="search-box">
-            <input 
-              type="text" 
-              placeholder="Search..." 
-            />
-          </div>
+          <GlobalSearch />
         </div>
 
         <div className="navbar-right">
+          <OnlineUsers />
+          <ThemeToggle />
+          <NotificationsCenter />
+          
           <div className="user-menu" ref={dropdownRef}>
             <button 
               className="user-avatar-btn"
@@ -77,11 +77,11 @@ export default function Navbar() {
                 </div>
 
                 <Link to="/settings" className="dropdown-item">
-                  Profile Settings
+                  ⚙️ Profile Settings
                 </Link>
 
                 <button onClick={handleLogout} className="dropdown-item logout">
-                  Log Out
+                  🚪 Log Out
                 </button>
               </div>
             )}

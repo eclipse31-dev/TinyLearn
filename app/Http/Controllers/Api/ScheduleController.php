@@ -22,7 +22,7 @@ class ScheduleController extends Controller
         $endOfWeek = $startOfWeek->copy()->endOfWeek();
 
         // Use expanded method to include recurring schedules
-        $schedules = Schedule::getExpandedByDateRange($user->id, $startOfWeek, $endOfWeek);
+        $schedules = Schedule::getExpandedByDateRange($user->user_ID, $startOfWeek, $endOfWeek);
 
         return response()->json([
             'message' => 'Week schedules retrieved successfully',
@@ -48,7 +48,7 @@ class ScheduleController extends Controller
         $endOfMonth = $startOfMonth->copy()->endOfMonth();
 
         // Use expanded method to include recurring schedules
-        $schedules = Schedule::getExpandedByDateRange($user->id, $startOfMonth, $endOfMonth);
+        $schedules = Schedule::getExpandedByDateRange($user->user_ID, $startOfMonth, $endOfMonth);
 
         return response()->json([
             'message' => 'Month schedules retrieved successfully',
@@ -71,7 +71,7 @@ class ScheduleController extends Controller
         $days = $request->query('days', 30);
 
         // Use expanded method to include recurring schedules
-        $schedules = Schedule::getUpcomingExpanded($user->id, $days);
+        $schedules = Schedule::getUpcomingExpanded($user->user_ID, $days);
 
         return response()->json([
             'message' => 'Upcoming schedules retrieved successfully',
@@ -99,7 +99,7 @@ class ScheduleController extends Controller
         $endOfDay = $startOfDay->copy()->endOfDay();
 
         // Use expanded method to include recurring schedules
-        $schedules = Schedule::getExpandedByDateRange($user->id, $startOfDay, $endOfDay);
+        $schedules = Schedule::getExpandedByDateRange($user->user_ID, $startOfDay, $endOfDay);
 
         return response()->json([
             'message' => 'Day schedules retrieved successfully',
@@ -134,7 +134,7 @@ class ScheduleController extends Controller
         $user = Auth::user();
 
         $schedule = Schedule::create([
-            'user_id' => $user->id,
+            'user_id' => $user->user_ID,
             'title' => $request->input('title'),
             'type' => $request->input('type'),
             'start_time' => $request->input('start_time'),

@@ -26,3 +26,15 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Database
+/database/database.sqlite
+/database/*.sqlite
+
+# Test files
+test_*.php
+check_errors.php
+add_sample_data.php
+
+# Batch files (optional - uncomment if you don't want to commit them)
+# *.bat

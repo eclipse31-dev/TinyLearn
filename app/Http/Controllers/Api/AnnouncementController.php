@@ -40,6 +40,9 @@ class AnnouncementController extends Controller
 
             $announcement = Announcement::create($validated);
 
+            // Broadcast the event
+            event(new \App\Events\AnnouncementCreated($announcement));
+
             return response()->json([
                 'message' => 'Announcement created successfully',
                 'announcement' => $announcement,
