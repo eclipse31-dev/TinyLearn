@@ -12,14 +12,71 @@
 .page-header-welcome h1 {
   font-size: clamp(1.5rem, 6vw, 2rem);
   color: #2d3748;
-  margin: 0;
+  margin: 0 0 0.5rem 0;
   font-weight: 600;
+}
+
+.page-header-welcome p {
+  color: #718096;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Stats Cards Grid */
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.stat-icon {
+  font-size: 2rem;
+  min-width: 50px;
+  text-align: center;
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: #6b7280;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ec4899;
+  margin: 0;
 }
 
 .dashboard-content {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
+  grid-template-columns: 2fr 1fr;
   gap: 2rem;
+  margin-top: 2rem;
 }
 
 /* LEFT COLUMN */

@@ -1,0 +1,166 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    ROLE-BASED FOLDER STRUCTURE                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📁 react/src/views/
+│
+├── 📄 HomePage.jsx (Router)
+│   │
+│   ├─→ Routes to Admin Dashboard (if role = 'admin')
+│   ├─→ Routes to Teacher Dashboard (if role = 'teacher')
+│   └─→ Routes to Student Dashboard (if role = 'student')
+│
+├── 📁 admin/
+│   ├── 📄 Dashboard.jsx
+│   │   ├── Stats: Total Users, Total Courses, Users Online, Assignments
+│   │   ├── OnlineHoursChart (Bar Graph)
+│   │   ├── OnlineHoursStats (Leaderboard)
+│   │   └── Real-time WebSocket Updates
+│   │
+│   └── 📄 index.js (Exports)
+│       └── export { default as Dashboard } from './Dashboard';
+│
+├── 📁 teacher/
+│   ├── 📄 Dashboard.jsx
+│   │   ├── Stats: My Courses, Students, Pending Submissions, Assignments
+│   │   ├── OnlineHoursChart (Bar Graph)
+│   │   ├── OnlineHoursStats (Leaderboard)
+│   │   └── Real-time WebSocket Updates
+│   │
+│   └── 📄 index.js (Exports)
+│       └── export { default as Dashboard } from './Dashboard';
+│
+└── 📁 student/
+    ├── 📄 Dashboard.jsx
+    │   ├── Stats: Enrolled Courses, Pending, Submitted, Average Grade
+    │   ├── OnlineHoursChart (Bar Graph)
+    │   ├── OnlineHoursStats (Leaderboard)
+    │   └── Real-time WebSocket Updates
+    │
+    └── 📄 index.js (Exports)
+        └── export { default as Dashboard } from './Dashboard';
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                           IMPORT FLOW                                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+HomePage.jsx
+    ↓
+    import { Dashboard as AdminDashboard } from './admin';
+    import { Dashboard as TeacherDashboard } from './teacher';
+    import { Dashboard as StudentDashboard } from './student';
+    ↓
+    switch (role) {
+        case 'admin': return <AdminDashboard />
+        case 'teacher': return <TeacherDashboard />
+        case 'student': return <StudentDashboard />
+    }
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                      COMPONENT DEPENDENCIES                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Each Dashboard.jsx imports:
+    ├── DashboardLayout (from ../../components/DashboardLayout)
+    ├── OnlineHoursChart (from ../../components/OnlineHoursChart)
+    ├── OnlineHoursStats (from ../../components/OnlineHoursStats)
+    ├── AuthContext (from ../../context/AuthContext)
+    ├── echo (from ../../services/echo)
+    ├── axios
+    ├── home.css (from ../../styles/home.css)
+    └── online-hours.css (from ../../styles/online-hours.css)
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         REAL-TIME FEATURES                                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+All Dashboards:
+    ├── 🔴 LIVE indicator on chart
+    ├── 🟢 Pulsing "Live" badge
+    ├── 📡 WebSocket connection to 'user-sessions' channel
+    ├── 🔔 Toast notifications on login/logout
+    ├── 📊 Auto-refresh chart data
+    ├── 📈 Auto-refresh statistics
+    └── ⚡ Real-time active users count
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                      ROLE-SPECIFIC FEATURES                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ADMIN DASHBOARD (admin/Dashboard.jsx)                                       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Stats Cards:                                                                 │
+│   👥 Total Users                                                            │
+│   📚 Total Courses                                                          │
+│   🟢 Users Online (Real-time)                                               │
+│   📝 Total Assignments                                                      │
+│                                                                              │
+│ Features:                                                                    │
+│   • System-wide statistics                                                  │
+│   • All users online hours tracking                                         │
+│   • User management capabilities                                            │
+│   • Platform-wide analytics                                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ TEACHER DASHBOARD (teacher/Dashboard.jsx)                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Stats Cards:                                                                 │
+│   📚 My Courses                                                             │
+│   👥 Total Students                                                         │
+│   ⏳ Pending Submissions                                                    │
+│   📝 Total Assignments                                                      │
+│                                                                              │
+│ Features:                                                                    │
+│   • Course management focus                                                 │
+│   • Student activity tracking                                               │
+│   • Submission review workflow                                              │
+│   • Class performance analytics                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ STUDENT DASHBOARD (student/Dashboard.jsx)                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Stats Cards:                                                                 │
+│   📚 Enrolled Courses                                                       │
+│   ⏳ Pending Assignments                                                    │
+│   ✅ Submitted Assignments                                                  │
+│   📊 Average Grade                                                          │
+│                                                                              │
+│ Features:                                                                    │
+│   • Personal academic progress                                              │
+│   • Assignment tracking                                                     │
+│   • Grade monitoring                                                        │
+│   • Course enrollment status                                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         BENEFITS OF STRUCTURE                                ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+✅ Organization      → Clear separation by role
+✅ Maintainability   → Update roles independently
+✅ Scalability       → Easy to add new features
+✅ Security          → Clear role boundaries
+✅ Developer UX      → Intuitive navigation
+✅ Clean Imports     → Using index.js pattern
+✅ Future-Ready      → Room for growth
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                            FILE LOCATIONS                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+react/src/views/HomePage.jsx                    (30 lines)
+react/src/views/admin/Dashboard.jsx             (130 lines)
+react/src/views/admin/index.js                  (1 line)
+react/src/views/teacher/Dashboard.jsx           (130 lines)
+react/src/views/teacher/index.js                (1 line)
+react/src/views/student/Dashboard.jsx           (130 lines)
+react/src/views/student/index.js                (1 line)

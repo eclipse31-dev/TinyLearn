@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\{User, Course, Assignment, Submission, Enrollment, Announcement};
-use App\Services\ActivityLogService;
+use App\Services\{ActivityLogService, UserSessionService};
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Cache;
 class DashboardAnalyticsController extends Controller
 {
     public function __construct(
-        protected ActivityLogService $activityLogService
+        protected ActivityLogService $activityLogService,
+        protected UserSessionService $sessionService
     ) {}
 
     public function getStats(): JsonResponse
@@ -42,6 +43,7 @@ class DashboardAnalyticsController extends Controller
             'total_submissions' => Submission::count(),
             'active_enrollments' => Enrollment::count(),
             'total_announcements' => Announcement::count(),
+            'active_users_online' => $this->sessionService->getActiveUsersCount(),
             
             'users_by_role' => User::select('roles.role', DB::raw('count(*) as count'))
                 ->join('user_roles', 'users.user_ID', '=', 'user_roles.user_id')
@@ -56,6 +58,8 @@ class DashboardAnalyticsController extends Controller
             'recent_activity' => $this->activityLogService->getRecentActivity(10),
             
             'enrollment_trend' => $this->getEnrollmentTrend(),
+            
+            'online_hours_chart' => $this->sessionService->getDailyOnlineHoursChart(7),
         ];
     }
 
@@ -198,5 +202,25 @@ class DashboardAnalyticsController extends Controller
         }
 
         return response()->json($activity);
+    }
+
+    public function getOnlineHoursStats(): JsonResponse
+    {
+        $period = request('period', 'week'); // today, week, month
+        $stats = $this->sessionService->getOnlineHoursStats($period);
+        
+        return response()->json([
+            'period' => $period,
+            'users' => $stats,
+            'active_users' => $this->sessionService->getActiveUsersCount(),
+        ]);
+    }
+
+    public function getOnlineHoursChart(): JsonResponse
+    {
+        $days = request('days', 7);
+        $chartData = $this->sessionService->getDailyOnlineHoursChart($days);
+        
+        return response()->json($chartData);
     }
 }

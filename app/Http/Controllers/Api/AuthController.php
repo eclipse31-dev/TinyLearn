@@ -7,9 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Role;
+use App\Services\UserSessionService;
 
 class AuthController extends Controller
 {
+    public function __construct(
+        protected UserSessionService $sessionService
+    ) {}
+
     public function register(Request $request)
     {
         try {
@@ -72,6 +77,9 @@ class AuthController extends Controller
         $user->tokens()->delete();
         $token = $user->createToken('api-token')->plainTextToken;
 
+        // Start user session tracking
+        $this->sessionService->startSession($user->user_ID);
+
         return response()->json([
             'user' => $user,
             'token' => $token,
@@ -80,6 +88,11 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        $userId = $request->user()->user_ID;
+        
+        // End user session tracking
+        $this->sessionService->endSession($userId);
+        
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logged out']);
     }

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\DashboardAnalyticsController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\AnnouncementController;
 use App\Http\Controllers\Api\AssignmentController;
@@ -51,6 +52,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Dashboard routes
     Route::get('/dashboard/overview', [DashboardController::class, 'overview']);
+    Route::get('/dashboard/stats', [DashboardAnalyticsController::class, 'getStats']);
+    Route::get('/dashboard/activity', [DashboardAnalyticsController::class, 'getRecentActivity']);
+    Route::get('/dashboard/online-hours', [DashboardAnalyticsController::class, 'getOnlineHoursStats']);
+    Route::get('/dashboard/online-hours-chart', [DashboardAnalyticsController::class, 'getOnlineHoursChart']);
 
     // Course routes - CRUD operations
     Route::post('/courses', [CourseController::class, 'store']);
