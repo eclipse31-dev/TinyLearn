@@ -3,6 +3,7 @@ import DashboardLayout from '../../components/DashboardLayout';
 import OnlineHoursChart from '../../components/OnlineHoursChart';
 import OnlineHoursStats from '../../components/OnlineHoursStats';
 import { AuthContext } from '../../context/AuthContext';
+import { Users, BookOpen, FileText, Activity, Hand } from 'lucide-react';
 import echo from '../../services/echo';
 import axios from 'axios';
 import '../../styles/home.css';
@@ -56,35 +57,46 @@ export default function AdminDashboard() {
         {/* Page Header */}
         <div className="page-header-welcome">
           <h1>Admin Dashboard</h1>
-          <p>Welcome back, {user?.FName} {user?.LName}! 👨‍💼</p>
+          <p className="welcome-message">
+            <Hand size={24} className="waving-hand" color="#ec4899" />
+            Welcome back, <span className="user-name-animated">{user?.FName} {user?.LName}</span>!
+          </p>
         </div>
 
         {/* Admin Stats Cards */}
         {!loading && dashboardStats && (
           <div className="stats-cards">
             <div className="stat-card">
-              <div className="stat-icon">👥</div>
+              <div className="stat-icon">
+                <Users size={32} color="#ec4899" />
+              </div>
               <div className="stat-info">
                 <h4>Total Users</h4>
                 <div className="stat-value">{dashboardStats.total_users}</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon">📚</div>
+              <div className="stat-icon">
+                <BookOpen size={32} color="#ec4899" />
+              </div>
               <div className="stat-info">
                 <h4>Total Courses</h4>
                 <div className="stat-value">{dashboardStats.total_courses}</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon">🟢</div>
+              <div className="stat-icon">
+                <Activity size={32} color="#10b981" />
+              </div>
               <div className="stat-info">
                 <h4>Users Online</h4>
                 <div className="stat-value">{dashboardStats.active_users_online}</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon">📝</div>
+              <div className="stat-icon">
+                <FileText size={32} color="#ec4899" />
+              </div>
               <div className="stat-info">
                 <h4>Total Assignments</h4>
                 <div className="stat-value">{dashboardStats.total_assignments}</div>

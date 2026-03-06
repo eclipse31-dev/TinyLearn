@@ -140,3 +140,104 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .quick-actions-trigger {
+    width: 50px;
+    height: 50px;
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .quick-actions-menu {
+    width: 90vw;
+    max-width: 350px;
+    bottom: 5rem;
+    right: 1rem;
+  }
+
+  .quick-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .quick-action-item {
+    padding: 1rem;
+  }
+
+  .quick-action-icon {
+    font-size: 1.75rem;
+  }
+
+  .quick-action-label {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .quick-actions-trigger {
+    width: 48px;
+    height: 48px;
+    bottom: 1rem;
+    right: 1rem;
+  }
+
+  .quick-actions-menu {
+    width: calc(100vw - 2rem);
+    bottom: 4.5rem;
+    right: 1rem;
+    left: 1rem;
+  }
+
+  .quick-actions-title {
+    font-size: 1rem;
+  }
+
+  .quick-actions-grid {
+    gap: 0.5rem;
+  }
+
+  .quick-action-item {
+    padding: 0.875rem;
+  }
+
+  .quick-action-icon {
+    font-size: 1.5rem;
+  }
+
+  .quick-action-label {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .quick-actions-trigger {
+    width: 44px;
+    height: 44px;
+  }
+
+  .quick-actions-menu {
+    bottom: 4rem;
+  }
+
+  .quick-actions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-action-item {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .quick-action-icon {
+    font-size: 1.5rem;
+  }
+
+  .quick-action-label {
+    font-size: 0.875rem;
+    text-align: left;
+  }
+}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FileText, Image as ImageIcon, Video, Paperclip, Download } from 'lucide-react';
+import { FileText, Image as ImageIcon, Video, Paperclip, Download, ArrowLeft } from 'lucide-react';
 import DashboardLayout from '../../components/DashboardLayout';
 import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
@@ -137,7 +137,8 @@ export default function GradeSubmissionsPage() {
       <div className="grade-submissions-page">
         <div className="page-header">
           <button className="btn-back" onClick={() => navigate('/courses')}>
-            ← Back to Courses
+            <ArrowLeft size={16} style={{ display: 'inline', marginRight: '6px' }} />
+            Back to Courses
           </button>
           <h1>{assignment?.title}</h1>
           <p>Grade student submissions</p>

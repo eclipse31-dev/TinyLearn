@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Edit, Trash2, MoreVertical } from 'lucide-react';
 import '../styles/courseCard.css';
 
 export default function CourseCard({ course, onDelete, isDeletingId }) {
@@ -54,7 +55,7 @@ export default function CourseCard({ course, onDelete, isDeletingId }) {
               setMenuOpen(!menuOpen);
             }}
           >
-            ⋯
+            <MoreVertical size={20} color="#6b7280" />
           </button>
 
           {menuOpen && (
@@ -65,7 +66,8 @@ export default function CourseCard({ course, onDelete, isDeletingId }) {
                   navigate(`/courses/${courseId}/edit`);
                 }}
               >
-                ✏️ Edit
+                <Edit size={16} color="#ec4899" style={{ display: 'inline', marginRight: '6px' }} />
+                Edit
               </button>
 
               <button
@@ -75,7 +77,8 @@ export default function CourseCard({ course, onDelete, isDeletingId }) {
                 }}
                 disabled={isDeletingId === courseId}
               >
-                🗑️ {isDeletingId === courseId ? 'Deleting...' : 'Delete'}
+                <Trash2 size={16} color="#ef4444" style={{ display: 'inline', marginRight: '6px' }} />
+                {isDeletingId === courseId ? 'Deleting...' : 'Delete'}
               </button>
             </div>
           )}

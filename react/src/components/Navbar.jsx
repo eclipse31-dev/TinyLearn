@@ -2,7 +2,6 @@ import React, { useContext, useState, useMemo, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Settings, LogOut } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
-import GlobalSearch from './GlobalSearch';
 import NotificationsCenter from './NotificationsCenter';
 import OnlineUsers from './OnlineUsers';
 import ThemeToggle from './ThemeToggle';
@@ -52,8 +51,6 @@ export default function Navbar() {
           <div className="navbar-greeting">
             Hi <span className="navbar-greeting-name">{firstName},</span>
           </div>
-
-          <GlobalSearch />
         </div>
 
         <div className="navbar-right">

@@ -3,6 +3,7 @@ import DashboardLayout from '../../components/DashboardLayout';
 import OnlineHoursChart from '../../components/OnlineHoursChart';
 import OnlineHoursStats from '../../components/OnlineHoursStats';
 import { AuthContext } from '../../context/AuthContext';
+import { BookOpen, Clock, CheckCircle, BarChart, Hand } from 'lucide-react';
 import echo from '../../services/echo';
 import axios from 'axios';
 import '../../styles/home.css';
@@ -56,35 +57,46 @@ export default function StudentDashboard() {
         {/* Page Header */}
         <div className="page-header-welcome">
           <h1>Student Dashboard</h1>
-          <p>Welcome back, {user?.FName} {user?.LName}! 👨‍🎓</p>
+          <p className="welcome-message">
+            <Hand size={24} className="waving-hand" color="#3b82f6" />
+            Welcome back, <span className="user-name-animated">{user?.FName} {user?.LName}</span>!
+          </p>
         </div>
 
         {/* Student Stats Cards */}
         {!loading && dashboardStats && (
           <div className="stats-cards">
             <div className="stat-card">
-              <div className="stat-icon">📚</div>
+              <div className="stat-icon">
+                <BookOpen size={32} color="#3b82f6" />
+              </div>
               <div className="stat-info">
                 <h4>Enrolled Courses</h4>
                 <div className="stat-value">{dashboardStats.enrolled_courses}</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon">⏳</div>
+              <div className="stat-icon">
+                <Clock size={32} color="#f59e0b" />
+              </div>
               <div className="stat-info">
                 <h4>Pending Assignments</h4>
                 <div className="stat-value">{dashboardStats.pending_assignments}</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon">✅</div>
+              <div className="stat-icon">
+                <CheckCircle size={32} color="#10b981" />
+              </div>
               <div className="stat-info">
                 <h4>Submitted</h4>
                 <div className="stat-value">{dashboardStats.submitted_assignments}</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon">📊</div>
+              <div className="stat-icon">
+                <BarChart size={32} color="#ec4899" />
+              </div>
               <div className="stat-info">
                 <h4>Average Grade</h4>
                 <div className="stat-value">

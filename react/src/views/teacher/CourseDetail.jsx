@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DashboardLayout from '../../components/DashboardLayout';
 import { AuthContext } from '../../context/AuthContext';
+import { ArrowLeft, BookOpen, Users, MapPin, Edit, Trash2 } from 'lucide-react';
 import '../../styles/courseDetail.css';
 
 const API_BASE_URL = 'http://localhost:8000';
@@ -100,6 +101,7 @@ export default function CourseDetail() {
         <div className="course-detail-error">
           <p>{error || 'Course not found'}</p>
           <button onClick={() => navigate('/courses')}>
+            <ArrowLeft size={16} style={{ display: 'inline', marginRight: '6px' }} />
             Back to Courses
           </button>
         </div>
@@ -116,13 +118,23 @@ export default function CourseDetail() {
             <div>
               <h1>{course.title}</h1>
               <div className="course-meta">
-                <span>📘 Code: {course.course_code || 'N/A'}</span>
-                <span>👥 {course.students_enrolled || 0} Students</span>
-                <span>📌 Status: {course.status || 'draft'}</span>
+                <span>
+                  <BookOpen size={16} style={{ display: 'inline', marginRight: '4px', color: '#ec4899' }} />
+                  Code: {course.course_code || 'N/A'}
+                </span>
+                <span>
+                  <Users size={16} style={{ display: 'inline', marginRight: '4px', color: '#ec4899' }} />
+                  {course.students_enrolled || 0} Students
+                </span>
+                <span>
+                  <MapPin size={16} style={{ display: 'inline', marginRight: '4px', color: '#ec4899' }} />
+                  Status: {course.status || 'draft'}
+                </span>
               </div>
             </div>
             <div className="course-actions">
               <button onClick={() => navigate(`/courses/${id}/edit`)} className="btn-edit">
+                <Edit size={16} style={{ display: 'inline', marginRight: '6px' }} />
                 Edit
               </button>
             </div>
@@ -211,7 +223,8 @@ export default function CourseDetail() {
 
         <div className="course-footer">
           <button onClick={() => navigate('/courses')}>
-            ← Back to Courses
+            <ArrowLeft size={16} style={{ display: 'inline', marginRight: '6px' }} />
+            Back to Courses
           </button>
         </div>
 

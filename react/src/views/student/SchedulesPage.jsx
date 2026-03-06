@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import DashboardLayout from '../../components/DashboardLayout';
 import { AuthContext } from '../../context/AuthContext';
+import { Edit, Trash2, MapPin } from 'lucide-react';
 import '../../styles/schedules.css';
 import { format, startOfWeek, addDays, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay } from 'date-fns';
 
@@ -581,21 +582,21 @@ function WeekView({ currentDate, schedules, getSchedulesForDay, getTypeIcon, onE
                           onClick={() => onEditSchedule(schedule)}
                           title="Edit"
                         >
-                          ✏️
+                          <Edit size={14} color="#ec4899" />
                         </button>
                         <button 
                           className="event-btn delete-btn" 
                           onClick={() => onDeleteSchedule(schedule.id)}
                           title="Delete"
                         >
-                          🗑️
+                          <Trash2 size={14} color="#ef4444" />
                         </button>
                       </div>
                     </div>
                     <div className="event-info">
                       <div className="event-title">{schedule.title}</div>
                       <div className="event-time">{getScheduleTime(schedule)}</div>
-                      {schedule.location && <div className="event-location">📍 {schedule.location}</div>}
+                      {schedule.location && <div className="event-location"><MapPin size={12} color="#ec4899" style={{ display: 'inline', marginRight: '4px' }} />{schedule.location}</div>}
                     </div>
                   </div>
                 </div>

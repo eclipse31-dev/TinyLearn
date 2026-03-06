@@ -1,6 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import DashboardLayout from '../../components/DashboardLayout';
+import { User, Lock, Bell, Palette, Settings } from 'lucide-react';
 import axios from 'axios';
 import '../../styles/settings.css';
 
@@ -435,35 +436,45 @@ export default function SettingsPage() {
                 className={activeTab === 'profile' ? 'active' : ''}
                 onClick={() => setActiveTab('profile')}
               >
-                <span className="icon">👤</span>
+                <span className="icon">
+                  <User size={20} color={activeTab === 'profile' ? '#ec4899' : '#6b7280'} />
+                </span>
                 Profile
               </button>
               <button
                 className={activeTab === 'security' ? 'active' : ''}
                 onClick={() => setActiveTab('security')}
               >
-                <span className="icon">🔒</span>
+                <span className="icon">
+                  <Lock size={20} color={activeTab === 'security' ? '#ec4899' : '#6b7280'} />
+                </span>
                 Security
               </button>
               <button
                 className={activeTab === 'notifications' ? 'active' : ''}
                 onClick={() => setActiveTab('notifications')}
               >
-                <span className="icon">🔔</span>
+                <span className="icon">
+                  <Bell size={20} color={activeTab === 'notifications' ? '#ec4899' : '#6b7280'} />
+                </span>
                 Notifications
               </button>
               <button
                 className={activeTab === 'appearance' ? 'active' : ''}
                 onClick={() => setActiveTab('appearance')}
               >
-                <span className="icon">🎨</span>
+                <span className="icon">
+                  <Palette size={20} color={activeTab === 'appearance' ? '#ec4899' : '#6b7280'} />
+                </span>
                 Appearance
               </button>
               <button
                 className={activeTab === 'account' ? 'active' : ''}
                 onClick={() => setActiveTab('account')}
               >
-                <span className="icon">⚙️</span>
+                <span className="icon">
+                  <Settings size={20} color={activeTab === 'account' ? '#ec4899' : '#6b7280'} />
+                </span>
                 Account
               </button>
             </nav>

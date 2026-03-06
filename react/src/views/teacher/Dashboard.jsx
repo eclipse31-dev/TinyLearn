@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { BookOpen, Users, FileText } from 'lucide-react';
+import { BookOpen, Users, FileText, Hand } from 'lucide-react';
 import DashboardLayout from '../../components/DashboardLayout';
 import OnlineHoursChart from '../../components/OnlineHoursChart';
 import OnlineHoursStats from '../../components/OnlineHoursStats';
@@ -57,7 +57,10 @@ export default function TeacherDashboard() {
         {/* Page Header */}
         <div className="page-header-welcome">
           <h1>Teacher Dashboard</h1>
-          <p>Welcome back, {user?.FName} {user?.LName}! 👨‍🏫</p>
+          <p className="welcome-message">
+            <Hand size={24} className="waving-hand" color="#ec4899" />
+            Welcome back, <span className="user-name-animated">{user?.FName} {user?.LName}</span>!
+          </p>
         </div>
 
         {/* Teacher Stats Cards */}

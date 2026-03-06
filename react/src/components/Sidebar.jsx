@@ -1,25 +1,32 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { LayoutDashboard, BookOpen, FolderOpen, MessageSquare, Calendar, Settings, LogOut, GraduationCap, Briefcase, Menu, X } from 'lucide-react';
 import '../styles/sidebar.css';
 
 export default function Sidebar() {
   const location = useLocation();
   const { logout, user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: '📊' },
-    { name: 'Courses', path: '/courses', icon: '📚' },
-    { name: 'Resources', path: '/resources', icon: '📁' },
-    { name: 'Discussion', path: '/discussion', icon: '💬' },
-    { name: 'Schedules', path: '/schedules', icon: '📅' },
-    { name: 'Settings', path: '/settings', icon: '⚙️' },
+    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'Courses', path: '/courses', icon: BookOpen },
+    { name: 'Resources', path: '/resources', icon: FolderOpen },
+    { name: 'Discussion', path: '/discussion', icon: MessageSquare },
+    { name: 'Schedules', path: '/schedules', icon: Calendar },
+    { name: 'Settings', path: '/settings', icon: Settings },
   ];
 
   const handleLogout = () => {
     logout();
     navigate('/login');
+    setIsOpen(false);
+  };
+
+  const handleLinkClick = () => {
+    setIsOpen(false);
   };
 
   const roleName = useMemo(() => {
@@ -36,49 +43,75 @@ export default function Sidebar() {
   const roleColor = roleName === 'teacher' || roleName === 'admin' ? '#ec4899' : '#3b82f6';
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-header">
-        <div className="logo-box" style={{ background: roleColor }}>
-          {roleName === 'teacher' || roleName === 'admin' ? '👨‍🏫' : '👨‍🎓'}
-        </div>
-        <div className="brand-text">
-          <span className="brand-title">
-            {roleName === 'teacher' ? 'Instructor' : roleName === 'admin' ? 'Admin' : 'Student'}
-          </span>
-          <span className="brand-sub">Dashboard</span>
-        </div>
-      </div>
+    <>
+      {/* Mobile Menu Toggle */}
+      <button 
+        className="mobile-menu-toggle"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Toggle menu"
+      >
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
 
-      <nav className="sidebar-nav">
-        <ul className="sidebar-menu">
-          {menuItems.map(item => (
-            <li key={item.path}>
-              <Link
-                to={item.path}
-                className={`sidebar-link ${
-                  location.pathname === item.path ? 'active' : ''
-                }`}
-                style={{
-                  '--active-color': roleColor
-                }}
-              >
-                <span className="icon">{item.icon}</span>
-                <span className="label">{item.name}</span>
-                {location.pathname === item.path && (
-                  <span className="active-indicator" style={{ background: roleColor }}></span>
-                )}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      {/* Overlay for mobile */}
+      {isOpen && <div className="sidebar-overlay" onClick={() => setIsOpen(false)} />}
 
-      <div className="sidebar-footer">
-        <button className="logout-btn" onClick={handleLogout}>
-          <span className="icon">🚪</span>
-          <span className="label">Log Out</span>
-        </button>
-      </div>
-    </aside>
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+        <div className="sidebar-header">
+          <div className="logo-box" style={{ background: roleColor }}>
+            {roleName === 'teacher' || roleName === 'admin' ? (
+              <Briefcase size={28} color="#fff" />
+            ) : (
+              <GraduationCap size={28} color="#fff" />
+            )}
+          </div>
+          <div className="brand-text">
+            <span className="brand-title">
+              {roleName === 'teacher' ? 'Instructor' : roleName === 'admin' ? 'Admin' : 'Student'}
+            </span>
+            <span className="brand-sub">Dashboard</span>
+          </div>
+        </div>
+
+        <nav className="sidebar-nav">
+          <ul className="sidebar-menu">
+            {menuItems.map(item => {
+              const IconComponent = item.icon;
+              return (
+                <li key={item.path}>
+                  <Link
+                    to={item.path}
+                    className={`sidebar-link ${
+                      location.pathname === item.path ? 'active' : ''
+                    }`}
+                    style={{
+                      '--active-color': roleColor
+                    }}
+                    onClick={handleLinkClick}
+                  >
+                    <span className="icon">
+                      <IconComponent size={20} color={location.pathname === item.path ? roleColor : '#6b7280'} />
+                    </span>
+                    <span className="label">{item.name}</span>
+                    {location.pathname === item.path && (
+                      <span className="active-indicator" style={{ background: roleColor }}></span>
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        <div className="sidebar-footer">
+          <button className="logout-btn" onClick={handleLogout}>
+            <span className="icon">
+              <LogOut size={20} color="#ef4444" />
+            </span>
+            <span className="label">Log Out</span>
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }
