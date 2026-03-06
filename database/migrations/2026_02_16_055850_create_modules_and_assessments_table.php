@@ -11,8 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-            Schema::create('assessments', function(Blueprint $table){
+        // Create modules table first
+        Schema::create('modules', function(Blueprint $table){
+            $table->id('module_ID');
+            $table->foreignId('course_ID')->constrained('courses','course_ID')->onDelete('cascade');
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->integer('order')->default(1);
+            $table->foreignId('created_by')->constrained('users','user_ID');
+            $table->timestamps();
+        });
+
+        // Then create assessments table
+        Schema::create('assessments', function(Blueprint $table){
             $table->id('assessment_ID');
+            $table->string('title');
+            $table->text('description')->nullable();
             $table->foreignId('module_ID')->constrained('modules','module_ID')->onDelete('cascade');
             $table->foreignId('attachment_ID')->nullable()->constrained('attachments','attachment_ID');
             $table->enum('status',['draft','published','closed'])->default('draft');
@@ -28,6 +42,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('assessments');
+        Schema::dropIfExists('modules');
     }
 };
 

@@ -8,16 +8,14 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('assessments', function (Blueprint $table) {
-            $table->string('title')->after('assessment_ID');
-            $table->text('description')->nullable()->after('title');
-        });
+        // Title and description are now added in the main assessments table creation
+        // This migration is no longer needed
     }
 
     public function down(): void
     {
-        Schema::table('assessments', function (Blueprint $table) {
-            $table->dropColumn(['title', 'description']);
-        });
+        // Schema::table('assessments', function (Blueprint $table) {
+        //     $table->dropColumn(['title', 'description']);
+        // });
     }
 };

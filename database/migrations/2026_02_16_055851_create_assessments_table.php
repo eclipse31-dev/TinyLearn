@@ -11,15 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-            Schema::create('modules', function(Blueprint $table){
-            $table->id('module_ID');
-            $table->foreignId('course_ID')->constrained('courses','course_ID')->onDelete('cascade');
-            $table->string('title');
-            $table->integer('order')->default(1);
-            $table->foreignId('created_by')->constrained('users','user_ID');
-            $table->timestamps();
-        });
-
+        // This migration is now handled in create_modules_and_assessments_table
+        // Keeping this file for migration history
     }
 
     /**
@@ -27,6 +20,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('modules');
+        // Schema::dropIfExists('modules');
     }
 };
