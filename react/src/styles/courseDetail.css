@@ -1581,3 +1581,63 @@
   color: #666;
   font-size: 0.85rem;
 }
+
+/* Card Header with Delete Button */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.card-header > div:first-child {
+  flex: 1;
+}
+
+.btn-delete-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #fee;
+  color: #e53e3e;
+  border: 1px solid #fc8181;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-delete-item:hover:not(:disabled) {
+  background: #e53e3e;
+  color: white;
+  border-color: #e53e3e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+}
+
+.btn-delete-item:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-delete-item svg {
+  display: inline;
+}
+
+/* Responsive adjustments for card headers */
+@media (max-width: 768px) {
+  .card-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn-delete-item {
+    width: 100%;
+    justify-content: center;
+  }
+}

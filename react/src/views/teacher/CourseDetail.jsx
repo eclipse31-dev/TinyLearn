@@ -22,6 +22,7 @@ export default function CourseDetail() {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('announcements');
   const [showClassList, setShowClassList] = useState(false);
+  const [deleting, setDeleting] = useState(null);
 
   // Check if user is teacher or admin
   const canEdit = user?.roles?.[0]?.role === 'teacher' || user?.roles?.[0]?.role === 'admin';
@@ -88,6 +89,57 @@ export default function CourseDetail() {
       return time.substring(0, 5);
     }
     return new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const handleDeleteAnnouncement = async (announcementId) => {
+    if (!window.confirm('Are you sure you want to delete this announcement?')) return;
+
+    setDeleting(announcementId);
+    try {
+      await axios.delete(`${API_BASE_URL}/api/announcements/${announcementId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setAnnouncements(prev => prev.filter(a => a.announcement_ID !== announcementId));
+    } catch (error) {
+      console.error('Error deleting announcement:', error);
+      alert('Failed to delete announcement');
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  const handleDeleteAssignment = async (assignmentId) => {
+    if (!window.confirm('Are you sure you want to delete this assignment?')) return;
+
+    setDeleting(assignmentId);
+    try {
+      await axios.delete(`${API_BASE_URL}/api/assessments/${assignmentId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setAssignments(prev => prev.filter(a => a.assessment_ID !== assignmentId));
+    } catch (error) {
+      console.error('Error deleting assignment:', error);
+      alert('Failed to delete assignment');
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  const handleDeleteMaterial = async (materialId) => {
+    if (!window.confirm('Are you sure you want to delete this material?')) return;
+
+    setDeleting(materialId);
+    try {
+      await axios.delete(`${API_BASE_URL}/api/materials/${materialId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setMaterials(prev => prev.filter(m => m.materials_ID !== materialId));
+    } catch (error) {
+      console.error('Error deleting material:', error);
+      alert('Failed to delete material');
+    } finally {
+      setDeleting(null);
+    }
   };
 
   if (loading) {
@@ -208,8 +260,22 @@ export default function CourseDetail() {
             ) : (
               announcements.map(a => (
                 <div key={a.announcement_ID} className="announcement-card">
-                  <h3>{a.title}</h3>
-                  <span>{formatDate(a.created_at)}</span>
+                  <div className="card-header">
+                    <div>
+                      <h3>{a.title}</h3>
+                      <span>{formatDate(a.created_at)}</span>
+                    </div>
+                    {canEdit && (
+                      <button
+                        className="btn-delete-item"
+                        onClick={() => handleDeleteAnnouncement(a.announcement_ID)}
+                        disabled={deleting === a.announcement_ID}
+                      >
+                        <Trash2 size={16} />
+                        {deleting === a.announcement_ID ? 'Deleting...' : 'Delete'}
+                      </button>
+                    )}
+                  </div>
                   <p>{a.content}</p>
                 </div>
               ))
@@ -221,9 +287,23 @@ export default function CourseDetail() {
             ) : (
               assignments.map(a => (
                 <div key={a.assessment_ID} className="assignment-card">
-                  <h3>Assessment</h3>
-                  <span>Due {formatDate(a.due_date)}</span>
-                  <span className="status-badge">{a.status}</span>
+                  <div className="card-header">
+                    <div>
+                      <h3>Assessment</h3>
+                      <span>Due {formatDate(a.due_date)}</span>
+                      <span className="status-badge">{a.status}</span>
+                    </div>
+                    {canEdit && (
+                      <button
+                        className="btn-delete-item"
+                        onClick={() => handleDeleteAssignment(a.assessment_ID)}
+                        disabled={deleting === a.assessment_ID}
+                      >
+                        <Trash2 size={16} />
+                        {deleting === a.assessment_ID ? 'Deleting...' : 'Delete'}
+                      </button>
+                    )}
+                  </div>
                 </div>
               ))
             ))}
@@ -234,7 +314,21 @@ export default function CourseDetail() {
             ) : (
               materials.map(m => (
                 <div key={m.materials_ID || m.id} className="resource-card">
-                  <h3>Material: {m.materials_type}</h3>
+                  <div className="card-header">
+                    <div>
+                      <h3>Material: {m.materials_type}</h3>
+                    </div>
+                    {canEdit && (
+                      <button
+                        className="btn-delete-item"
+                        onClick={() => handleDeleteMaterial(m.materials_ID)}
+                        disabled={deleting === m.materials_ID}
+                      >
+                        <Trash2 size={16} />
+                        {deleting === m.materials_ID ? 'Deleting...' : 'Delete'}
+                      </button>
+                    )}
+                  </div>
                   {m.content && <p>{m.content}</p>}
                   {m.attachment && (
                     <div className="resource-attachment">
