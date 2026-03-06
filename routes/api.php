@@ -61,7 +61,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/courses', [CourseController::class, 'store']);
     Route::put('/courses/{id}', [CourseController::class, 'update']);
     Route::delete('/courses/{id}', [CourseController::class, 'destroy']);
+    
+    // Course enrollment routes
     Route::post('/courses/{id}/enroll', [CourseController::class, 'enroll']);
+    Route::post('/courses/{id}/unenroll', [CourseController::class, 'unenroll']);
+    Route::get('/courses/{id}/class-list', [CourseController::class, 'getClassList']);
 
     // Announcement routes - CRUD operations
     Route::get('/courses/{courseId}/announcements', [AnnouncementController::class, 'index']);

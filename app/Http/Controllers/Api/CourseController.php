@@ -15,18 +15,36 @@ class CourseController extends Controller
 {
     public function index()
     {
-        return response()->json(
-            Course::with('creator')
+        try {
+            $userId = Auth::id();
+            
+            $courses = Course::with('creator')
                 ->withCount('enrollments')
                 ->orderBy('title')
                 ->get()
-                ->map(function ($course) {
+                ->map(function ($course) use ($userId) {
+                    $isEnrolled = false;
+                    if ($userId) {
+                        $isEnrolled = \App\Models\Enrollment::where('course_ID', $course->course_ID)
+                            ->where('user_ID', $userId)
+                            ->exists();
+                    }
+                    
                     return [
                         ...$course->toArray(),
-                        'students_enrolled' => $course->enrollments_count
+                        'students_enrolled' => $course->enrollments_count,
+                        'is_enrolled' => $isEnrolled
                     ];
-                })
-        );
+                });
+            
+            return response()->json($courses);
+        } catch (\Exception $e) {
+            \Log::error('Error fetching courses: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Failed to fetch courses',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function show($id)
@@ -258,6 +276,118 @@ class CourseController extends Controller
             return response()->json([
                 'message' => 'Course not found',
             ], 404);
+        }
+    }
+
+    // Enroll student in course
+    public function enroll($id)
+    {
+        try {
+            $course = Course::findOrFail($id);
+            $userId = Auth::id();
+
+            // Check if already enrolled
+            $existingEnrollment = \App\Models\Enrollment::where('course_ID', $id)
+                ->where('user_ID', $userId)
+                ->first();
+
+            if ($existingEnrollment) {
+                return response()->json([
+                    'message' => 'You are already enrolled in this course'
+                ], 400);
+            }
+
+            // Create enrollment
+            \App\Models\Enrollment::create([
+                'course_ID' => $id,
+                'user_ID' => $userId,
+                'enrollment_date' => now(),
+                'status' => 'active'
+            ]);
+
+            return response()->json([
+                'message' => 'Successfully enrolled in course',
+                'enrolled' => true
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to enroll in course',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // Unenroll student from course
+    public function unenroll($id)
+    {
+        try {
+            $userId = Auth::id();
+
+            $enrollment = \App\Models\Enrollment::where('course_ID', $id)
+                ->where('user_ID', $userId)
+                ->first();
+
+            if (!$enrollment) {
+                return response()->json([
+                    'message' => 'You are not enrolled in this course'
+                ], 400);
+            }
+
+            $enrollment->delete();
+
+            return response()->json([
+                'message' => 'Successfully unenrolled from course',
+                'enrolled' => false
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to unenroll from course',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // Get class list (students and teachers)
+    public function getClassList($id)
+    {
+        try {
+            $course = Course::findOrFail($id);
+
+            // Get enrolled students
+            $students = \App\Models\User::whereHas('enrollments', function ($query) use ($id) {
+                $query->where('course_ID', $id);
+            })
+            ->whereHas('roles', function ($query) {
+                $query->where('role', 'student');
+            })
+            ->select('user_ID', 'FName', 'LName', 'email', 'username')
+            ->orderBy('LName')
+            ->orderBy('FName')
+            ->get();
+
+            // Get teachers (course creator and any assigned teachers)
+            $teachers = \App\Models\User::where(function ($query) use ($course) {
+                $query->where('user_ID', $course->created_by);
+            })
+            ->orWhereHas('roles', function ($query) {
+                $query->where('role', 'teacher');
+            })
+            ->select('user_ID', 'FName', 'LName', 'email', 'username')
+            ->orderBy('LName')
+            ->orderBy('FName')
+            ->get();
+
+            return response()->json([
+                'students' => $students,
+                'teachers' => $teachers,
+                'total_students' => $students->count(),
+                'total_teachers' => $teachers->count()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch class list',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 }

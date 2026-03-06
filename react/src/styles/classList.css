@@ -1,0 +1,245 @@
+/* Class List Modal */
+.class-list-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.class-list-modal .modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.class-list-modal .modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #2d3748;
+  display: flex;
+  align-items: center;
+}
+
+.class-list-modal .close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+  color: #6b7280;
+}
+
+.class-list-modal .close-btn:hover {
+  background: #f3f4f6;
+  color: #2d3748;
+}
+
+.class-list-modal .modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.list-section {
+  margin-bottom: 2rem;
+}
+
+.list-section:last-child {
+  margin-bottom: 0;
+}
+
+.list-section h3 {
+  font-size: 1.125rem;
+  color: #2d3748;
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s;
+}
+
+.member-item:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+  transform: translateX(4px);
+}
+
+.member-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ec4899, #3b82f6);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.member-item.teacher .member-avatar {
+  background: linear-gradient(135deg, #ec4899, #f472b6);
+}
+
+.member-item.student .member-avatar {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+}
+
+.member-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.member-name {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+.member-email {
+  font-size: 0.85rem;
+  color: #6b7280;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.member-badge {
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.teacher-badge {
+  background: rgba(236, 72, 153, 0.1);
+  color: #ec4899;
+}
+
+.student-badge {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.empty-message {
+  text-align: center;
+  color: #9ca3af;
+  padding: 2rem;
+  font-style: italic;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+}
+
+/* Dark Mode */
+.dark-mode .class-list-modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .class-list-modal .modal-header {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dark-mode .class-list-modal .modal-header h2 {
+  color: var(--text-primary);
+}
+
+.dark-mode .list-section h3 {
+  color: var(--text-primary);
+}
+
+.dark-mode .member-item {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+
+.dark-mode .member-item:hover {
+  background: var(--bg-secondary);
+}
+
+.dark-mode .member-name {
+  color: var(--text-primary);
+}
+
+.dark-mode .member-email {
+  color: var(--text-secondary);
+}
+
+.dark-mode .empty-message,
+.dark-mode .loading {
+  color: var(--text-muted);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .class-list-modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .class-list-modal .modal-header {
+    padding: 1rem;
+  }
+
+  .class-list-modal .modal-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .class-list-modal .modal-body {
+    padding: 1rem;
+  }
+
+  .member-item {
+    padding: 0.875rem;
+  }
+
+  .member-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 0.875rem;
+  }
+
+  .member-name {
+    font-size: 0.875rem;
+  }
+
+  .member-email {
+    font-size: 0.8rem;
+  }
+}

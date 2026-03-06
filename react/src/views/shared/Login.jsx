@@ -39,7 +39,7 @@ export default function Login() {
   };
 
   return (
-    <div className="auth-container">
+    <div className="auth-container login-page">
       <div
         className="auth-background"
         style={{ backgroundImage: `url(${backgroundImage})` }}

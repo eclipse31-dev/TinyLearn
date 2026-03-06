@@ -11,6 +11,7 @@ import {
 import { Bar } from 'react-chartjs-2';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { ThemeContext } from '../context/ThemeContext';
 import echo from '../services/echo';
 
 ChartJS.register(
@@ -27,6 +28,7 @@ export default function OnlineHoursChart({ period = 'week' }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { token } = useContext(AuthContext);
+  const { isDark } = useContext(ThemeContext);
 
   useEffect(() => {
     fetchChartData();
@@ -98,6 +100,9 @@ export default function OnlineHoursChart({ period = 'week' }) {
     plugins: {
       legend: {
         position: 'top',
+        labels: {
+          color: isDark ? '#f5f5f5' : '#1f2937',
+        }
       },
       title: {
         display: true,
@@ -106,9 +111,14 @@ export default function OnlineHoursChart({ period = 'week' }) {
           size: 16,
           weight: 'bold',
         },
-        color: '#1f2937',
+        color: isDark ? '#f5f5f5' : '#1f2937',
       },
       tooltip: {
+        backgroundColor: isDark ? '#2d2d2d' : 'rgba(0, 0, 0, 0.8)',
+        titleColor: '#f5f5f5',
+        bodyColor: '#f5f5f5',
+        borderColor: isDark ? '#404040' : 'rgba(0, 0, 0, 0.1)',
+        borderWidth: 1,
         callbacks: {
           label: function(context) {
             if (context.datasetIndex === 0) {
@@ -124,7 +134,11 @@ export default function OnlineHoursChart({ period = 'week' }) {
       x: {
         grid: {
           display: false,
+          color: isDark ? '#404040' : 'rgba(0, 0, 0, 0.1)',
         },
+        ticks: {
+          color: isDark ? '#b0b0b0' : '#6b7280',
+        }
       },
       y: {
         type: 'linear',
@@ -133,8 +147,15 @@ export default function OnlineHoursChart({ period = 'week' }) {
         title: {
           display: true,
           text: 'Hours Online',
+          color: isDark ? '#f5f5f5' : '#1f2937',
         },
         beginAtZero: true,
+        grid: {
+          color: isDark ? '#404040' : 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          color: isDark ? '#b0b0b0' : '#6b7280',
+        }
       },
       y1: {
         type: 'linear',
@@ -143,11 +164,16 @@ export default function OnlineHoursChart({ period = 'week' }) {
         title: {
           display: true,
           text: 'Number of Users',
+          color: isDark ? '#f5f5f5' : '#1f2937',
         },
         beginAtZero: true,
         grid: {
           drawOnChartArea: false,
+          color: isDark ? '#404040' : 'rgba(0, 0, 0, 0.1)',
         },
+        ticks: {
+          color: isDark ? '#b0b0b0' : '#6b7280',
+        }
       },
     },
   };

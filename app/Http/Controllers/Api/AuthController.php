@@ -81,7 +81,7 @@ class AuthController extends Controller
         $this->sessionService->startSession($user->user_ID);
 
         return response()->json([
-            'user' => $user,
+            'user' => $user->load('roles'),
             'token' => $token,
         ]);
     }

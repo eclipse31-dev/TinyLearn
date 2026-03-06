@@ -56,11 +56,11 @@ export default function StudentDashboard() {
       <div className="home-page">
         {/* Page Header */}
         <div className="page-header-welcome">
-          <h1>Student Dashboard</h1>
           <p className="welcome-message">
             <Hand size={24} className="waving-hand" color="#3b82f6" />
             Welcome back, <span className="user-name-animated">{user?.FName} {user?.LName}</span>!
           </p>
+          <h1>Student Dashboard</h1>
         </div>
 
         {/* Student Stats Cards */}

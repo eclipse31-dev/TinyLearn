@@ -935,6 +935,13 @@
   color: #718096;
 }
 
+.welcome-message-large {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #718096;
+  margin-bottom: 0.5rem;
+}
+
 .user-name-animated {
   display: inline-block;
   font-weight: 600;
@@ -1037,6 +1044,10 @@
     font-size: 1rem;
   }
 
+  .welcome-message-large {
+    font-size: 1.35rem;
+  }
+
   .stats-cards {
     grid-template-columns: 1fr;
     gap: 0.875rem;
@@ -1074,9 +1085,13 @@
     font-size: 0.875rem;
   }
 
+  .welcome-message-large {
+    font-size: 1.15rem;
+  }
+
   .waving-hand {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
   }
 
   .stat-card {

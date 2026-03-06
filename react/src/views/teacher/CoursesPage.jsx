@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/DashboardLayout';
 import CourseCard from '../../components/CourseCard';
+import { AuthContext } from '../../context/AuthContext';
 import '../../styles/courses.css';
 
 const API_URL = 'http://localhost:8000/api';
 
 export default function CoursesPage() {
   const navigate = useNavigate();
+  const { user, token } = useContext(AuthContext);
   const [courses, setCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,12 +19,17 @@ export default function CoursesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('title');
 
+  const isTeacherOrAdmin = user?.roles?.[0]?.role === 'teacher' || user?.roles?.[0]?.role === 'admin';
+
   useEffect(() => {
     async function loadCourses() {
       try {
         setLoading(true);
         const res = await fetch(`${API_URL}/courses`, {
-          headers: { Accept: 'application/json' }
+          headers: { 
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`
+          }
         });
 
         if (!res.ok) throw new Error('Failed to fetch courses');
@@ -37,8 +44,10 @@ export default function CoursesPage() {
       }
     }
 
-    loadCourses();
-  }, []);
+    if (token) {
+      loadCourses();
+    }
+  }, [token]);
 
   useEffect(() => {
     let results = [...courses];
@@ -80,7 +89,10 @@ export default function CoursesPage() {
     try {
       const res = await fetch(`${API_URL}/courses/${courseId}`, {
         method: 'DELETE',
-        headers: { Accept: 'application/json' }
+        headers: { 
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`
+        }
       });
 
       if (!res.ok) throw new Error('Delete failed');
@@ -93,6 +105,28 @@ export default function CoursesPage() {
     }
   };
 
+  const handleEnrollmentChange = () => {
+    // Reload courses to get updated enrollment status
+    async function reloadCourses() {
+      try {
+        const res = await fetch(`${API_URL}/courses`, {
+          headers: { 
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setCourses(data);
+        }
+      } catch (err) {
+        console.error('Failed to reload courses:', err);
+      }
+    }
+    reloadCourses();
+  };
+
   return (
    <DashboardLayout>
   <div className="courses-page">
@@ -103,13 +137,15 @@ export default function CoursesPage() {
           <p>Explore and manage all available courses.</p>
         </div>
 
-        <button
-          className="btn-create-course"
-          onClick={() => navigate('/courses/create')}
-        >
-          <span className="btn-icon">+</span>
-          Create Course
-        </button>
+        {isTeacherOrAdmin && (
+          <button
+            className="btn-create-course"
+            onClick={() => navigate('/courses/create')}
+          >
+            <span className="btn-icon">+</span>
+            Create Course
+          </button>
+        )}
       </div>
     </div>
 
@@ -189,6 +225,7 @@ export default function CoursesPage() {
                 course={course}
                 onDelete={handleDeleteCourse}
                 isDeletingId={deleting}
+                onEnrollmentChange={handleEnrollmentChange}
               />
             ))}
         </div>

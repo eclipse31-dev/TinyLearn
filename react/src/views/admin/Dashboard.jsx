@@ -56,11 +56,11 @@ export default function AdminDashboard() {
       <div className="home-page">
         {/* Page Header */}
         <div className="page-header-welcome">
-          <h1>Admin Dashboard</h1>
           <p className="welcome-message">
             <Hand size={24} className="waving-hand" color="#ec4899" />
             Welcome back, <span className="user-name-animated">{user?.FName} {user?.LName}</span>!
           </p>
+          <h1>Admin Dashboard</h1>
         </div>
 
         {/* Admin Stats Cards */}

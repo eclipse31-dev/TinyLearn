@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DashboardLayout from '../../components/DashboardLayout';
+import ClassList from '../../components/ClassList';
 import { AuthContext } from '../../context/AuthContext';
 import { ArrowLeft, BookOpen, Users, MapPin, Edit, Trash2 } from 'lucide-react';
 import '../../styles/courseDetail.css';
@@ -11,7 +12,7 @@ const API_BASE_URL = 'http://localhost:8000';
 export default function CourseDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { token } = useContext(AuthContext);
+  const { token, user } = useContext(AuthContext);
 
   const [course, setCourse] = useState(null);
   const [announcements, setAnnouncements] = useState([]);
@@ -20,6 +21,10 @@ export default function CourseDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('announcements');
+  const [showClassList, setShowClassList] = useState(false);
+
+  // Check if user is teacher or admin
+  const canEdit = user?.roles?.[0]?.role === 'teacher' || user?.roles?.[0]?.role === 'admin';
 
   useEffect(() => {
     if (!id || id === 'undefined') {
@@ -132,17 +137,30 @@ export default function CourseDetail() {
                 </span>
               </div>
             </div>
-            <div className="course-actions">
-              <button onClick={() => navigate(`/courses/${id}/edit`)} className="btn-edit">
-                <Edit size={16} style={{ display: 'inline', marginRight: '6px' }} />
-                Edit
-              </button>
-            </div>
+            {canEdit && (
+              <div className="course-actions">
+                <button onClick={() => navigate(`/courses/${id}/edit`)} className="btn-edit">
+                  <Edit size={16} style={{ display: 'inline', marginRight: '6px' }} />
+                  Edit
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
         <div className="course-description">
           <p>{course.description || 'No description provided.'}</p>
+        </div>
+
+        {/* View Class Button */}
+        <div className="view-class-section">
+          <button 
+            className="btn-view-class"
+            onClick={() => setShowClassList(true)}
+          >
+            <Users size={20} style={{ marginRight: '8px' }} />
+            View Class
+          </button>
         </div>
 
         {course.schedules && course.schedules.length > 0 && (
@@ -172,12 +190,14 @@ export default function CourseDetail() {
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
             </button>
           ))}
-          <button 
-            className="btn-create-item"
-            onClick={() => navigate(`/courses/${id}/${activeTab}/create`)}
-          >
-            + Add {activeTab.slice(0, -1)}
-          </button>
+          {canEdit && (
+            <button 
+              className="btn-create-item"
+              onClick={() => navigate(`/courses/${id}/${activeTab}/create`)}
+            >
+              + Add {activeTab.slice(0, -1)}
+            </button>
+          )}
         </div>
 
         <div className="course-content">
@@ -229,6 +249,13 @@ export default function CourseDetail() {
         </div>
 
       </div>
+
+      {/* ClassList Modal */}
+      <ClassList 
+        courseId={id}
+        isOpen={showClassList}
+        onClose={() => setShowClassList(false)}
+      />
     </DashboardLayout>
   );
 }
