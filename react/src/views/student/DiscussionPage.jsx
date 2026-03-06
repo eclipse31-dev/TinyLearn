@@ -16,8 +16,7 @@ import {
   Send
 } from 'lucide-react';
 import '../../styles/discussion.css';
-
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from '../../config/api';
 
 export default function DiscussionPage() {
   const navigate = useNavigate();

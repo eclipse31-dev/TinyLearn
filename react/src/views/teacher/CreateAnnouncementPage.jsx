@@ -3,8 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import DashboardLayout from '../../components/DashboardLayout';
 import { AuthContext } from '../../context/AuthContext';
 import '../../styles/createForm.css';
-
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from '../../config/api';
 
 export default function CreateAnnouncementPage() {
   const navigate = useNavigate();

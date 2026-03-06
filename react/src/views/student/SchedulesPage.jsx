@@ -5,8 +5,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { Edit, Trash2, MapPin } from 'lucide-react';
 import '../../styles/schedules.css';
 import { format, startOfWeek, addDays, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay } from 'date-fns';
-
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from '../../config/api';
 
 export default function SchedulesPage() {
   const [currentView, setCurrentView] = useState('week');

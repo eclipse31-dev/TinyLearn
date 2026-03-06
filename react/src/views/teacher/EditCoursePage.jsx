@@ -4,8 +4,7 @@ import axios from 'axios';
 import DashboardLayout from '../../components/DashboardLayout';
 import CourseForm from '../../components/CourseForm';
 import { AuthContext } from '../../context/AuthContext';
-
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from '../../config/api';
 
 export default function EditCoursePage() {
   const navigate = useNavigate();

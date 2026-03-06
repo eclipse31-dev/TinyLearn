@@ -4,8 +4,9 @@ import DashboardLayout from '../../components/DashboardLayout';
 import CourseCard from '../../components/CourseCard';
 import { AuthContext } from '../../context/AuthContext';
 import '../../styles/courses.css';
+import { API_BASE_URL } from '../../config/api';
 
-const API_URL = 'http://localhost:8000/api';
+const API_URL = `${API_BASE_URL}/api`;
 
 export default function CoursesPage() {
   const navigate = useNavigate();

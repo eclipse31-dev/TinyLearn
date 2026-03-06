@@ -1,8 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import '../styles/modal.css';
-
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from '../config/api';
 
 export default function ModuleCreateModal({ courseId, isOpen, onClose, onModuleCreated }) {
   const { token } = useContext(AuthContext);

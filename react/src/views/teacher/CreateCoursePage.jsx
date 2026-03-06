@@ -5,8 +5,7 @@ import { Image, Upload } from 'lucide-react';
 import DashboardLayout from '../../components/DashboardLayout';
 import { AuthContext } from '../../context/AuthContext';
 import '../../styles/createCourse.css';
-
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from '../../config/api';
 
 export default function CreateCoursePage() {
   const navigate = useNavigate();

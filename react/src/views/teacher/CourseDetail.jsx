@@ -6,8 +6,7 @@ import ClassList from '../../components/ClassList';
 import { AuthContext } from '../../context/AuthContext';
 import { ArrowLeft, BookOpen, Users, MapPin, Edit, Trash2 } from 'lucide-react';
 import '../../styles/courseDetail.css';
-
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from '../../config/api';
 
 export default function CourseDetail() {
   const { id } = useParams();

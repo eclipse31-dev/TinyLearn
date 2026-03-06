@@ -4,8 +4,7 @@ import DashboardLayout from '../../components/DashboardLayout';
 import { AuthContext } from '../../context/AuthContext';
 import { Download, FileText, Video, Link as LinkIcon, Image as ImageIcon } from 'lucide-react';
 import '../../styles/resources.css';
-
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from '../../config/api';
 
 export default function ResourcesPage() {
   const navigate = useNavigate();
