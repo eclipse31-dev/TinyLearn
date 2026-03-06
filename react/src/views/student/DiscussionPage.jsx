@@ -29,6 +29,7 @@ export default function DiscussionPage() {
   const [selectedCourse, setSelectedCourse] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
   const [selectedDiscussion, setSelectedDiscussion] = useState(null);
   const [replyContent, setReplyContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -210,10 +211,16 @@ export default function DiscussionPage() {
             <h1>Discussion Forum</h1>
             <p>Collaborate and discuss with your peers and teachers.</p>
           </div>
-          <button className="btn-create" onClick={() => setShowCreateModal(true)}>
-            <Plus size={20} />
-            New Discussion
-          </button>
+          <div className="header-actions">
+            <button className="btn-help" onClick={() => setShowHelpModal(true)}>
+              <MessageSquare size={20} />
+              How to Upload Materials?
+            </button>
+            <button className="btn-create" onClick={() => setShowCreateModal(true)}>
+              <Plus size={20} />
+              New Discussion
+            </button>
+          </div>
         </div>
 
         <div className="discussion-container">
@@ -483,6 +490,154 @@ export default function DiscussionPage() {
                   </button>
                 </div>
               </form>
+            </div>
+          </>
+        )}
+
+        {/* Help Modal - How to Upload Materials */}
+        {showHelpModal && (
+          <>
+            <div className="modal-overlay" onClick={() => setShowHelpModal(false)}></div>
+            <div className="modal help-modal">
+              <div className="modal-header">
+                <h2>📚 How to Upload Materials</h2>
+                <button onClick={() => setShowHelpModal(false)} className="btn-close">×</button>
+              </div>
+
+              <div className="modal-body help-content">
+                <div className="help-section">
+                  <h3>For Teachers:</h3>
+                  <div className="steps">
+                    <div className="step">
+                      <span className="step-number">1</span>
+                      <div className="step-content">
+                        <h4>Go to Your Course</h4>
+                        <p>Navigate to <strong>Courses</strong> from the sidebar and select the course where you want to add materials.</p>
+                      </div>
+                    </div>
+
+                    <div className="step">
+                      <span className="step-number">2</span>
+                      <div className="step-content">
+                        <h4>Click Materials Tab</h4>
+                        <p>In the course detail page, click on the <strong>Materials</strong> tab.</p>
+                      </div>
+                    </div>
+
+                    <div className="step">
+                      <span className="step-number">3</span>
+                      <div className="step-content">
+                        <h4>Add New Material</h4>
+                        <p>Click the <strong>"+ Add material"</strong> button.</p>
+                      </div>
+                    </div>
+
+                    <div className="step">
+                      <span className="step-number">4</span>
+                      <div className="step-content">
+                        <h4>Select or Create Module</h4>
+                        <p>Choose an existing module or create a new one to organize your materials.</p>
+                      </div>
+                    </div>
+
+                    <div className="step">
+                      <span className="step-number">5</span>
+                      <div className="step-content">
+                        <h4>Choose Material Type</h4>
+                        <p>Select the type: <strong>Document</strong>, <strong>Video</strong>, or <strong>Link</strong>.</p>
+                      </div>
+                    </div>
+
+                    <div className="step">
+                      <span className="step-number">6</span>
+                      <div className="step-content">
+                        <h4>Upload File or Add Link</h4>
+                        <p>Click <strong>"Choose File"</strong> to upload documents, videos, or images (max 50MB).</p>
+                        <p className="supported-formats">
+                          <strong>Supported formats:</strong> PDF, Word, PowerPoint, Excel, Videos (MP4), Images, ZIP
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="step">
+                      <span className="step-number">7</span>
+                      <div className="step-content">
+                        <h4>Add Description (Optional)</h4>
+                        <p>Add a description or URL for the material.</p>
+                      </div>
+                    </div>
+
+                    <div className="step">
+                      <span className="step-number">8</span>
+                      <div className="step-content">
+                        <h4>Create Material</h4>
+                        <p>Click <strong>"Create Material"</strong> and your file will be uploaded and available to students!</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="help-section">
+                  <h3>For Students:</h3>
+                  <div className="info-box">
+                    <p><strong>View Materials:</strong></p>
+                    <ul>
+                      <li>Go to <strong>Courses</strong> → Select a course → <strong>Materials</strong> tab</li>
+                      <li>Or go to <strong>Materials</strong> from sidebar to see all materials from all courses</li>
+                    </ul>
+                    <p><strong>Download Materials:</strong></p>
+                    <ul>
+                      <li>Click the <strong>"📎 Download"</strong> button next to any material</li>
+                      <li>Files will download to your computer</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="help-section">
+                  <h3>Quick Tips:</h3>
+                  <div className="tips-grid">
+                    <div className="tip-card">
+                      <span className="tip-icon">📁</span>
+                      <p>Organize materials by modules for better structure</p>
+                    </div>
+                    <div className="tip-card">
+                      <span className="tip-icon">📝</span>
+                      <p>Add clear descriptions to help students understand the content</p>
+                    </div>
+                    <div className="tip-card">
+                      <span className="tip-icon">🎥</span>
+                      <p>Use video links for YouTube or Vimeo content</p>
+                    </div>
+                    <div className="tip-card">
+                      <span className="tip-icon">💾</span>
+                      <p>Maximum file size is 50MB per upload</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="help-actions">
+                  {isTeacherOrAdmin && (
+                    <button 
+                      className="btn-primary"
+                      onClick={() => {
+                        setShowHelpModal(false);
+                        navigate('/courses');
+                      }}
+                    >
+                      Go to Courses
+                    </button>
+                  )}
+                  <button 
+                    className="btn-secondary"
+                    onClick={() => {
+                      setShowHelpModal(false);
+                      navigate('/resources');
+                    }}
+                  >
+                    View All Materials
+                  </button>
+                </div>
+              </div>
             </div>
           </>
         )}

@@ -604,3 +604,269 @@
     width: 95%;
   }
 }
+
+/* Header Actions */
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.btn-help {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: white;
+  color: #3b82f6;
+  border: 2px solid #3b82f6;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-help:hover {
+  background: #3b82f6;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+/* Help Modal */
+.help-modal {
+  max-width: 800px;
+  max-height: 85vh;
+}
+
+.help-content {
+  padding: 2rem;
+}
+
+.help-section {
+  margin-bottom: 2.5rem;
+}
+
+.help-section h3 {
+  font-size: 1.5rem;
+  color: #1a202c;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Steps */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.step {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.step-number {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-content h4 {
+  margin: 0 0 0.5rem 0;
+  color: #2d3748;
+  font-size: 1.125rem;
+}
+
+.step-content p {
+  margin: 0 0 0.5rem 0;
+  color: #4a5568;
+  line-height: 1.6;
+}
+
+.supported-formats {
+  background: #f0f7ff;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border-left: 3px solid #3b82f6;
+  margin-top: 0.5rem;
+}
+
+/* Info Box */
+.info-box {
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.info-box p {
+  margin: 0 0 0.75rem 0;
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.info-box ul {
+  margin: 0 0 1rem 0;
+  padding-left: 1.5rem;
+  color: #4a5568;
+}
+
+.info-box li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+/* Tips Grid */
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.tip-card {
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.25rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.tip-card:hover {
+  border-color: #ec4899;
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.1);
+  transform: translateY(-2px);
+}
+
+.tip-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.tip-card p {
+  margin: 0;
+  color: #4a5568;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Help Actions */
+.help-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+}
+
+.btn-secondary {
+  padding: 0.75rem 1.5rem;
+  background: white;
+  color: #3b82f6;
+  border: 2px solid #3b82f6;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #3b82f6;
+  color: white;
+}
+
+/* Dark Mode for Help Modal */
+.dark-mode .help-modal {
+  background: var(--bg-secondary);
+}
+
+.dark-mode .help-section h3,
+.dark-mode .step-content h4 {
+  color: var(--text-primary);
+}
+
+.dark-mode .step-content p,
+.dark-mode .info-box li,
+.dark-mode .tip-card p {
+  color: var(--text-secondary);
+}
+
+.dark-mode .info-box,
+.dark-mode .tip-card {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-help,
+  .btn-create {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .help-modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .help-content {
+    padding: 1rem;
+  }
+
+  .step {
+    flex-direction: column;
+  }
+
+  .tips-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .help-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}
