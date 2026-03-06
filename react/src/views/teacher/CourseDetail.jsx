@@ -17,7 +17,7 @@ export default function CourseDetail() {
   const [course, setCourse] = useState(null);
   const [announcements, setAnnouncements] = useState([]);
   const [assignments, setAssignments] = useState([]);
-  const [resources, setResources] = useState([]);
+  const [materials, setMaterials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('announcements');
@@ -46,10 +46,10 @@ export default function CourseDetail() {
         const courseData = courseRes.data;
         setCourse(courseData);
 
-        const [annRes, assRes, resRes] = await Promise.all([
+        const [annRes, assRes, matRes] = await Promise.all([
           axios.get(`${API_BASE_URL}/api/courses/${id}/announcements`, { headers, validateStatus: () => true }),
           axios.get(`${API_BASE_URL}/api/courses/${id}/assignments`, { headers, validateStatus: () => true }),
-          axios.get(`${API_BASE_URL}/api/courses/${id}/resources`, { headers, validateStatus: () => true })
+          axios.get(`${API_BASE_URL}/api/courses/${id}/materials`, { headers, validateStatus: () => true })
         ]);
 
         if (annRes.status === 200) {
@@ -62,9 +62,9 @@ export default function CourseDetail() {
           setAssignments(Array.isArray(data) ? data : []);
         }
 
-        if (resRes.status === 200) {
-          const data = resRes.data;
-          setResources(Array.isArray(data) ? data : []);
+        if (matRes.status === 200) {
+          const data = matRes.data;
+          setMaterials(Array.isArray(data) ? data : []);
         }
       } catch (err) {
         console.error('Error loading course:', err);
@@ -181,7 +181,7 @@ export default function CourseDetail() {
         )}
 
         <div className="course-tabs">
-          {['announcements', 'assignments', 'resources'].map(tab => (
+          {['announcements', 'assignments', 'materials'].map(tab => (
             <button
               key={tab}
               className={activeTab === tab ? 'active' : ''}
@@ -228,32 +228,32 @@ export default function CourseDetail() {
               ))
             ))}
 
-          {activeTab === 'resources' &&
-            (resources.length === 0 ? (
+          {activeTab === 'materials' &&
+            (materials.length === 0 ? (
               <p>No materials yet</p>
             ) : (
-              resources.map(r => (
-                <div key={r.materials_ID || r.id} className="resource-card">
-                  <h3>Material: {r.materials_type}</h3>
-                  {r.content && <p>{r.content}</p>}
-                  {r.attachment && (
+              materials.map(m => (
+                <div key={m.materials_ID || m.id} className="resource-card">
+                  <h3>Material: {m.materials_type}</h3>
+                  {m.content && <p>{m.content}</p>}
+                  {m.attachment && (
                     <div className="resource-attachment">
                       <a
-                        href={`http://localhost:8000/api/attachments/${r.attachment.attachment_ID}/download`}
+                        href={`http://localhost:8000/api/attachments/${m.attachment.attachment_ID}/download`}
                         download
                         className="btn-download"
                         onClick={(e) => {
                           e.preventDefault();
                           window.open(
-                            `http://localhost:8000/api/attachments/${r.attachment.attachment_ID}/download`,
+                            `http://localhost:8000/api/attachments/${m.attachment.attachment_ID}/download`,
                             '_blank'
                           );
                         }}
                       >
-                        📎 Download: {r.attachment.file_name}
+                        📎 Download: {m.attachment.file_name}
                       </a>
                       <span className="file-size">
-                        ({(r.attachment.file_size / 1024 / 1024).toFixed(2)} MB)
+                        ({(m.attachment.file_size / 1024 / 1024).toFixed(2)} MB)
                       </span>
                     </div>
                   )}

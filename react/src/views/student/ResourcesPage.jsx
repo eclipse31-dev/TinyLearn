@@ -1,10 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/DashboardLayout';
+import { AuthContext } from '../../context/AuthContext';
+import { Download, FileText, Video, Link as LinkIcon, Image as ImageIcon } from 'lucide-react';
 import '../../styles/resources.css';
 
+const API_BASE_URL = 'http://localhost:8000';
+
 export default function ResourcesPage() {
-  const [resources, setResources] = useState([]);
-  const [filteredResources, setFilteredResources] = useState([]);
+  const navigate = useNavigate();
+  const { token } = useContext(AuthContext);
+  const [materials, setMaterials] = useState([]);
+  const [filteredMaterials, setFilteredMaterials] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('all');
   const [selectedCourse, setSelectedCourse] = useState('all');
@@ -12,111 +19,111 @@ export default function ResourcesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch all resources on component mount
+  // Fetch all enrolled courses and their materials
   useEffect(() => {
-    fetchResources();
-  }, []);
+    fetchMaterials();
+  }, [token]);
 
-  const fetchResources = async () => {
+  const fetchMaterials = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await fetch('/api/resources', {
+      
+      // First, get all courses
+      const coursesResponse = await fetch(`${API_BASE_URL}/api/courses`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/json',
         },
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch resources');
+      if (!coursesResponse.ok) {
+        throw new Error('Failed to fetch courses');
       }
 
-      const data = await response.json();
-      setResources(data);
+      const coursesData = await coursesResponse.json();
       
-      // Extract unique courses from resources
-      const uniqueCourses = [...new Set(data.map(r => r.course_id))];
-      const courseData = data.reduce((acc, resource) => {
-        if (!acc.find(c => c.id === resource.course_id)) {
-          acc.push({
-            id: resource.course_id,
-            title: resource.course?.title || `Course ${resource.course_id}`
-          });
-        }
-        return acc;
-      }, []);
-      setCourses(courseData);
+      // Filter only enrolled courses for students
+      const enrolledCourses = coursesData.filter(c => c.is_enrolled);
+      setCourses(enrolledCourses);
+
+      // Fetch materials for each enrolled course
+      const materialsPromises = enrolledCourses.map(course =>
+        fetch(`${API_BASE_URL}/api/courses/${course.course_ID}/materials`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+          },
+        }).then(res => res.ok ? res.json() : [])
+      );
+
+      const materialsArrays = await Promise.all(materialsPromises);
       
+      // Flatten and add course info to each material
+      const allMaterials = materialsArrays.flat().map((material, index) => {
+        const courseIndex = materialsArrays.findIndex(arr => arr.includes(material));
+        return {
+          ...material,
+          course: enrolledCourses[courseIndex]
+        };
+      });
+
+      setMaterials(allMaterials);
       setError(null);
     } catch (err) {
       setError(err.message);
-      console.error('Error fetching resources:', err);
+      console.error('Error fetching materials:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Filter resources based on search, type, and course
+  // Filter materials based on search, type, and course
   useEffect(() => {
-    let filtered = resources;
+    let filtered = materials;
 
     // Filter by search term
     if (searchTerm) {
-      filtered = filtered.filter(resource =>
-        resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        resource.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(material =>
+        material.content?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        material.materials_type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        material.attachment?.file_name?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Filter by type
     if (selectedType !== 'all') {
-      filtered = filtered.filter(resource => resource.type === selectedType);
+      filtered = filtered.filter(material => material.materials_type === selectedType);
     }
 
     // Filter by course
     if (selectedCourse !== 'all') {
-      filtered = filtered.filter(resource => resource.course_id.toString() === selectedCourse);
+      filtered = filtered.filter(material => material.course?.course_ID?.toString() === selectedCourse);
     }
 
-    setFilteredResources(filtered);
-  }, [resources, searchTerm, selectedType, selectedCourse]);
+    setFilteredMaterials(filtered);
+  }, [materials, searchTerm, selectedType, selectedCourse]);
 
-  const getResourceIcon = (type) => {
+  const getMaterialIcon = (type) => {
     switch (type) {
-      case 'link':
-        return '🔗';
-      case 'file':
-        return '📄';
-      case 'image':
-        return '🖼️';
       case 'video':
-        return '🎥';
+        return <Video size={24} color="#ec4899" />;
+      case 'document':
+        return <FileText size={24} color="#3b82f6" />;
+      case 'link':
+        return <LinkIcon size={24} color="#10b981" />;
       default:
-        return '📌';
+        return <FileText size={24} color="#6b7280" />;
     }
   };
 
-  const formatFileSize = (bytes) => {
-    if (!bytes) return '';
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
-  };
-
-  const handleResourceClick = (resource) => {
-    if (resource.url) {
-      window.open(resource.url, '_blank');
-    } else if (resource.file_path) {
-      // Download file
-      const link = document.createElement('a');
-      link.href = `/storage/${resource.file_path}`;
-      link.download = resource.file_name || 'download';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+  const handleDownload = (material) => {
+    if (material.attachment) {
+      window.open(
+        `${API_BASE_URL}/api/attachments/${material.attachment.attachment_ID}/download`,
+        '_blank'
+      );
+    } else if (material.content && material.materials_type === 'link') {
+      window.open(material.content, '_blank');
     }
   };
 
@@ -125,10 +132,10 @@ export default function ResourcesPage() {
       <DashboardLayout>
         <div className="resources-page">
           <div className="page-header">
-            <h1>Resources</h1>
-            <p>Access and manage your learning resources.</p>
+            <h1>Materials</h1>
+            <p>Access all your learning materials from enrolled courses.</p>
           </div>
-          <div className="loading-spinner">Loading resources...</div>
+          <div className="loading-spinner">Loading materials...</div>
         </div>
       </DashboardLayout>
     );
@@ -138,8 +145,8 @@ export default function ResourcesPage() {
     <DashboardLayout>
       <div className="resources-page">
         <div className="page-header">
-          <h1>Resources</h1>
-          <p>Access and manage your learning resources from all courses.</p>
+          <h1>Materials</h1>
+          <p>Access all your learning materials from enrolled courses.</p>
         </div>
 
         {error && (
@@ -153,7 +160,7 @@ export default function ResourcesPage() {
             <div className="toolbar-group">
               <input
                 type="text"
-                placeholder="Search resources..."
+                placeholder="Search materials..."
                 className="search-input"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -167,10 +174,9 @@ export default function ResourcesPage() {
                 onChange={(e) => setSelectedType(e.target.value)}
               >
                 <option value="all">All Types</option>
-                <option value="link">Links</option>
-                <option value="file">Files</option>
-                <option value="image">Images</option>
+                <option value="document">Documents</option>
                 <option value="video">Videos</option>
+                <option value="link">Links</option>
               </select>
             </div>
 
@@ -182,7 +188,7 @@ export default function ResourcesPage() {
               >
                 <option value="all">All Courses</option>
                 {courses.map(course => (
-                  <option key={course.id} value={course.id}>
+                  <option key={course.course_ID} value={course.course_ID}>
                     {course.title}
                   </option>
                 ))}
@@ -190,44 +196,60 @@ export default function ResourcesPage() {
             </div>
           </div>
 
-          {filteredResources.length === 0 ? (
+          {filteredMaterials.length === 0 ? (
             <div className="no-resources">
-              <p>No resources found. Try adjusting your filters.</p>
+              <p>No materials found. Try adjusting your filters or enroll in courses.</p>
             </div>
           ) : (
             <div className="resources-grid">
-              {filteredResources.map(resource => (
-                <div key={resource.id} className="resource-card">
+              {filteredMaterials.map(material => (
+                <div key={material.materials_ID} className="resource-card">
                   <div className="resource-header">
-                    <span className="resource-icon">{getResourceIcon(resource.type)}</span>
-                    <span className="resource-type">{resource.type}</span>
+                    <span className="resource-icon">{getMaterialIcon(material.materials_type)}</span>
+                    <span className="resource-type">{material.materials_type}</span>
                   </div>
 
                   <div className="resource-body">
-                    <h3 className="resource-title">{resource.title}</h3>
+                    <h3 className="resource-title">
+                      {material.attachment?.file_name || material.materials_type}
+                    </h3>
                     
-                    {resource.description && (
-                      <p className="resource-description">{resource.description}</p>
+                    {material.content && (
+                      <p className="resource-description">{material.content}</p>
                     )}
 
                     <div className="resource-meta">
                       <span className="course-name">
-                        {resource.course?.title || `Course ${resource.course_id}`}
+                        {material.course?.title || 'Unknown Course'}
                       </span>
-                      {resource.file_size && (
+                      {material.module?.title && (
+                        <span className="module-name">
+                          Module: {material.module.title}
+                        </span>
+                      )}
+                      {material.attachment?.file_size && (
                         <span className="file-size">
-                          {formatFileSize(resource.file_size)}
+                          {(material.attachment.file_size / 1024 / 1024).toFixed(2)} MB
                         </span>
                       )}
                     </div>
                   </div>
 
                   <div className="resource-footer">
+                    {(material.attachment || material.materials_type === 'link') && (
+                      <button
+                        className="btn btn-primary btn-sm"
+                        onClick={() => handleDownload(material)}
+                      >
+                        <Download size={16} style={{ marginRight: '6px' }} />
+                        {material.materials_type === 'link' ? 'Open Link' : 'Download'}
+                      </button>
+                    )}
                     <button
-                      className="btn btn-primary btn-sm"
-                      onClick={() => handleResourceClick(resource)}
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => navigate(`/courses/${material.course?.course_ID}`)}
                     >
-                      {resource.url ? 'Open' : 'Download'}
+                      View Course
                     </button>
                   </div>
                 </div>
@@ -236,7 +258,7 @@ export default function ResourcesPage() {
           )}
 
           <div className="resources-summary">
-            <p>Showing {filteredResources.length} of {resources.length} resources</p>
+            <p>Showing {filteredMaterials.length} of {materials.length} materials</p>
           </div>
         </div>
       </div>

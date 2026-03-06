@@ -48,7 +48,7 @@ const router = createBrowserRouter([
     element: <PrivateRoute><CreateAssignmentPage /></PrivateRoute>,
   },
   {
-    path: "/courses/:courseId/resources/create",
+    path: "/courses/:courseId/materials/create",
     element: <PrivateRoute><CreateResourcePage /></PrivateRoute>,
   },
   {

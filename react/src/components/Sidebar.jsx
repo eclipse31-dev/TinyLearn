@@ -13,7 +13,7 @@ export default function Sidebar() {
   const menuItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Courses', path: '/courses', icon: BookOpen },
-    { name: 'Resources', path: '/resources', icon: FolderOpen },
+    { name: 'Materials', path: '/resources', icon: FolderOpen },
     { name: 'Discussion', path: '/discussion', icon: MessageSquare },
     { name: 'Schedules', path: '/schedules', icon: Calendar },
     { name: 'Settings', path: '/settings', icon: Settings },
