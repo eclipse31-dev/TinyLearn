@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { Users } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import echo from '../services/echo';
 import '../styles/online-users.css';
@@ -35,7 +36,7 @@ export default function OnlineUsers() {
         onClick={() => setIsOpen(!isOpen)}
         title="Online Users"
       >
-        <span className="online-icon">👥</span>
+        <Users size={20} color="#ec4899" />
         <span className="online-count">{onlineUsers.length}</span>
       </button>
 

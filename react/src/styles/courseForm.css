@@ -253,3 +253,41 @@
     width: 100%;
   }
 }
+
+/* Form hint and image upload */
+.form-hint {
+  display: block;
+  margin-top: 8px;
+  color: #ec4899;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.upload-image-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
+}
+
+.upload-image-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+  background: linear-gradient(135deg, #db2777 0%, #be185d 100%);
+}
+
+.upload-image-btn:active {
+  transform: translateY(0);
+}

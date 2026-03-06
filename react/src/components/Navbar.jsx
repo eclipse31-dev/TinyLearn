@@ -1,5 +1,6 @@
 import React, { useContext, useState, useMemo, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { Settings, LogOut } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import GlobalSearch from './GlobalSearch';
 import NotificationsCenter from './NotificationsCenter';
@@ -77,11 +78,13 @@ export default function Navbar() {
                 </div>
 
                 <Link to="/settings" className="dropdown-item">
-                  ⚙️ Profile Settings
+                  <Settings size={16} style={{ marginRight: '8px', color: '#ec4899' }} />
+                  Profile Settings
                 </Link>
 
                 <button onClick={handleLogout} className="dropdown-item logout">
-                  🚪 Log Out
+                  <LogOut size={16} style={{ marginRight: '8px', color: '#ec4899' }} />
+                  Log Out
                 </button>
               </div>
             )}

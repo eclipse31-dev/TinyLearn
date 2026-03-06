@@ -1,10 +1,10 @@
 import { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import '../styles/login.css';
-import backgroundImage from '../assets/b_sakura-be-editors-637438-rel49a76f54.png';
-import logoImage from '../assets/image-removebg-preview.png';
+import { AuthContext } from '../../context/AuthContext';
+import '../../styles/login.css';
+import backgroundImage from '../../assets/b_sakura-be-editors-637438-rel49a76f54.png';
+import logoImage from '../../assets/image-removebg-preview.png';
 
 export default function Login() {
   const [email, setEmail] = useState('');

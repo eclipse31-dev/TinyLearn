@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import DashboardLayout from '../components/DashboardLayout';
-import { AuthContext } from '../context/AuthContext';
-import '../styles/schedules.css';
+import DashboardLayout from '../../components/DashboardLayout';
+import { AuthContext } from '../../context/AuthContext';
+import '../../styles/schedules.css';
 import { format, startOfWeek, addDays, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay } from 'date-fns';
 
 const API_BASE_URL = 'http://localhost:8000';

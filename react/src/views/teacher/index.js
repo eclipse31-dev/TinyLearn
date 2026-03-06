@@ -1,1 +1,9 @@
 export { default as Dashboard } from './Dashboard';
+export { default as CoursesPage } from './CoursesPage';
+export { default as CourseDetail } from './CourseDetail';
+export { default as CreateCoursePage } from './CreateCoursePage';
+export { default as EditCoursePage } from './EditCoursePage';
+export { default as CreateAnnouncementPage } from './CreateAnnouncementPage';
+export { default as CreateAssignmentPage } from './CreateAssignmentPage';
+export { default as CreateResourcePage } from './CreateResourcePage';
+export { default as GradeSubmissionsPage } from './GradeSubmissionsPage';

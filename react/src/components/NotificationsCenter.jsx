@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { Bell, BellOff, Megaphone, FileText, Star, MessageSquare } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import '../styles/notifications-center.css';
@@ -65,12 +66,13 @@ export default function NotificationsCenter() {
   };
 
   const getIcon = (type) => {
+    const iconProps = { size: 18, color: '#ec4899' };
     switch (type) {
-      case 'announcement': return '📢';
-      case 'assignment': return '📝';
-      case 'grade': return '⭐';
-      case 'message': return '💬';
-      default: return '🔔';
+      case 'announcement': return <Megaphone {...iconProps} />;
+      case 'assignment': return <FileText {...iconProps} />;
+      case 'grade': return <Star {...iconProps} />;
+      case 'message': return <MessageSquare {...iconProps} />;
+      default: return <Bell {...iconProps} />;
     }
   };
 
@@ -88,7 +90,7 @@ export default function NotificationsCenter() {
         className="notifications-trigger"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className="notification-bell">🔔</span>
+        <Bell size={20} color="#ec4899" />
         {unreadCount > 0 && (
           <span className="notification-badge">{unreadCount}</span>
         )}
@@ -113,7 +115,7 @@ export default function NotificationsCenter() {
             <div className="notifications-list">
               {notifications.length === 0 ? (
                 <div className="notifications-empty">
-                  <span className="empty-icon">🔕</span>
+                  <BellOff size={48} color="#9ca3af" />
                   <p>No notifications yet</p>
                 </div>
               ) : (

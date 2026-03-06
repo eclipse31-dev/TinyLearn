@@ -1,8 +1,8 @@
 import { useState, useContext, useEffect } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import DashboardLayout from '../components/DashboardLayout';
+import { AuthContext } from '../../context/AuthContext';
+import DashboardLayout from '../../components/DashboardLayout';
 import axios from 'axios';
-import '../styles/settings.css';
+import '../../styles/settings.css';
 
 export default function SettingsPage() {
   const { user } = useContext(AuthContext);

@@ -16,6 +16,8 @@ class Submission extends Model
         'user_id',
         'attachment_ID',
         'status',
+        'notes',
+        'submitted_at',
     ];
 
     protected $casts = [

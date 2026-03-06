@@ -10,7 +10,7 @@ class SubmissionFile extends Model
     use HasFactory;
 
     protected $fillable = [
-        'submission_id',
+        'submission_ID',
         'type',
         'url',
         'file_path',
@@ -21,6 +21,6 @@ class SubmissionFile extends Model
 
     public function submission()
     {
-        return $this->belongsTo(Submission::class);
+        return $this->belongsTo(Submission::class, 'submission_ID', 'submission_ID');
     }
 }

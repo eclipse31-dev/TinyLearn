@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import DashboardLayout from '../components/DashboardLayout';
-import Modal from '../components/Modal';
-import '../styles/discussion.css';
+import DashboardLayout from '../../components/DashboardLayout';
+import Modal from '../../components/Modal';
+import '../../styles/discussion.css';
 
 export default function DiscussionPage() {
   const [discussions, setDiscussions] = useState([]);

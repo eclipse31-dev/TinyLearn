@@ -1,19 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
-import Login from "./views/login";
-import Signup from "./views/Signup";
-import NotFound from "./views/NotFound";
+import { Login, Signup, NotFound, SettingsPage } from "./views/shared";
 import HomePage from "./views/HomePage";
-import CoursesPage from "./views/CoursesPage";
-import CourseDetail from "./views/CourseDetail";
-import CreateCoursePage from "./views/CreateCoursePage";
-import EditCoursePage from "./views/EditCoursePage";
-import ResourcesPage from "./views/ResourcesPage";
-import DiscussionPage from "./views/DiscussionPage";
-import SchedulesPage from "./views/SchedulesPage";
-import SettingsPage from "./views/SettingsPage";
-import CreateAnnouncementPage from "./views/CreateAnnouncementPage";
-import CreateAssignmentPage from "./views/CreateAssignmentPage";
-import CreateResourcePage from "./views/CreateResourcePage";
+import { CoursesPage, CourseDetail, CreateCoursePage, EditCoursePage, CreateAnnouncementPage, CreateAssignmentPage, CreateResourcePage, GradeSubmissionsPage } from "./views/teacher";
+import { ResourcesPage, SchedulesPage, DiscussionPage, AssignmentsPage, SubmitAssignmentPage } from "./views/student";
 import { PrivateRoute } from "./components/PrivateRoute";
 
 
@@ -73,6 +62,18 @@ const router = createBrowserRouter([
   {
     path: "/schedules",
     element: <PrivateRoute><SchedulesPage /></PrivateRoute>,
+  },
+  {
+    path: "/assignments",
+    element: <PrivateRoute><AssignmentsPage /></PrivateRoute>,
+  },
+  {
+    path: "/assignments/:assignmentId/submit",
+    element: <PrivateRoute><SubmitAssignmentPage /></PrivateRoute>,
+  },
+  {
+    path: "/assignments/:assignmentId/grade",
+    element: <PrivateRoute><GradeSubmissionsPage /></PrivateRoute>,
   },
   {
     path: "/settings",

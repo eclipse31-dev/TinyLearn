@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Image, Upload } from 'lucide-react';
 import '../styles/courseForm.css';
 
 export default function CourseForm({ course = null, onSuccess, onCancel, token }) {
@@ -152,16 +153,72 @@ export default function CourseForm({ course = null, onSuccess, onCancel, token }
         </div>
 
         <div className="form-group">
-          <label htmlFor="header_image_url">Header Image URL</label>
+          <label htmlFor="header_image_url">
+            <Image size={18} style={{ display: 'inline', marginRight: '6px', color: '#ec4899' }} />
+            Header Image
+          </label>
+          
+          {/* URL Input */}
           <input
             type="url"
             id="header_image_url"
             name="header_image_url"
             value={formData.header_image_url}
             onChange={handleChange}
-            placeholder="https://example.com/image.jpg"
+            placeholder="https://example.com/image.jpg or paste image URL"
             disabled={loading}
           />
+          
+          {/* OR Divider */}
+          <div style={{ textAlign: 'center', margin: '12px 0', color: '#9ca3af', fontSize: '14px', fontWeight: '600' }}>
+            OR
+          </div>
+          
+          {/* File Upload Button */}
+          <label htmlFor="header_image_file" className="upload-image-btn">
+            <Upload size={18} style={{ display: 'inline', marginRight: '8px' }} />
+            Upload Image from Computer
+            <input
+              type="file"
+              id="header_image_file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  // Create a preview URL
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setFormData(prev => ({ ...prev, header_image_url: reader.result }));
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+              style={{ display: 'none' }}
+              disabled={loading}
+            />
+          </label>
+          
+          {/* Image Preview */}
+          {formData.header_image_url && (
+            <div style={{ marginTop: '12px' }}>
+              <img 
+                src={formData.header_image_url} 
+                alt="Header preview" 
+                style={{ 
+                  maxWidth: '100%', 
+                  maxHeight: '200px', 
+                  borderRadius: '8px',
+                  objectFit: 'cover',
+                  border: '2px solid #e2e8f0'
+                }}
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
+            </div>
+          )}
+          
+          <small className="form-hint">Upload an image or paste an image URL (JPG, PNG, GIF)</small>
         </div>
 
         <div className="form-group">

@@ -1,0 +1,284 @@
+.submit-assignment-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  color: #ec4899;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 20px;
+  padding: 8px 0;
+  transition: color 0.2s;
+}
+
+.btn-back:hover {
+  color: #db2777;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+}
+
+.page-header p {
+  color: #6b7280;
+  margin: 0 0 24px 0;
+  line-height: 1.6;
+}
+
+.page-header .upload-info {
+  color: #ec4899;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 12px 0 24px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.assignment-details {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-item .label {
+  font-size: 12px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-item .value {
+  font-size: 16px;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.feedback-section {
+  background: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.feedback-section h3 {
+  margin: 0 0 12px 0;
+  color: #92400e;
+  font-size: 18px;
+}
+
+.feedback-content {
+  color: #78350f;
+  line-height: 1.6;
+}
+
+.submission-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.submission-section h3 {
+  margin: 0 0 20px 0;
+  color: #1f2937;
+  font-size: 20px;
+}
+
+.upload-section {
+  margin-bottom: 24px;
+  padding: 24px;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.upload-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #ec4899;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.upload-btn:hover {
+  background: #db2777;
+  transform: translateY(-1px);
+}
+
+.upload-hint {
+  margin: 12px 0 0 0;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.files-list {
+  margin-bottom: 24px;
+}
+
+.files-list h4 {
+  margin: 0 0 16px 0;
+  color: #1f2937;
+  font-size: 16px;
+}
+
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  transition: background 0.2s;
+}
+
+.file-item:hover {
+  background: #f3f4f6;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.file-icon {
+  font-size: 24px;
+}
+
+.file-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.file-name {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.file-size {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.btn-remove {
+  background: #ef4444;
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.2s;
+}
+
+.btn-remove:hover {
+  background: #dc2626;
+  transform: scale(1.1);
+}
+
+.notes-section {
+  margin-bottom: 24px;
+}
+
+.notes-section label {
+  display: block;
+  margin-bottom: 8px;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.notes-section textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.notes-section textarea:focus {
+  outline: none;
+  border-color: #ec4899;
+}
+
+.notes-section textarea:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.submit-actions {
+  text-align: center;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.submit-actions .btn {
+  padding: 14px 32px;
+  font-size: 16px;
+}
+
+.submit-hint {
+  margin: 12px 0 0 0;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.submitted-message {
+  text-align: center;
+  padding: 24px;
+  background: #d1fae5;
+  border-radius: 8px;
+  color: #065f46;
+}
+
+.submitted-message p {
+  margin: 8px 0;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .submit-assignment-page {
+    padding: 15px;
+  }
+
+  .assignment-details {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .submission-section {
+    padding: 16px;
+  }
+
+  .upload-section {
+    padding: 16px;
+  }
+}

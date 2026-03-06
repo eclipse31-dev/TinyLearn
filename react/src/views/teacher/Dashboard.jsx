@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { BookOpen, Users, FileText } from 'lucide-react';
 import DashboardLayout from '../../components/DashboardLayout';
 import OnlineHoursChart from '../../components/OnlineHoursChart';
 import OnlineHoursStats from '../../components/OnlineHoursStats';
@@ -63,28 +64,28 @@ export default function TeacherDashboard() {
         {!loading && dashboardStats && (
           <div className="stats-cards">
             <div className="stat-card">
-              <div className="stat-icon">📚</div>
+              <div className="stat-icon"><BookOpen size={32} color="#ec4899" /></div>
               <div className="stat-info">
                 <h4>My Courses</h4>
                 <div className="stat-value">{dashboardStats.my_courses}</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon">👥</div>
+              <div className="stat-icon"><Users size={32} color="#ec4899" /></div>
               <div className="stat-info">
                 <h4>Total Students</h4>
                 <div className="stat-value">{dashboardStats.total_students}</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon">⏳</div>
+              <div className="stat-icon"><FileText size={32} color="#f59e0b" /></div>
               <div className="stat-info">
                 <h4>Pending Submissions</h4>
                 <div className="stat-value">{dashboardStats.pending_submissions}</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon">📝</div>
+              <div className="stat-icon"><FileText size={32} color="#ec4899" /></div>
               <div className="stat-info">
                 <h4>Total Assignments</h4>
                 <div className="stat-value">{dashboardStats.total_assignments}</div>

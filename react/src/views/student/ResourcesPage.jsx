@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import DashboardLayout from '../components/DashboardLayout';
-import '../styles/resources.css';
+import DashboardLayout from '../../components/DashboardLayout';
+import '../../styles/resources.css';
 
 export default function ResourcesPage() {
   const [resources, setResources] = useState([]);

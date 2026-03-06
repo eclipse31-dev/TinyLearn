@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import DashboardLayout from '../components/DashboardLayout';
-import CourseCard from '../components/CourseCard';
-import '../styles/courses.css';
+import DashboardLayout from '../../components/DashboardLayout';
+import CourseCard from '../../components/CourseCard';
+import '../../styles/courses.css';
 
 const API_URL = 'http://localhost:8000/api';
 

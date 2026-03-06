@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import DashboardLayout from '../components/DashboardLayout';
-import { AuthContext } from '../context/AuthContext';
-import '../styles/createCourse.css';
+import { Image, Upload } from 'lucide-react';
+import DashboardLayout from '../../components/DashboardLayout';
+import { AuthContext } from '../../context/AuthContext';
+import '../../styles/createCourse.css';
 
 const API_BASE_URL = 'http://localhost:8000';
 
@@ -144,14 +145,69 @@ export default function CreateCoursePage() {
             </div>
 
             <div className="form-group">
-              <label>Header Image URL</label>
+              <label>
+                <Image size={18} style={{ display: 'inline', marginRight: '6px', color: '#ec4899' }} />
+                Header Image
+              </label>
+              
+              {/* URL Input */}
               <input
                 type="text"
                 name="header_image_url"
                 value={formData.header_image_url}
                 onChange={handleChange}
-                placeholder="https://example.com/image.jpg"
+                placeholder="https://example.com/image.jpg or paste image URL"
               />
+              
+              {/* OR Divider */}
+              <div style={{ textAlign: 'center', margin: '12px 0', color: '#9ca3af', fontSize: '14px', fontWeight: '600' }}>
+                OR
+              </div>
+              
+              {/* File Upload Button */}
+              <label htmlFor="header_image_file" className="upload-image-btn">
+                <Upload size={18} style={{ display: 'inline', marginRight: '8px' }} />
+                Upload Image from Computer
+                <input
+                  type="file"
+                  id="header_image_file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      // Create a preview URL
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        setFormData(prev => ({ ...prev, header_image_url: reader.result }));
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  style={{ display: 'none' }}
+                />
+              </label>
+              
+              {/* Image Preview */}
+              {formData.header_image_url && (
+                <div style={{ marginTop: '12px' }}>
+                  <img 
+                    src={formData.header_image_url} 
+                    alt="Header preview" 
+                    style={{ 
+                      maxWidth: '100%', 
+                      maxHeight: '200px', 
+                      borderRadius: '8px',
+                      objectFit: 'cover',
+                      border: '2px solid #e2e8f0'
+                    }}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                </div>
+              )}
+              
+              <small className="form-hint">Upload an image or paste an image URL (JPG, PNG, GIF)</small>
             </div>
 
             <div className="form-section">

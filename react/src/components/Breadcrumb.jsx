@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { Home } from 'lucide-react';
 import '../styles/breadcrumb.css';
 
 export default function Breadcrumb() {
@@ -24,7 +25,8 @@ export default function Breadcrumb() {
   return (
     <nav className="breadcrumb">
       <Link to="/dashboard" className="breadcrumb-item">
-        🏠 Home
+        <Home size={16} color="#ec4899" style={{ display: 'inline', marginRight: '6px' }} />
+        Home
       </Link>
       {pathnames.map((name, index) => {
         const routeTo = `/${pathnames.slice(0, index + 1).join('/')}`;

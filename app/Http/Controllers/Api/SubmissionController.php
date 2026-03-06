@@ -30,9 +30,9 @@ class SubmissionController extends Controller
     public function getUserSubmission($assignmentId)
     {
         $user = Auth::user();
-        $submission = Submission::where('assignment_id', $assignmentId)
-            ->where('user_id', $user->id)
-            ->with('files')
+        $submission = Submission::where('assessment_id', $assignmentId)
+            ->where('user_id', $user->user_ID)
+            ->with(['files', 'grades'])
             ->first();
 
         return response()->json($submission ?: ['message' => 'No submission found']);
@@ -47,27 +47,31 @@ class SubmissionController extends Controller
             $user = Auth::user();
             
             $validated = $request->validate([
-                'assignment_id' => 'required|exists:assignments,id',
+                'assignment_id' => 'required|exists:assessments,assessment_ID',
                 'notes' => 'nullable|string',
+                'status' => 'nullable|in:draft,submitted,graded',
             ]);
 
-            $validated['user_id'] = $user->id;
-            $validated['status'] = 'submitted';
-            $validated['submitted_at'] = now();
+            $validated['user_id'] = $user->user_ID;
+            $validated['assessment_id'] = $validated['assignment_id'];
+            unset($validated['assignment_id']);
+            
+            if (!isset($validated['status'])) {
+                $validated['status'] = 'submitted';
+            }
+            
+            if ($validated['status'] === 'submitted') {
+                $validated['submitted_at'] = now();
+            }
 
             // Check if submission already exists
-            $submission = Submission::firstOrCreate(
+            $submission = Submission::updateOrCreate(
                 [
-                    'assignment_id' => $validated['assignment_id'],
+                    'assessment_id' => $validated['assessment_id'],
                     'user_id' => $validated['user_id'],
                 ],
                 $validated
             );
-
-            // Update if it exists
-            if (!$submission->wasRecentlyCreated) {
-                $submission->update($validated);
-            }
 
             return response()->json([
                 'message' => 'Submission created successfully',
@@ -90,7 +94,7 @@ class SubmissionController extends Controller
             $submission = Submission::findOrFail($submissionId);
             
             // Verify user owns this submission
-            if ($submission->user_id !== Auth::id()) {
+            if ($submission->user_id !== Auth::user()->user_ID) {
                 return response()->json(['message' => 'Unauthorized'], 403);
             }
 
@@ -117,7 +121,6 @@ class SubmissionController extends Controller
             }
 
             $submission->files()->save($submissionFile);
-            $submission->update(['status' => 'submitted', 'submitted_at' => now()]);
 
             return response()->json([
                 'message' => 'File added to submission',
@@ -140,7 +143,7 @@ class SubmissionController extends Controller
             $submissionFile = SubmissionFile::findOrFail($fileId);
             
             // Verify user owns this submission
-            if ($submissionFile->submission->user_id !== Auth::id()) {
+            if ($submissionFile->submission->user_id !== Auth::user()->user_ID) {
                 return response()->json(['message' => 'Unauthorized'], 403);
             }
 
@@ -220,7 +223,7 @@ class SubmissionController extends Controller
             $submission = Submission::findOrFail($id);
 
             // Verify user owns this submission
-            if ($submission->user_id !== Auth::id()) {
+            if ($submission->user_id !== Auth::user()->user_ID) {
                 return response()->json(['message' => 'Unauthorized'], 403);
             }
 

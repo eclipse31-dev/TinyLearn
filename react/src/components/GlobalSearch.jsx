@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Search, BookOpen, FolderOpen, Loader } from 'lucide-react';
 import axios from 'axios';
 import '../styles/search.css';
 
@@ -70,7 +71,7 @@ export default function GlobalSearch() {
   if (!isOpen) {
     return (
       <button className="search-trigger" onClick={() => setIsOpen(true)}>
-        <span className="search-icon">🔍</span>
+        <Search size={18} color="#ec4899" />
         <span className="search-text">Search...</span>
         <kbd className="search-kbd">Ctrl K</kbd>
       </button>
@@ -81,7 +82,7 @@ export default function GlobalSearch() {
     <div className="search-overlay" onClick={() => setIsOpen(false)}>
       <div className="search-modal" onClick={(e) => e.stopPropagation()} ref={searchRef}>
         <div className="search-input-wrapper">
-          <span className="search-icon">🔍</span>
+          <Search size={18} color="#ec4899" />
           <input
             type="text"
             className="search-input"
@@ -90,7 +91,7 @@ export default function GlobalSearch() {
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
           />
-          {loading && <span className="search-loading">⏳</span>}
+          {loading && <Loader size={18} color="#ec4899" className="search-loading-spinner" />}
         </div>
 
         <div className="search-results">
@@ -107,7 +108,10 @@ export default function GlobalSearch() {
             <>
               {results.courses.length > 0 && (
                 <div className="search-section">
-                  <h4 className="search-section-title">📚 Courses</h4>
+                  <h4 className="search-section-title">
+                    <BookOpen size={16} color="#ec4899" style={{ display: 'inline', marginRight: '6px' }} />
+                    Courses
+                  </h4>
                   {results.courses.map((course) => (
                     <button
                       key={course.course_ID}
@@ -125,7 +129,10 @@ export default function GlobalSearch() {
 
               {results.resources.length > 0 && (
                 <div className="search-section">
-                  <h4 className="search-section-title">📁 Resources</h4>
+                  <h4 className="search-section-title">
+                    <FolderOpen size={16} color="#ec4899" style={{ display: 'inline', marginRight: '6px' }} />
+                    Resources
+                  </h4>
                   {results.resources.map((resource) => (
                     <button
                       key={resource.id}

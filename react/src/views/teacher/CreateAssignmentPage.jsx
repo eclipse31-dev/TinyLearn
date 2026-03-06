@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import DashboardLayout from '../components/DashboardLayout';
-import ModuleCreateModal from '../components/ModuleCreateModal';
-import { AuthContext } from '../context/AuthContext';
-import '../styles/createForm.css';
+import DashboardLayout from '../../components/DashboardLayout';
+import ModuleCreateModal from '../../components/ModuleCreateModal';
+import { AuthContext } from '../../context/AuthContext';
+import '../../styles/createForm.css';
 
 const API_BASE_URL = 'http://localhost:8000';
 

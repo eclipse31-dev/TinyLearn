@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import DashboardLayout from '../components/DashboardLayout';
-import CourseForm from '../components/CourseForm';
-import { AuthContext } from '../context/AuthContext';
+import DashboardLayout from '../../components/DashboardLayout';
+import CourseForm from '../../components/CourseForm';
+import { AuthContext } from '../../context/AuthContext';
 
 const API_BASE_URL = 'http://localhost:8000';
 
