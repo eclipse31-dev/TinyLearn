@@ -16,7 +16,10 @@ export default function CreateResourcePage() {
     module_ID: '',
     materials_type: 'document',
     content: '',
+    attachment_ID: null,
   });
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modulesLoading, setModulesLoading] = useState(true);
@@ -57,6 +60,50 @@ export default function CreateResourcePage() {
     }));
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Check file size (50MB max)
+      if (file.size > 50 * 1024 * 1024) {
+        setError('File size must be less than 50MB');
+        return;
+      }
+      setSelectedFile(file);
+      setError(null);
+    }
+  };
+
+  const handleFileUpload = async () => {
+    if (!selectedFile) return null;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      formData.append('type', 'material');
+
+      const response = await fetch(`${API_BASE_URL}/api/attachments/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('File upload failed');
+      }
+
+      const data = await response.json();
+      return data.attachment.attachment_ID;
+    } catch (err) {
+      console.error('Upload error:', err);
+      throw err;
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleModuleCreated = (newModule) => {
     setModules((prev) => [...prev, newModule]);
     setFormData((prev) => ({
@@ -77,6 +124,12 @@ export default function CreateResourcePage() {
     }
 
     try {
+      // Upload file first if selected
+      let attachmentId = null;
+      if (selectedFile) {
+        attachmentId = await handleFileUpload();
+      }
+
       const response = await fetch(`${API_BASE_URL}/api/materials`, {
         method: 'POST',
         headers: {
@@ -88,6 +141,7 @@ export default function CreateResourcePage() {
           module_ID: parseInt(formData.module_ID),
           materials_type: formData.materials_type,
           content: formData.content,
+          attachment_ID: attachmentId,
         }),
       });
 
@@ -191,6 +245,39 @@ export default function CreateResourcePage() {
               />
             </div>
 
+            <div className="form-group">
+              <label htmlFor="file">Upload File (Optional)</label>
+              <div className="file-upload-area">
+                <input
+                  type="file"
+                  id="file"
+                  onChange={handleFileChange}
+                  disabled={loading || uploading}
+                  accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.zip,.mp4,.mp3,.jpg,.jpeg,.png"
+                />
+                {selectedFile && (
+                  <div className="file-info">
+                    <span>📎 {selectedFile.name}</span>
+                    <span className="file-size">
+                      ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedFile(null)}
+                      className="btn-remove-file"
+                      disabled={loading || uploading}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+                {uploading && <p className="uploading-text">Uploading file...</p>}
+              </div>
+              <small className="form-hint">
+                Supported formats: PDF, Word, PowerPoint, Excel, Text, ZIP, Videos, Images (Max 50MB)
+              </small>
+            </div>
+
             <div className="form-actions">
               <button
                 type="button"
@@ -202,10 +289,10 @@ export default function CreateResourcePage() {
               </button>
               <button
                 type="submit"
-                disabled={loading || !formData.module_ID}
+                disabled={loading || uploading || !formData.module_ID}
                 className="btn-submit"
               >
-                {loading ? 'Creating...' : 'Create Material'}
+                {uploading ? 'Uploading...' : loading ? 'Creating...' : 'Create Material'}
               </button>
             </div>
           </form>

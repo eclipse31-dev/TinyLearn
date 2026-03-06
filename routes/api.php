@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\AssessmentController;
 use App\Http\Controllers\Api\ModuleController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\EnrollmentController;
+use App\Http\Controllers\Api\AttachmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -157,4 +158,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/enrollments/{id}', [EnrollmentController::class, 'show']);
     Route::put('/enrollments/{id}', [EnrollmentController::class, 'update']);
     Route::delete('/enrollments/{id}', [EnrollmentController::class, 'destroy']);
+
+    // Attachment routes (file uploads)
+    Route::post('/attachments/upload', [AttachmentController::class, 'upload']);
+    Route::get('/attachments/{id}', [AttachmentController::class, 'show']);
+    Route::get('/attachments/{id}/download', [AttachmentController::class, 'download']);
+    Route::delete('/attachments/{id}', [AttachmentController::class, 'destroy']);
 });

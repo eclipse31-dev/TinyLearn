@@ -18,11 +18,12 @@ class MaterialController extends Controller
     {
         try {
             // Get all modules for the course, then get their materials
-            $materials = Material::whereHas('module', function ($query) use ($courseId) {
-                $query->where('course_ID', $courseId);
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
+            $materials = Material::with(['attachment', 'module'])
+                ->whereHas('module', function ($query) use ($courseId) {
+                    $query->where('course_ID', $courseId);
+                })
+                ->orderBy('created_at', 'desc')
+                ->get();
 
             return response()->json($materials);
         } catch (\Exception $e) {

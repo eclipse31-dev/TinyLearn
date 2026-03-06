@@ -233,9 +233,30 @@ export default function CourseDetail() {
               <p>No materials yet</p>
             ) : (
               resources.map(r => (
-                <div key={r.id} className="resource-card">
+                <div key={r.materials_ID || r.id} className="resource-card">
                   <h3>Material: {r.materials_type}</h3>
                   {r.content && <p>{r.content}</p>}
+                  {r.attachment && (
+                    <div className="resource-attachment">
+                      <a
+                        href={`http://localhost:8000/api/attachments/${r.attachment.attachment_ID}/download`}
+                        download
+                        className="btn-download"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.open(
+                            `http://localhost:8000/api/attachments/${r.attachment.attachment_ID}/download`,
+                            '_blank'
+                          );
+                        }}
+                      >
+                        📎 Download: {r.attachment.file_name}
+                      </a>
+                      <span className="file-size">
+                        ({(r.attachment.file_size / 1024 / 1024).toFixed(2)} MB)
+                      </span>
+                    </div>
+                  )}
                 </div>
               ))
             ))}
