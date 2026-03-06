@@ -127,7 +127,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/discussions', [DiscussionController::class, 'index']);
     Route::post('/discussions', [DiscussionController::class, 'store']);
     Route::get('/discussions/{id}', [DiscussionController::class, 'show']);
+    Route::put('/discussions/{id}', [DiscussionController::class, 'update']);
+    Route::delete('/discussions/{id}', [DiscussionController::class, 'destroy']);
     Route::post('/discussions/{id}/reply', [DiscussionController::class, 'reply']);
+    Route::post('/discussions/{id}/toggle-pin', [DiscussionController::class, 'togglePin']);
+    Route::post('/discussions/{id}/toggle-lock', [DiscussionController::class, 'toggleLock']);
 
     // Schedule routes
     Route::get('/schedules/week', [ScheduleController::class, 'getWeekSchedules']);
