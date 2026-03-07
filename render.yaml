@@ -1,0 +1,36 @@
+# Render Blueprint for TinyLearn Laravel Backend
+services:
+  - type: web
+    name: tinylearn
+    env: php
+    region: oregon
+    plan: free
+    buildCommand: composer install --no-dev --optimize-autoloader && php artisan config:cache
+    startCommand: php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT
+    envVars:
+      - key: APP_NAME
+        value: TinyLearn
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: SESSION_DRIVER
+        value: file
+      - key: BROADCAST_DRIVER
+        value: log
+      - key: CACHE_DRIVER
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: FILESYSTEM_DISK
+        value: local
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_PORT
+        value: 5432
+      # Add these manually in Render dashboard:
+      # DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD (from Supabase)
+      # APP_URL (your Render URL)
+      # CORS_ALLOWED_ORIGINS (your Vercel URL)
