@@ -1,0 +1,8 @@
+react/
+node_modules/
+.git/
+.github/
+*.md
+.env
+.env.example
+tests/
