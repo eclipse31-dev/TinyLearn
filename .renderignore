@@ -6,3 +6,7 @@ node_modules/
 .env
 .env.example
 tests/
+package.json
+package-lock.json
+vite.config.js
+tsconfig.json
