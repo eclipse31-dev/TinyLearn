@@ -65,3 +65,51 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Override global fetch for demo mode
+const originalFetch = window.fetch;
+window.fetch = async function(...args) {
+  const [url, options] = args;
+  
+  if (isDemoMode() && typeof url === 'string' && url.includes('/api/')) {
+    // Extract endpoint from URL
+    const urlObj = new URL(url, window.location.origin);
+    const pathname = urlObj.pathname;
+    
+    // Return mock data based on endpoint
+    if (pathname.includes('/api/courses') && pathname.includes('/materials')) {
+      const courseId = pathname.match(/\/courses\/(\d+)/)?.[1];
+      const mockResponse = await mockApi.getMaterials(courseId ? parseInt(courseId) : null);
+      return new Response(JSON.stringify(mockResponse.data.materials), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+    
+    if (pathname.includes('/api/courses')) {
+      const mockResponse = await mockApi.getCourses();
+      return new Response(JSON.stringify(mockResponse.data.courses), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+    
+    if (pathname.includes('/api/schedules')) {
+      // Return empty schedules for now
+      return new Response(JSON.stringify([]), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+    
+    if (pathname.includes('/api/discussions')) {
+      const mockResponse = await mockApi.getDiscussions();
+      return new Response(JSON.stringify(mockResponse.data.discussions), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+  }
+  
+  return originalFetch.apply(this, args);
+};

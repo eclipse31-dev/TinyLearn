@@ -36,7 +36,8 @@ export const dummyCourses = [
     status: 'active',
     created_by: 2,
     header_image_url: null,
-    created_at: '2024-01-15T10:00:00Z'
+    created_at: '2024-01-15T10:00:00Z',
+    is_enrolled: true
   },
   {
     course_ID: 2,
@@ -46,7 +47,8 @@ export const dummyCourses = [
     status: 'active',
     created_by: 2,
     header_image_url: null,
-    created_at: '2024-01-20T10:00:00Z'
+    created_at: '2024-01-20T10:00:00Z',
+    is_enrolled: true
   },
   {
     course_ID: 3,
@@ -56,7 +58,8 @@ export const dummyCourses = [
     status: 'active',
     created_by: 2,
     header_image_url: null,
-    created_at: '2024-02-01T10:00:00Z'
+    created_at: '2024-02-01T10:00:00Z',
+    is_enrolled: true
   },
   {
     course_ID: 4,
@@ -66,7 +69,8 @@ export const dummyCourses = [
     status: 'active',
     created_by: 2,
     header_image_url: null,
-    created_at: '2024-02-10T10:00:00Z'
+    created_at: '2024-02-10T10:00:00Z',
+    is_enrolled: false
   }
 ];
 
