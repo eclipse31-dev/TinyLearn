@@ -2,7 +2,6 @@ import { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { isDemoAccount, getDemoUser, demoCredentials } from '../../data/dummyData';
 import '../../styles/login.css';
 import backgroundImage from '../../assets/b_sakura-be-editors-637438-rel49a76f54.png';
 import logoImage from '../../assets/image-removebg-preview.png';
@@ -22,28 +21,6 @@ export default function Login() {
     setError('');
 
     try {
-      // Check if it's a demo account
-      if (isDemoAccount(email)) {
-        const demoUser = getDemoUser(email);
-        const validPassword = Object.values(demoCredentials).find(
-          cred => cred.email === email
-        )?.password;
-
-        if (password === validPassword) {
-          // Demo mode - no backend connection
-          login(demoUser, 'demo-token-' + demoUser.user_ID);
-          localStorage.setItem('demoMode', 'true');
-          navigate('/dashboard');
-          return;
-        } else {
-          setError('Invalid demo credentials. Use password: demo123');
-          setLoading(false);
-          return;
-        }
-      }
-
-      // Regular login with backend
-      localStorage.removeItem('demoMode');
       const response = await axios.post(
         'http://localhost:8000/api/login',
         { email, password }
