@@ -7,6 +7,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { BookOpen, Clock, CheckCircle, BarChart, Hand, Plus } from 'lucide-react';
 import echo from '../../services/echo';
 import axios from 'axios';
+import logoImage from '../../assets/image-removebg-preview.png';
 import '../../styles/home.css';
 import '../../styles/online-hours.css';
 
@@ -85,18 +86,22 @@ export default function StudentDashboard() {
 
         {/* Empty State for New Students */}
         {hasNoEnrollments && (
-          <div className="empty-enrollment-state">
-            <div className="empty-state-icon">📚</div>
-            <h2>Welcome to TinyLearn!</h2>
-            <p>You haven't enrolled in any courses yet.</p>
-            <p>Use a class code to join your first course!</p>
-            <button 
-              className="btn-browse-courses"
-              onClick={() => setShowJoinModal(true)}
-            >
-              <Plus size={20} style={{ marginRight: '8px' }} />
-              Join Class
-            </button>
+          <div className="empty-enrollment-state-clean">
+            <div className="empty-state-content">
+              <div className="tinylearn-logo">
+                <img src={logoImage} alt="TinyLearn" />
+              </div>
+              <h1 className="empty-state-title">Welcome to TinyLearn!</h1>
+              <p className="empty-state-subtitle">You haven't enrolled in any courses yet.</p>
+              <p className="empty-state-subtitle">Use a class code to join your first course!</p>
+              <button 
+                className="btn-join-class-empty"
+                onClick={() => setShowJoinModal(true)}
+              >
+                <Plus size={20} />
+                Join Class
+              </button>
+            </div>
           </div>
         )}
 

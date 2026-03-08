@@ -502,7 +502,93 @@
   }
 }
 
-/* Empty Enrollment State */
+/* Empty Enrollment State - Clean Design */
+.empty-enrollment-state-clean {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 40px 20px;
+}
+
+.empty-state-content {
+  text-align: left;
+  max-width: 600px;
+}
+
+.tinylearn-logo {
+  margin-bottom: 32px;
+}
+
+.tinylearn-logo img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.empty-state-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 24px 0;
+  line-height: 1.2;
+}
+
+.empty-state-subtitle {
+  font-size: 20px;
+  color: #6b7280;
+  margin: 0 0 8px 0;
+  line-height: 1.6;
+}
+
+.btn-join-class-empty {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: white;
+  color: #1f2937;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 32px;
+}
+
+.btn-join-class-empty:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.btn-join-class-empty:active {
+  transform: translateY(0);
+}
+
+/* Dark mode */
+[data-theme="dark"] .empty-state-title {
+  color: #f9fafb;
+}
+
+[data-theme="dark"] .empty-state-subtitle {
+  color: #9ca3af;
+}
+
+[data-theme="dark"] .btn-join-class-empty {
+  background: #1f2937;
+  color: #f9fafb;
+  border-color: #374151;
+}
+
+[data-theme="dark"] .btn-join-class-empty:hover {
+  background: #111827;
+  border-color: #4b5563;
+}
+
+/* Old empty state - keep for backwards compatibility */
 .empty-enrollment-state {
   display: flex;
   flex-direction: column;
