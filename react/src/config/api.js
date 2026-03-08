@@ -1,6 +1,5 @@
 // API Configuration
 import axios from 'axios';
-import { isDemoMode, mockApi } from '../services/mockApi';
 
 // This will use the environment variable in production, or localhost in development
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
@@ -12,6 +11,11 @@ export const getApiUrl = (path) => {
   return `${API_BASE_URL}${cleanPath}`;
 };
 
+// Check if in demo mode
+const isDemoMode = () => {
+  return localStorage.getItem('demoMode') === 'true';
+};
+
 // Create axios instance with interceptor for demo mode
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -21,7 +25,8 @@ export const api = axios.create({
 api.interceptors.request.use(
   async (config) => {
     if (isDemoMode()) {
-      // Return mock data instead of making real request
+      // Dynamically import mockApi to avoid circular dependency
+      const { mockApi } = await import('../services/mockApi');
       const url = config.url;
       
       // Map API endpoints to mock functions
@@ -72,6 +77,9 @@ window.fetch = async function(...args) {
   const [url, options] = args;
   
   if (isDemoMode() && typeof url === 'string' && url.includes('/api/')) {
+    // Dynamically import mockApi to avoid circular dependency
+    const { mockApi } = await import('../services/mockApi');
+    
     // Extract endpoint from URL
     const urlObj = new URL(url, window.location.origin);
     const pathname = urlObj.pathname;
