@@ -10,7 +10,10 @@ import {
   dummyResources,
   dummyDiscussions,
   dummySubmissions,
-  dummyUsers
+  dummyUsers,
+  dummySchedules,
+  dummyOnlineHours,
+  dummyActivityLogs
 } from '../data/dummyData';
 
 // Simulate API delay
@@ -124,6 +127,27 @@ export const mockApi = {
       ? dummyDiscussions.filter(d => d.course_id === parseInt(courseId))
       : dummyDiscussions;
     return { data: { discussions } };
+  },
+
+  // Schedules
+  getSchedules: async (params) => {
+    if (!isDemoMode()) return null;
+    await delay();
+    return { data: { schedules: dummySchedules } };
+  },
+
+  // Online hours data
+  getOnlineHours: async (period = 'week') => {
+    if (!isDemoMode()) return null;
+    await delay();
+    return { data: { hours: dummyOnlineHours[period] || dummyOnlineHours.week } };
+  },
+
+  // Activity logs
+  getActivityLogs: async (userId) => {
+    if (!isDemoMode()) return null;
+    await delay();
+    return { data: { logs: dummyActivityLogs } };
   },
 
   // Dashboard stats

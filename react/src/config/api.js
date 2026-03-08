@@ -95,8 +95,8 @@ window.fetch = async function(...args) {
     }
     
     if (pathname.includes('/api/schedules')) {
-      // Return empty schedules for now
-      return new Response(JSON.stringify([]), {
+      const mockResponse = await mockApi.getSchedules();
+      return new Response(JSON.stringify(mockResponse.data.schedules), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -105,6 +105,22 @@ window.fetch = async function(...args) {
     if (pathname.includes('/api/discussions')) {
       const mockResponse = await mockApi.getDiscussions();
       return new Response(JSON.stringify(mockResponse.data.discussions), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    if (pathname.includes('/api/online-hours') || pathname.includes('/api/sessions')) {
+      const mockResponse = await mockApi.getOnlineHours('week');
+      return new Response(JSON.stringify(mockResponse.data), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    if (pathname.includes('/api/activity-logs')) {
+      const mockResponse = await mockApi.getActivityLogs();
+      return new Response(JSON.stringify(mockResponse.data.logs), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       });

@@ -341,6 +341,33 @@ export const dummyDiscussions = [
     content: 'What are the best practices for making websites responsive?',
     created_at: '2024-03-12T10:00:00Z',
     user: dummyUsers.student,
+    replies: [
+      {
+        reply_ID: 2,
+        discussion_id: 2,
+        user_id: 2,
+        content: 'Use mobile-first approach, CSS Grid and Flexbox, and test on multiple devices!',
+        created_at: '2024-03-12T11:00:00Z',
+        user: dummyUsers.teacher
+      },
+      {
+        reply_ID: 3,
+        discussion_id: 2,
+        user_id: 1,
+        content: 'Thank you! That helps a lot.',
+        created_at: '2024-03-12T12:00:00Z',
+        user: dummyUsers.student
+      }
+    ]
+  },
+  {
+    discussion_ID: 3,
+    course_id: 1,
+    user_id: 1,
+    title: 'Help with assignment 1',
+    content: 'I am stuck on question 3 of the variables assignment. Any hints?',
+    created_at: '2024-03-14T16:00:00Z',
+    user: dummyUsers.student,
     replies: []
   }
 ];
@@ -378,3 +405,119 @@ export const getDemoUser = (email) => {
 export const isDemoMode = () => {
   return localStorage.getItem('demoMode') === 'true';
 };
+
+// Dummy schedules
+export const dummySchedules = [
+  {
+    schedule_ID: 1,
+    course_id: 1,
+    title: 'CS101 Lecture',
+    description: 'Introduction to Programming - Variables and Data Types',
+    start_time: '2024-03-11T09:00:00Z',
+    end_time: '2024-03-11T10:30:00Z',
+    location: 'Room 101',
+    type: 'lecture',
+    course: dummyCourses[0]
+  },
+  {
+    schedule_ID: 2,
+    course_id: 2,
+    title: 'WEB201 Lab',
+    description: 'Web Development - HTML & CSS Practice',
+    start_time: '2024-03-11T14:00:00Z',
+    end_time: '2024-03-11T16:00:00Z',
+    location: 'Computer Lab 2',
+    type: 'lab',
+    course: dummyCourses[1]
+  },
+  {
+    schedule_ID: 3,
+    course_id: 1,
+    title: 'CS101 Tutorial',
+    description: 'Problem Solving Session',
+    start_time: '2024-03-12T10:00:00Z',
+    end_time: '2024-03-12T11:00:00Z',
+    location: 'Room 205',
+    type: 'tutorial',
+    course: dummyCourses[0]
+  },
+  {
+    schedule_ID: 4,
+    course_id: 3,
+    title: 'CS202 Lecture',
+    description: 'Data Structures - Arrays and Linked Lists',
+    start_time: '2024-03-13T11:00:00Z',
+    end_time: '2024-03-13T12:30:00Z',
+    location: 'Room 303',
+    type: 'lecture',
+    course: dummyCourses[2]
+  },
+  {
+    schedule_ID: 5,
+    course_id: 2,
+    title: 'WEB201 Lecture',
+    description: 'JavaScript Fundamentals',
+    start_time: '2024-03-14T13:00:00Z',
+    end_time: '2024-03-14T14:30:00Z',
+    location: 'Room 102',
+    type: 'lecture',
+    course: dummyCourses[1]
+  }
+];
+
+// Dummy online hours data for charts
+export const dummyOnlineHours = {
+  week: [
+    { date: '2024-03-04', hours: 2.5 },
+    { date: '2024-03-05', hours: 3.2 },
+    { date: '2024-03-06', hours: 1.8 },
+    { date: '2024-03-07', hours: 4.1 },
+    { date: '2024-03-08', hours: 2.9 },
+    { date: '2024-03-09', hours: 1.5 },
+    { date: '2024-03-10', hours: 3.7 }
+  ],
+  month: [
+    { date: '2024-02-11', hours: 18.5 },
+    { date: '2024-02-18', hours: 22.3 },
+    { date: '2024-02-25', hours: 19.7 },
+    { date: '2024-03-03', hours: 21.4 },
+    { date: '2024-03-10', hours: 19.7 }
+  ],
+  year: [
+    { date: '2024-01', hours: 85.2 },
+    { date: '2024-02', hours: 92.5 },
+    { date: '2024-03', hours: 78.3 }
+  ]
+};
+
+// Dummy activity logs
+export const dummyActivityLogs = [
+  {
+    log_ID: 1,
+    user_id: 1,
+    action: 'Submitted Assignment',
+    description: 'Variables and Data Types',
+    created_at: '2024-03-14T18:30:00Z'
+  },
+  {
+    log_ID: 2,
+    user_id: 1,
+    action: 'Viewed Material',
+    description: 'Python Basics Tutorial',
+    created_at: '2024-03-14T17:00:00Z'
+  },
+  {
+    log_ID: 3,
+    user_id: 1,
+    action: 'Posted Discussion',
+    description: 'Help with assignment 1',
+    created_at: '2024-03-14T16:00:00Z'
+  },
+  {
+    log_ID: 4,
+    user_id: 1,
+    action: 'Enrolled in Course',
+    description: 'Data Structures and Algorithms',
+    created_at: '2024-03-01T10:00:00Z'
+  }
+];
