@@ -17,35 +17,47 @@ class DatabaseSeeder extends Seeder
         $teacherRole = \App\Models\Role::where('role', 'teacher')->first();
         $studentRole = \App\Models\Role::where('role', 'student')->first();
 
-        // Create admin user
-        $admin = \App\Models\User::create([
-            'FName' => 'Admin',
-            'LName' => 'User',
-            'username' => 'admin',
-            'email' => 'admin@example.com',
-            'password' => 'password', // Will be auto-hashed by model
-        ]);
-        $admin->roles()->attach($adminRole->role_ID);
+        // Create admin user (only if doesn't exist)
+        $admin = \App\Models\User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'FName' => 'Admin',
+                'LName' => 'User',
+                'username' => 'admin',
+                'password' => 'password', // Will be auto-hashed by model
+            ]
+        );
+        if (!$admin->roles()->where('role_ID', $adminRole->role_ID)->exists()) {
+            $admin->roles()->attach($adminRole->role_ID);
+        }
 
-        // Create teacher user
-        $teacher = \App\Models\User::create([
-            'FName' => 'Teacher',
-            'LName' => 'User',
-            'username' => 'teacher',
-            'email' => 'teacher@example.com',
-            'password' => 'password', // Will be auto-hashed by model
-        ]);
-        $teacher->roles()->attach($teacherRole->role_ID);
+        // Create teacher user (only if doesn't exist)
+        $teacher = \App\Models\User::firstOrCreate(
+            ['email' => 'teacher@example.com'],
+            [
+                'FName' => 'Teacher',
+                'LName' => 'User',
+                'username' => 'teacher',
+                'password' => 'password', // Will be auto-hashed by model
+            ]
+        );
+        if (!$teacher->roles()->where('role_ID', $teacherRole->role_ID)->exists()) {
+            $teacher->roles()->attach($teacherRole->role_ID);
+        }
 
-        // Create student user
-        $student = \App\Models\User::create([
-            'FName' => 'Student',
-            'LName' => 'User',
-            'username' => 'student',
-            'email' => 'student@example.com',
-            'password' => 'password', // Will be auto-hashed by model
-        ]);
-        $student->roles()->attach($studentRole->role_ID);
+        // Create student user (only if doesn't exist)
+        $student = \App\Models\User::firstOrCreate(
+            ['email' => 'student@example.com'],
+            [
+                'FName' => 'Student',
+                'LName' => 'User',
+                'username' => 'student',
+                'password' => 'password', // Will be auto-hashed by model
+            ]
+        );
+        if (!$student->roles()->where('role_ID', $studentRole->role_ID)->exists()) {
+            $student->roles()->attach($studentRole->role_ID);
+        }
 
         // Create sample courses
         $course1 = \App\Models\Course::create([
