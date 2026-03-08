@@ -4,7 +4,7 @@ import axios from 'axios';
 import DashboardLayout from '../../components/DashboardLayout';
 import ClassList from '../../components/ClassList';
 import { AuthContext } from '../../context/AuthContext';
-import { ArrowLeft, BookOpen, Users, MapPin, Edit, Trash2 } from 'lucide-react';
+import { ArrowLeft, BookOpen, Users, MapPin, Edit, Trash2, Copy, Check } from 'lucide-react';
 import '../../styles/courseDetail.css';
 import { API_BASE_URL } from '../../config/api';
 
@@ -22,9 +22,18 @@ export default function CourseDetail() {
   const [activeTab, setActiveTab] = useState('announcements');
   const [showClassList, setShowClassList] = useState(false);
   const [deleting, setDeleting] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   // Check if user is teacher or admin
   const canEdit = user?.roles?.[0]?.role === 'teacher' || user?.roles?.[0]?.role === 'admin';
+
+  const handleCopyClassCode = () => {
+    if (course?.course_code) {
+      navigator.clipboard.writeText(course.course_code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   useEffect(() => {
     if (!id || id === 'undefined') {
@@ -174,9 +183,18 @@ export default function CourseDetail() {
             <div>
               <h1>{course.title}</h1>
               <div className="course-meta">
-                <span>
+                <span className="class-code-container">
                   <BookOpen size={16} style={{ display: 'inline', marginRight: '4px', color: '#ec4899' }} />
-                  Code: {course.course_code || 'N/A'}
+                  Class Code: <strong>{course.course_code || 'N/A'}</strong>
+                  {canEdit && course.course_code && (
+                    <button 
+                      className="btn-copy-code"
+                      onClick={handleCopyClassCode}
+                      title="Copy class code"
+                    >
+                      {copied ? <Check size={14} /> : <Copy size={14} />}
+                    </button>
+                  )}
                 </span>
                 <span>
                   <Users size={16} style={{ display: 'inline', marginRight: '4px', color: '#ec4899' }} />

@@ -2,7 +2,9 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/DashboardLayout';
 import CourseCard from '../../components/CourseCard';
+import JoinClassModal from '../../components/JoinClassModal';
 import { AuthContext } from '../../context/AuthContext';
+import { Plus } from 'lucide-react';
 import '../../styles/courses.css';
 import { API_BASE_URL } from '../../config/api';
 
@@ -16,11 +18,13 @@ export default function CoursesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [deleting, setDeleting] = useState(null);
+  const [showJoinModal, setShowJoinModal] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('title');
 
   const isTeacherOrAdmin = user?.roles?.[0]?.role === 'teacher' || user?.roles?.[0]?.role === 'admin';
+  const isStudent = user?.roles?.[0]?.role === 'student';
 
   useEffect(() => {
     async function loadCourses() {
@@ -128,6 +132,29 @@ export default function CoursesPage() {
     reloadCourses();
   };
 
+  const handleJoinSuccess = (course) => {
+    // Reload courses to show newly joined course
+    async function reloadCourses() {
+      try {
+        const res = await fetch(`${API_URL}/courses`, {
+          headers: { 
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setCourses(data);
+        }
+      } catch (err) {
+        console.error('Failed to reload courses:', err);
+      }
+    }
+    reloadCourses();
+    alert(`Successfully joined ${course.title}!`);
+  };
+
   return (
    <DashboardLayout>
   <div className="courses-page">
@@ -145,6 +172,16 @@ export default function CoursesPage() {
           >
             <span className="btn-icon">+</span>
             Create Course
+          </button>
+        )}
+
+        {isStudent && (
+          <button
+            className="btn-join-class"
+            onClick={() => setShowJoinModal(true)}
+          >
+            <Plus size={20} />
+            Join Class
           </button>
         )}
       </div>
@@ -230,6 +267,13 @@ export default function CoursesPage() {
               />
             ))}
         </div>
+
+        {/* Join Class Modal */}
+        <JoinClassModal
+          isOpen={showJoinModal}
+          onClose={() => setShowJoinModal(false)}
+          onSuccess={handleJoinSuccess}
+        />
       </div>
     </div>
   </div>

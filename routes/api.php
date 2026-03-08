@@ -64,6 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/courses/{id}', [CourseController::class, 'destroy']);
     
     // Course enrollment routes
+    Route::post('/courses/enroll-with-code', [CourseController::class, 'enrollWithCode']);
     Route::post('/courses/{id}/enroll', [CourseController::class, 'enroll']);
     Route::post('/courses/{id}/unenroll', [CourseController::class, 'unenroll']);
     Route::get('/courses/{id}/class-list', [CourseController::class, 'getClassList']);

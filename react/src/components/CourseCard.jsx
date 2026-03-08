@@ -107,16 +107,6 @@ export default function CourseCard({ course, onDelete, isDeletingId, onEnrollmen
       </div>
 
       <div className="course-card-footer">
-        {isStudent && !isEnrolled && (
-          <button
-            className="btn-enroll"
-            onClick={handleEnroll}
-            disabled={enrolling}
-          >
-            {enrolling ? 'Enrolling...' : 'Enroll in Course'}
-          </button>
-        )}
-
         {isStudent && isEnrolled && (
           <span className="enrolled-badge">✓ Enrolled</span>
         )}

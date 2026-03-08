@@ -2,8 +2,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import DashboardLayout from '../../components/DashboardLayout';
 import OnlineHoursChart from '../../components/OnlineHoursChart';
 import OnlineHoursStats from '../../components/OnlineHoursStats';
+import JoinClassModal from '../../components/JoinClassModal';
 import { AuthContext } from '../../context/AuthContext';
-import { BookOpen, Clock, CheckCircle, BarChart, Hand } from 'lucide-react';
+import { BookOpen, Clock, CheckCircle, BarChart, Hand, Plus } from 'lucide-react';
 import echo from '../../services/echo';
 import axios from 'axios';
 import '../../styles/home.css';
@@ -14,6 +15,7 @@ export default function StudentDashboard() {
   const [period, setPeriod] = useState('week');
   const [dashboardStats, setDashboardStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showJoinModal, setShowJoinModal] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -54,16 +56,31 @@ export default function StudentDashboard() {
   // Check if student has no enrollments
   const hasNoEnrollments = !loading && dashboardStats && dashboardStats.enrolled_courses === 0;
 
+  const handleJoinSuccess = (course) => {
+    // Refresh dashboard stats
+    fetchDashboardStats();
+    alert(`Successfully joined ${course.title}!`);
+  };
+
   return (
     <DashboardLayout>
       <div className="home-page">
         {/* Page Header */}
         <div className="page-header-welcome">
-          <p className="welcome-message">
-            <Hand size={24} className="waving-hand" color="#3b82f6" />
-            Welcome back, <span className="user-name-animated">{user?.FName} {user?.LName}</span>!
-          </p>
-          <h1>Student Dashboard</h1>
+          <div>
+            <p className="welcome-message">
+              <Hand size={24} className="waving-hand" color="#3b82f6" />
+              Welcome back, <span className="user-name-animated">{user?.FName} {user?.LName}</span>!
+            </p>
+            <h1>Student Dashboard</h1>
+          </div>
+          <button 
+            className="btn-join-class"
+            onClick={() => setShowJoinModal(true)}
+          >
+            <Plus size={20} />
+            Join Class
+          </button>
         </div>
 
         {/* Empty State for New Students */}
@@ -72,12 +89,13 @@ export default function StudentDashboard() {
             <div className="empty-state-icon">📚</div>
             <h2>Welcome to TinyLearn!</h2>
             <p>You haven't enrolled in any courses yet.</p>
-            <p>Browse available courses and start your learning journey today!</p>
+            <p>Use a class code to join your first course!</p>
             <button 
               className="btn-browse-courses"
-              onClick={() => window.location.href = '/courses'}
+              onClick={() => setShowJoinModal(true)}
             >
-              Browse Courses
+              <Plus size={20} style={{ marginRight: '8px' }} />
+              Join Class
             </button>
           </div>
         )}
@@ -165,6 +183,13 @@ export default function StudentDashboard() {
             </div>
           </>
         )}
+
+        {/* Join Class Modal */}
+        <JoinClassModal
+          isOpen={showJoinModal}
+          onClose={() => setShowJoinModal(false)}
+          onSuccess={handleJoinSuccess}
+        />
       </div>
     </DashboardLayout>
   );

@@ -279,27 +279,41 @@ class CourseController extends Controller
         }
     }
 
-    // Enroll student in course
-    public function enroll($id)
+    // Enroll student in course using class code
+    public function enrollWithCode(Request $request)
     {
         try {
-            $course = Course::findOrFail($id);
+            $validated = $request->validate([
+                'class_code' => 'required|string'
+            ]);
+
             $userId = Auth::id();
+            $classCode = strtoupper(trim($validated['class_code']));
+
+            // Find course by class code
+            $course = Course::where('course_code', $classCode)->first();
+
+            if (!$course) {
+                return response()->json([
+                    'message' => 'Invalid class code. Please check and try again.'
+                ], 404);
+            }
 
             // Check if already enrolled
-            $existingEnrollment = \App\Models\Enrollment::where('course_ID', $id)
+            $existingEnrollment = \App\Models\Enrollment::where('course_ID', $course->course_ID)
                 ->where('user_ID', $userId)
                 ->first();
 
             if ($existingEnrollment) {
                 return response()->json([
-                    'message' => 'You are already enrolled in this course'
+                    'message' => 'You are already enrolled in this course',
+                    'course' => $course
                 ], 400);
             }
 
             // Create enrollment
             \App\Models\Enrollment::create([
-                'course_ID' => $id,
+                'course_ID' => $course->course_ID,
                 'user_ID' => $userId,
                 'enrollment_date' => now(),
                 'status' => 'active'
@@ -307,6 +321,7 @@ class CourseController extends Controller
 
             return response()->json([
                 'message' => 'Successfully enrolled in course',
+                'course' => $course->load('creator'),
                 'enrolled' => true
             ]);
         } catch (\Exception $e) {
