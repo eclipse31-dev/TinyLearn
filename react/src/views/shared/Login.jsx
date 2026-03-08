@@ -59,26 +59,6 @@ export default function Login() {
           <div className="auth-card">
             {error && <p className="error-text">{error}</p>}
 
-            {/* Demo Credentials */}
-            <div className="demo-credentials">
-              <p className="demo-title">🎭 Demo Accounts</p>
-              <div className="demo-accounts">
-                <div className="demo-account">
-                  <span className="demo-role student">👨‍🎓 Student</span>
-                  <span className="demo-email">student@example.com</span>
-                </div>
-                <div className="demo-account">
-                  <span className="demo-role teacher">👨‍🏫 Teacher</span>
-                  <span className="demo-email">teacher@example.com</span>
-                </div>
-                <div className="demo-account">
-                  <span className="demo-role admin">👨‍💼 Admin</span>
-                  <span className="demo-email">admin@example.com</span>
-                </div>
-              </div>
-              <p className="demo-password">🔑 Password: <strong>password</strong></p>
-            </div>
-
             <form onSubmit={handleSubmit} className="auth-form">
               <div className="form-group">
                 <label>Email</label>
