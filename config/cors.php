@@ -19,9 +19,13 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000', 'http://localhost:3001'],
+    'allowed_origins' => [
+        'http://localhost:3000', 
+        'http://localhost:3001',
+        'https://vite-react-z6ty.vercel.app',
+    ],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => ['/\.vercel\.app$/'],
 
     'allowed_headers' => ['*'],
 
