@@ -525,6 +525,7 @@
   font-size: 80px;
   margin-bottom: 24px;
   animation: float 3s ease-in-out infinite;
+  display: block;
 }
 
 @keyframes float {
@@ -540,21 +541,24 @@
   font-size: 42px;
   font-weight: 700;
   color: #1a1a1a;
-  margin: 0 0 24px 0;
-  line-height: 1.2;
+  margin: 0 0 32px 0;
+  line-height: 1.3;
   letter-spacing: -0.5px;
+  display: block;
 }
 
 .empty-state-message {
-  margin-bottom: 36px;
+  margin-bottom: 40px;
+  display: block;
 }
 
 .message-primary {
   font-size: 18px;
   color: #4a5568;
-  margin: 0 0 8px 0;
+  margin: 0 0 12px 0;
   line-height: 1.6;
   font-weight: 500;
+  display: block;
 }
 
 .message-secondary {
@@ -562,6 +566,7 @@
   color: #718096;
   margin: 0;
   line-height: 1.6;
+  display: block;
 }
 
 .btn-join-class-modern {
