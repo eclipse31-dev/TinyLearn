@@ -1,9 +1,9 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
+  "buildCommand": "cd react && npm run build",
+  "outputDirectory": "react/dist",
+  "devCommand": "cd react && npm run dev",
+  "installCommand": "cd react && npm install",
   "framework": "vite",
   "rewrites": [
     {
