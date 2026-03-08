@@ -85,17 +85,20 @@ export default function StudentDashboard() {
 
         {/* Empty State for New Students */}
         {hasNoEnrollments && (
-          <div className="empty-enrollment-state-clean">
-            <div className="empty-state-content">
-              <h1 className="empty-state-title">Welcome to TinyLearn!</h1>
-              <p className="empty-state-subtitle">You haven't enrolled in any courses yet.</p>
-              <p className="empty-state-subtitle">Use a class code to join your first course!</p>
+          <div className="empty-enrollment-state-modern">
+            <div className="empty-state-card">
+              <div className="empty-state-icon-large">📚</div>
+              <h1 className="empty-state-heading">Welcome to TinyLearn!</h1>
+              <div className="empty-state-message">
+                <p className="message-primary">You haven't enrolled in any courses yet.</p>
+                <p className="message-secondary">Use a class code to join your first course!</p>
+              </div>
               <button 
-                className="btn-join-class-empty"
+                className="btn-join-class-modern"
                 onClick={() => setShowJoinModal(true)}
               >
                 <Plus size={20} />
-                Join Class
+                <span>Join Class</span>
               </button>
             </div>
           </div>

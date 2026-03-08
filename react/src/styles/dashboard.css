@@ -502,80 +502,160 @@
   }
 }
 
-/* Empty Enrollment State - Clean Design */
-.empty-enrollment-state-clean {
+/* Empty Enrollment State - Modern Design */
+.empty-enrollment-state-modern {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 60vh;
+  min-height: 65vh;
   padding: 40px 20px;
 }
 
-.empty-state-content {
-  text-align: left;
-  max-width: 600px;
+.empty-state-card {
+  background: white;
+  border-radius: 20px;
+  padding: 60px 80px;
+  text-align: center;
+  max-width: 700px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
 }
 
-.empty-state-title {
-  font-size: 48px;
+.empty-state-icon-large {
+  font-size: 80px;
+  margin-bottom: 24px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.empty-state-heading {
+  font-size: 42px;
   font-weight: 700;
-  color: #1f2937;
+  color: #1a1a1a;
   margin: 0 0 24px 0;
   line-height: 1.2;
+  letter-spacing: -0.5px;
 }
 
-.empty-state-subtitle {
-  font-size: 20px;
-  color: #6b7280;
+.empty-state-message {
+  margin-bottom: 36px;
+}
+
+.message-primary {
+  font-size: 18px;
+  color: #4a5568;
   margin: 0 0 8px 0;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.message-secondary {
+  font-size: 16px;
+  color: #718096;
+  margin: 0;
   line-height: 1.6;
 }
 
-.btn-join-class-empty {
+.btn-join-class-modern {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 14px 28px;
-  background: white;
-  color: #1f2937;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
+  gap: 10px;
+  padding: 16px 36px;
+  background: #1a1a1a;
+  color: white;
+  border: 2px solid #1a1a1a;
+  border-radius: 12px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  margin-top: 32px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
 }
 
-.btn-join-class-empty:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+.btn-join-class-modern:hover {
+  background: #2d2d2d;
+  border-color: #2d2d2d;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
-.btn-join-class-empty:active {
+.btn-join-class-modern:active {
   transform: translateY(0);
 }
 
 /* Dark mode */
-[data-theme="dark"] .empty-state-title {
+[data-theme="dark"] .empty-state-card {
+  background: #1f2937;
+  border-color: #374151;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .empty-state-heading {
   color: #f9fafb;
 }
 
-[data-theme="dark"] .empty-state-subtitle {
+[data-theme="dark"] .message-primary {
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .message-secondary {
   color: #9ca3af;
 }
 
-[data-theme="dark"] .btn-join-class-empty {
-  background: #1f2937;
-  color: #f9fafb;
-  border-color: #374151;
+[data-theme="dark"] .btn-join-class-modern {
+  background: #3b82f6;
+  border-color: #3b82f6;
 }
 
-[data-theme="dark"] .btn-join-class-empty:hover {
-  background: #111827;
-  border-color: #4b5563;
+[data-theme="dark"] .btn-join-class-modern:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .empty-state-card {
+    padding: 40px 32px;
+  }
+
+  .empty-state-heading {
+    font-size: 32px;
+  }
+
+  .message-primary {
+    font-size: 16px;
+  }
+
+  .message-secondary {
+    font-size: 15px;
+  }
+
+  .btn-join-class-modern {
+    padding: 14px 28px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .empty-state-card {
+    padding: 32px 24px;
+  }
+
+  .empty-state-icon-large {
+    font-size: 64px;
+  }
+
+  .empty-state-heading {
+    font-size: 28px;
+  }
 }
 
 /* Old empty state - keep for backwards compatibility */
