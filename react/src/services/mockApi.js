@@ -1,6 +1,5 @@
 // Mock API service for demo mode
 import {
-  isDemoMode,
   dummyCourses,
   dummyAnnouncements,
   dummyAssignments,
@@ -15,6 +14,11 @@ import {
   dummyOnlineHours,
   dummyActivityLogs
 } from '../data/dummyData';
+
+// Check if in demo mode
+const isDemoMode = () => {
+  return localStorage.getItem('demoMode') === 'true';
+};
 
 // Simulate API delay
 const delay = (ms = 300) => new Promise(resolve => setTimeout(resolve, ms));
