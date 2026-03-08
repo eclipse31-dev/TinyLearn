@@ -44,6 +44,7 @@
         "@tailwindcss/vite": "^4.1.11",
         "@types/react": "^19.2.0",
         "@types/react-dom": "^19.2.0",
+        "@vercel/edge-config": "^1.4.3",
         "@vitejs/plugin-react": "^5.0.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",

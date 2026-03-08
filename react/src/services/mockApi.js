@@ -162,37 +162,71 @@ export const mockApi = {
     if (role === 'student') {
       return {
         data: {
-          stats: {
-            enrolled_courses: dummyEnrollments.filter(e => e.user_id === userId).length,
-            pending_assignments: dummyAssignments.length - dummySubmissions.length,
-            completed_assignments: dummySubmissions.filter(s => s.status === 'graded').length,
-            average_grade: 88.5
-          }
+          enrolled_courses: dummyEnrollments.filter(e => e.user_id === userId).length,
+          pending_assignments: dummyAssignments.length - dummySubmissions.length,
+          submitted_assignments: dummySubmissions.filter(s => s.status === 'graded').length,
+          average_grade: 88.5
         }
       };
     } else if (role === 'teacher') {
       return {
         data: {
-          stats: {
-            total_courses: dummyCourses.length,
-            total_students: 45,
-            pending_submissions: 12,
-            total_assignments: dummyAssignments.length
-          }
+          my_courses: dummyCourses.length,
+          total_students: 45,
+          pending_submissions: 12,
+          total_assignments: dummyAssignments.length
         }
       };
     } else if (role === 'admin') {
       return {
         data: {
-          stats: {
-            total_users: 150,
-            total_courses: dummyCourses.length,
-            total_teachers: 8,
-            total_students: 142
-          }
+          total_users: 150,
+          total_courses: dummyCourses.length,
+          total_teachers: 8,
+          total_students: 142
         }
       };
     }
+  },
+
+  // Online hours chart data
+  getOnlineHoursChart: async () => {
+    if (!isDemoMode()) return null;
+    await delay();
+    return {
+      data: [
+        { day: 'Mon', hours: 4.5, users_count: 12 },
+        { day: 'Tue', hours: 5.2, users_count: 15 },
+        { day: 'Wed', hours: 3.8, users_count: 10 },
+        { day: 'Thu', hours: 6.1, users_count: 18 },
+        { day: 'Fri', hours: 5.5, users_count: 16 },
+        { day: 'Sat', hours: 2.3, users_count: 8 },
+        { day: 'Sun', hours: 3.2, users_count: 9 }
+      ]
+    };
+  },
+
+  // Online hours stats
+  getOnlineHoursStats: async () => {
+    if (!isDemoMode()) return null;
+    await delay();
+    return {
+      data: {
+        active_users: 5,
+        users: [
+          { user_id: 1, name: 'Demo Student', role: 'student', total_hours: 12.5, sessions_count: 8 },
+          { user_id: 2, name: 'Demo Teacher', role: 'teacher', total_hours: 18.3, sessions_count: 12 },
+          { user_id: 4, name: 'John Doe', role: 'student', total_hours: 10.2, sessions_count: 6 },
+          { user_id: 5, name: 'Jane Smith', role: 'teacher', total_hours: 15.7, sessions_count: 10 },
+          { user_id: 6, name: 'Alice Johnson', role: 'student', total_hours: 8.9, sessions_count: 5 },
+          { user_id: 7, name: 'Bob Wilson', role: 'student', total_hours: 7.4, sessions_count: 4 },
+          { user_id: 8, name: 'Carol Davis', role: 'student', total_hours: 6.2, sessions_count: 3 },
+          { user_id: 9, name: 'David Brown', role: 'student', total_hours: 5.8, sessions_count: 3 },
+          { user_id: 10, name: 'Emma Taylor', role: 'student', total_hours: 4.5, sessions_count: 2 },
+          { user_id: 11, name: 'Frank Miller', role: 'student', total_hours: 3.9, sessions_count: 2 }
+        ]
+      }
+    };
   },
 
   // Users (for admin)
@@ -268,13 +302,4 @@ export const mockApi = {
     await delay();
     return { data: { message: 'Submission graded successfully (Demo Mode)' } };
   }
-};
-
-// Helper to wrap axios calls with mock data
-export const withMockApi = async (apiCall, mockCall) => {
-  if (isDemoMode()) {
-    const mockResult = await mockCall();
-    if (mockResult) return mockResult;
-  }
-  return apiCall();
 };

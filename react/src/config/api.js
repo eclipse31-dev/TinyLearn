@@ -11,47 +11,93 @@ export const getApiUrl = (path) => {
   return `${API_BASE_URL}${cleanPath}`;
 };
 
-// Check if in demo mode
-const isDemoMode = () => {
+// Check if in demo mode (exported for use in other modules)
+export const isDemoMode = () => {
   return localStorage.getItem('demoMode') === 'true';
 };
 
-// Create axios instance with interceptor for demo mode
+// Create axios instance
 export const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// Intercept requests in demo mode
-api.interceptors.request.use(
+// Setup axios interceptor for demo mode
+let mockApiModule = null;
+
+const getMockApi = async () => {
+  if (!mockApiModule) {
+    mockApiModule = await import('../services/mockApi');
+  }
+  return mockApiModule.mockApi;
+};
+
+// Intercept ALL axios requests globally
+axios.interceptors.request.use(
   async (config) => {
     if (isDemoMode()) {
-      // Dynamically import mockApi to avoid circular dependency
-      const { mockApi } = await import('../services/mockApi');
-      const url = config.url;
+      const mockApi = await getMockApi();
+      const url = config.url || '';
       
-      // Map API endpoints to mock functions
-      if (url.includes('/api/courses') && config.method === 'get') {
-        throw { mockData: await mockApi.getCourses() };
-      }
-      if (url.includes('/api/announcements') && config.method === 'get') {
-        throw { mockData: await mockApi.getAnnouncements() };
-      }
-      if (url.includes('/api/assignments') && config.method === 'get') {
-        throw { mockData: await mockApi.getAssignments() };
-      }
-      if (url.includes('/api/materials') && config.method === 'get') {
-        throw { mockData: await mockApi.getMaterials() };
-      }
-      if (url.includes('/api/resources') && config.method === 'get') {
-        throw { mockData: await mockApi.getResources() };
-      }
-      if (url.includes('/api/dashboard/stats') && config.method === 'get') {
-        const user = JSON.parse(localStorage.getItem('user'));
+      // Dashboard stats
+      if (url.includes('/api/dashboard/stats')) {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
         const role = user?.roles?.[0]?.role || 'student';
         throw { mockData: await mockApi.getDashboardStats(user?.user_ID, role) };
       }
+      
+      // Online hours chart
+      if (url.includes('/api/dashboard/online-hours-chart')) {
+        throw { mockData: await mockApi.getOnlineHoursChart() };
+      }
+      
+      // Online hours stats
+      if (url.includes('/api/dashboard/online-hours')) {
+        throw { mockData: await mockApi.getOnlineHoursStats() };
+      }
+      
+      // Courses
+      if (url.includes('/api/courses') && config.method === 'get') {
+        throw { mockData: await mockApi.getCourses() };
+      }
+      
+      // Announcements
+      if (url.includes('/api/announcements') && config.method === 'get') {
+        throw { mockData: await mockApi.getAnnouncements() };
+      }
+      
+      // Assignments
+      if (url.includes('/api/assignments') && config.method === 'get') {
+        throw { mockData: await mockApi.getAssignments() };
+      }
+      
+      // Materials
+      if (url.includes('/api/materials') && config.method === 'get') {
+        throw { mockData: await mockApi.getMaterials() };
+      }
+      
+      // Resources
+      if (url.includes('/api/resources') && config.method === 'get') {
+        throw { mockData: await mockApi.getResources() };
+      }
+      
+      // Schedules
+      if (url.includes('/api/schedules') && config.method === 'get') {
+        throw { mockData: await mockApi.getSchedules() };
+      }
+      
+      // Discussions
+      if (url.includes('/api/discussions') && config.method === 'get') {
+        throw { mockData: await mockApi.getDiscussions() };
+      }
+      
+      // Activity logs
+      if (url.includes('/api/activity-logs') && config.method === 'get') {
+        throw { mockData: await mockApi.getActivityLogs() };
+      }
+      
+      // Enrollments
       if (url.includes('/api/enrollments') && config.method === 'get') {
-        const user = JSON.parse(localStorage.getItem('user'));
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
         throw { mockData: await mockApi.getEnrollments(user?.user_ID) };
       }
     }
@@ -61,7 +107,7 @@ api.interceptors.request.use(
 );
 
 // Intercept responses to handle mock data
-api.interceptors.response.use(
+axios.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.mockData) {
@@ -71,69 +117,76 @@ api.interceptors.response.use(
   }
 );
 
-// Override global fetch for demo mode
-const originalFetch = window.fetch;
-window.fetch = async function(...args) {
-  const [url, options] = args;
-  
-  if (isDemoMode() && typeof url === 'string' && url.includes('/api/')) {
-    // Dynamically import mockApi to avoid circular dependency
-    const { mockApi } = await import('../services/mockApi');
-    
-    // Extract endpoint from URL
-    const urlObj = new URL(url, window.location.origin);
-    const pathname = urlObj.pathname;
-    
-    // Return mock data based on endpoint
-    if (pathname.includes('/api/courses') && pathname.includes('/materials')) {
-      const courseId = pathname.match(/\/courses\/(\d+)/)?.[1];
-      const mockResponse = await mockApi.getMaterials(courseId ? parseInt(courseId) : null);
-      return new Response(JSON.stringify(mockResponse.data.materials), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      });
+// Also apply to the api instance
+api.interceptors.request.use(
+  async (config) => {
+    if (isDemoMode()) {
+      const mockApi = await getMockApi();
+      const url = config.url || '';
+      
+      // Same logic as above
+      if (url.includes('/api/dashboard/stats')) {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const role = user?.roles?.[0]?.role || 'student';
+        throw { mockData: await mockApi.getDashboardStats(user?.user_ID, role) };
+      }
+      
+      if (url.includes('/api/dashboard/online-hours-chart')) {
+        throw { mockData: await mockApi.getOnlineHoursChart() };
+      }
+      
+      if (url.includes('/api/dashboard/online-hours')) {
+        throw { mockData: await mockApi.getOnlineHoursStats() };
+      }
+      
+      if (url.includes('/api/courses') && config.method === 'get') {
+        throw { mockData: await mockApi.getCourses() };
+      }
+      
+      if (url.includes('/api/announcements') && config.method === 'get') {
+        throw { mockData: await mockApi.getAnnouncements() };
+      }
+      
+      if (url.includes('/api/assignments') && config.method === 'get') {
+        throw { mockData: await mockApi.getAssignments() };
+      }
+      
+      if (url.includes('/api/materials') && config.method === 'get') {
+        throw { mockData: await mockApi.getMaterials() };
+      }
+      
+      if (url.includes('/api/resources') && config.method === 'get') {
+        throw { mockData: await mockApi.getResources() };
+      }
+      
+      if (url.includes('/api/schedules') && config.method === 'get') {
+        throw { mockData: await mockApi.getSchedules() };
+      }
+      
+      if (url.includes('/api/discussions') && config.method === 'get') {
+        throw { mockData: await mockApi.getDiscussions() };
+      }
+      
+      if (url.includes('/api/activity-logs') && config.method === 'get') {
+        throw { mockData: await mockApi.getActivityLogs() };
+      }
+      
+      if (url.includes('/api/enrollments') && config.method === 'get') {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        throw { mockData: await mockApi.getEnrollments(user?.user_ID) };
+      }
     }
-    
-    if (pathname.includes('/api/courses')) {
-      const mockResponse = await mockApi.getCourses();
-      return new Response(JSON.stringify(mockResponse.data.courses), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-    
-    if (pathname.includes('/api/schedules')) {
-      const mockResponse = await mockApi.getSchedules();
-      return new Response(JSON.stringify(mockResponse.data.schedules), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-    
-    if (pathname.includes('/api/discussions')) {
-      const mockResponse = await mockApi.getDiscussions();
-      return new Response(JSON.stringify(mockResponse.data.discussions), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-    if (pathname.includes('/api/online-hours') || pathname.includes('/api/sessions')) {
-      const mockResponse = await mockApi.getOnlineHours('week');
-      return new Response(JSON.stringify(mockResponse.data), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      });
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.mockData) {
+      return Promise.resolve(error.mockData);
     }
-
-    if (pathname.includes('/api/activity-logs')) {
-      const mockResponse = await mockApi.getActivityLogs();
-      return new Response(JSON.stringify(mockResponse.data.logs), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
+    return Promise.reject(error);
   }
-  
-  return originalFetch.apply(this, args);
-};
+);

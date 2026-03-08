@@ -401,11 +401,6 @@ export const getDemoUser = (email) => {
   return null;
 };
 
-// Check if currently in demo mode
-export const isDemoMode = () => {
-  return localStorage.getItem('demoMode') === 'true';
-};
-
 // Dummy schedules
 export const dummySchedules = [
   {
