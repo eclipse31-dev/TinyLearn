@@ -29,8 +29,36 @@ export default function CourseCard({ course, onDelete, isDeletingId, onEnrollmen
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleEnrollment = async (e) => {
+  const handleEnroll = async (e) => {
     e.stopPropagation();
+    setEnrolling(true);
+
+    try {
+      const endpoint = `http://localhost:8000/api/courses/${courseId}/enroll`;
+
+      await axios.post(endpoint, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      setIsEnrolled(true);
+      if (onEnrollmentChange) {
+        onEnrollmentChange();
+      }
+    } catch (error) {
+      console.error('Enrollment error:', error);
+      alert(error.response?.data?.message || 'Failed to enroll in course');
+    } finally {
+      setEnrolling(false);
+    }
+  };
+
+  const handleUnenroll = async (e) => {
+    e.stopPropagation();
+    
+    if (!window.confirm('Are you sure you want to unenroll from this course?')) {
+      return;
+    }
+
     setEnrolling(true);
 
     try {
@@ -79,6 +107,20 @@ export default function CourseCard({ course, onDelete, isDeletingId, onEnrollmen
       </div>
 
       <div className="course-card-footer">
+        {isStudent && !isEnrolled && (
+          <button
+            className="btn-enroll"
+            onClick={handleEnroll}
+            disabled={enrolling}
+          >
+            {enrolling ? 'Enrolling...' : 'Enroll in Course'}
+          </button>
+        )}
+
+        {isStudent && isEnrolled && (
+          <span className="enrolled-badge">✓ Enrolled</span>
+        )}
+
         <div className="course-menu" ref={menuRef}>
           <button
             className="menu-button"
@@ -117,9 +159,9 @@ export default function CourseCard({ course, onDelete, isDeletingId, onEnrollmen
                 </>
               )}
               
-              {isStudent && (
+              {isStudent && isEnrolled && (
                 <button
-                  onClick={handleEnrollment}
+                  onClick={handleUnenroll}
                   disabled={enrolling}
                   className="unenroll-btn"
                 >
