@@ -117,26 +117,6 @@ export default function Login() {
               Sign up
             </Link>
           </p>
-
-          {/* Demo Mode Info */}
-          <div className="demo-mode-info">
-            <p className="demo-mode-title">🎭 Try Demo Mode (No Backend Required)</p>
-            <div className="demo-credentials-list">
-              <div className="demo-cred-item">
-                <span className="demo-role-badge student">Student</span>
-                <span className="demo-email-text">demo.student@tinylearn.com</span>
-              </div>
-              <div className="demo-cred-item">
-                <span className="demo-role-badge teacher">Teacher</span>
-                <span className="demo-email-text">demo.teacher@tinylearn.com</span>
-              </div>
-              <div className="demo-cred-item">
-                <span className="demo-role-badge admin">Admin</span>
-                <span className="demo-email-text">demo.admin@tinylearn.com</span>
-              </div>
-            </div>
-            <p className="demo-password-text">Password: <code>demo123</code></p>
-          </div>
         </div>
       </div>
     </div>
