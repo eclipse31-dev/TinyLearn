@@ -2,6 +2,7 @@ import { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { isDemoAccount, getDemoUser, demoCredentials } from '../../data/dummyData';
 import '../../styles/login.css';
 import backgroundImage from '../../assets/b_sakura-be-editors-637438-rel49a76f54.png';
 import logoImage from '../../assets/image-removebg-preview.png';
@@ -21,6 +22,28 @@ export default function Login() {
     setError('');
 
     try {
+      // Check if it's a demo account
+      if (isDemoAccount(email)) {
+        const demoUser = getDemoUser(email);
+        const validPassword = Object.values(demoCredentials).find(
+          cred => cred.email === email
+        )?.password;
+
+        if (password === validPassword) {
+          // Demo mode - no backend connection
+          login(demoUser, 'demo-token-' + demoUser.user_ID);
+          localStorage.setItem('demoMode', 'true');
+          navigate('/dashboard');
+          return;
+        } else {
+          setError('Invalid demo credentials. Use password: demo123');
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Regular login with backend
+      localStorage.removeItem('demoMode');
       const response = await axios.post(
         'http://localhost:8000/api/login',
         { email, password }
@@ -89,11 +112,31 @@ export default function Login() {
           </div>
 
           <p className="auth-footer">
-            Don’t have an account?{' '}
+            Don't have an account?{' '}
             <Link to="/signup" className="auth-link">
               Sign up
             </Link>
           </p>
+
+          {/* Demo Mode Info */}
+          <div className="demo-mode-info">
+            <p className="demo-mode-title">🎭 Try Demo Mode (No Backend Required)</p>
+            <div className="demo-credentials-list">
+              <div className="demo-cred-item">
+                <span className="demo-role-badge student">Student</span>
+                <span className="demo-email-text">demo.student@tinylearn.com</span>
+              </div>
+              <div className="demo-cred-item">
+                <span className="demo-role-badge teacher">Teacher</span>
+                <span className="demo-email-text">demo.teacher@tinylearn.com</span>
+              </div>
+              <div className="demo-cred-item">
+                <span className="demo-role-badge admin">Admin</span>
+                <span className="demo-email-text">demo.admin@tinylearn.com</span>
+              </div>
+            </div>
+            <p className="demo-password-text">Password: <code>demo123</code></p>
+          </div>
         </div>
       </div>
     </div>

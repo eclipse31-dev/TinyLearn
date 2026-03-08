@@ -390,3 +390,87 @@
     font-size: 0.75rem;
   }
 }
+
+/* Demo Mode Section */
+.demo-mode-info {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+  border: 2px dashed #3b82f6;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.demo-mode-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e40af;
+  margin-bottom: 0.75rem;
+}
+
+.demo-credentials-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.demo-cred-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.demo-role-badge {
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+.demo-role-badge.student {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.demo-role-badge.teacher {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+.demo-role-badge.admin {
+  background: #ede9fe;
+  color: #6b21a8;
+}
+
+.demo-email-text {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #374151;
+}
+
+.demo-password-text {
+  font-size: 0.85rem;
+  color: #1e40af;
+  margin: 0;
+}
+
+.demo-password-text code {
+  background: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  color: #1e40af;
+}
+
+@media (max-width: 480px) {
+  .demo-cred-item {
+    flex-direction: column;
+    gap: 0.25rem;
+    text-align: center;
+  }
+}
