@@ -362,6 +362,52 @@ class CourseController extends Controller
         }
     }
 
+    // Send course invitation via email
+    public function sendInvitation(Request $request, $id)
+    {
+        try {
+            $validated = $request->validate([
+                'emails' => 'required|array',
+                'emails.*' => 'required|email'
+            ]);
+
+            $course = Course::findOrFail($id);
+            $teacher = Auth::user();
+
+            // Check if user is the course creator or admin
+            if ($course->created_by !== $teacher->user_ID && !$teacher->roles->contains('role', 'admin')) {
+                return response()->json([
+                    'message' => 'You do not have permission to send invitations for this course'
+                ], 403);
+            }
+
+            $inviteUrl = env('APP_URL', 'http://localhost:3000') . '/courses';
+            $sentCount = 0;
+            $failedEmails = [];
+
+            foreach ($validated['emails'] as $email) {
+                try {
+                    \Mail::to($email)->send(new \App\Mail\CourseInvitation($course, $teacher, $inviteUrl));
+                    $sentCount++;
+                } catch (\Exception $e) {
+                    $failedEmails[] = $email;
+                    \Log::error("Failed to send invitation to {$email}: " . $e->getMessage());
+                }
+            }
+
+            return response()->json([
+                'message' => "Invitations sent successfully to {$sentCount} recipient(s)",
+                'sent_count' => $sentCount,
+                'failed_emails' => $failedEmails
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to send invitations',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     // Get class list (students and teachers)
     public function getClassList($id)
     {

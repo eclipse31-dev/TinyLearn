@@ -1695,3 +1695,39 @@
   background: rgba(96, 165, 250, 0.15);
   color: #60a5fa;
 }
+
+/* Invite Button */
+.btn-invite {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.btn-invite:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.course-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Dark mode */
+[data-theme="dark"] .btn-invite {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+[data-theme="dark"] .btn-invite:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}

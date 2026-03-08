@@ -1,0 +1,212 @@
+/* Invite Students Modal */
+.invite-modal {
+  max-width: 600px;
+}
+
+.course-name {
+  color: #6b7280;
+  font-size: 14px;
+  margin: 4px 0 0 0;
+}
+
+/* Class Code Display */
+.class-code-display {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 24px;
+  color: white;
+}
+
+.class-code-label {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
+.class-code-value {
+  font-size: 32px;
+  font-weight: bold;
+  font-family: monospace;
+  letter-spacing: 4px;
+  margin: 8px 0;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 12px 24px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.class-code-hint {
+  font-size: 13px;
+  opacity: 0.85;
+  margin: 8px 0 0 0;
+}
+
+/* Form Section */
+.form-section {
+  margin-bottom: 20px;
+}
+
+.form-section label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.form-hint {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+/* Email List */
+.email-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.email-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.email-icon {
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.email-input-group .form-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.email-input-group .form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.btn-remove-email {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  color: #ef4444;
+  flex-shrink: 0;
+}
+
+.btn-remove-email:hover {
+  background: #fef2f2;
+}
+
+/* Add Email Button */
+.btn-add-email {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #f3f4f6;
+  color: #374151;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-add-email:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+/* Success Message */
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  color: #16a34a;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.success-icon {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Dark Mode */
+[data-theme="dark"] .course-name {
+  color: #9ca3af;
+}
+
+[data-theme="dark"] .class-code-display {
+  background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 100%);
+}
+
+[data-theme="dark"] .form-section label {
+  color: #e5e7eb;
+}
+
+[data-theme="dark"] .form-hint {
+  color: #9ca3af;
+}
+
+[data-theme="dark"] .email-icon {
+  color: #6b7280;
+}
+
+[data-theme="dark"] .email-input-group .form-input {
+  background: #111827;
+  border-color: #374151;
+  color: #f9fafb;
+}
+
+[data-theme="dark"] .email-input-group .form-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="dark"] .btn-remove-email {
+  color: #f87171;
+}
+
+[data-theme="dark"] .btn-remove-email:hover {
+  background: #7f1d1d;
+}
+
+[data-theme="dark"] .btn-add-email {
+  background: #374151;
+  color: #e5e7eb;
+  border-color: #4b5563;
+}
+
+[data-theme="dark"] .btn-add-email:hover {
+  background: #4b5563;
+  border-color: #6b7280;
+}
+
+[data-theme="dark"] .success-message {
+  background: #064e3b;
+  border-color: #065f46;
+  color: #6ee7b7;
+}

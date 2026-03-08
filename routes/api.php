@@ -67,6 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/courses/enroll-with-code', [CourseController::class, 'enrollWithCode']);
     Route::post('/courses/{id}/enroll', [CourseController::class, 'enroll']);
     Route::post('/courses/{id}/unenroll', [CourseController::class, 'unenroll']);
+    Route::post('/courses/{id}/send-invitation', [CourseController::class, 'sendInvitation']);
     Route::get('/courses/{id}/class-list', [CourseController::class, 'getClassList']);
 
     // Announcement routes - CRUD operations

@@ -3,8 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DashboardLayout from '../../components/DashboardLayout';
 import ClassList from '../../components/ClassList';
+import InviteStudentsModal from '../../components/InviteStudentsModal';
 import { AuthContext } from '../../context/AuthContext';
-import { ArrowLeft, BookOpen, Users, MapPin, Edit, Trash2, Copy, Check } from 'lucide-react';
+import { ArrowLeft, BookOpen, Users, MapPin, Edit, Trash2, Copy, Check, Mail } from 'lucide-react';
 import '../../styles/courseDetail.css';
 import { API_BASE_URL } from '../../config/api';
 
@@ -23,6 +24,7 @@ export default function CourseDetail() {
   const [showClassList, setShowClassList] = useState(false);
   const [deleting, setDeleting] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   // Check if user is teacher or admin
   const canEdit = user?.roles?.[0]?.role === 'teacher' || user?.roles?.[0]?.role === 'admin';
@@ -208,6 +210,13 @@ export default function CourseDetail() {
             </div>
             {canEdit && (
               <div className="course-actions">
+                <button 
+                  onClick={() => setShowInviteModal(true)} 
+                  className="btn-invite"
+                >
+                  <Mail size={16} style={{ display: 'inline', marginRight: '6px' }} />
+                  Invite Students
+                </button>
                 <button onClick={() => navigate(`/courses/${id}/edit`)} className="btn-edit">
                   <Edit size={16} style={{ display: 'inline', marginRight: '6px' }} />
                   Edit
@@ -387,6 +396,13 @@ export default function CourseDetail() {
         courseId={id}
         isOpen={showClassList}
         onClose={() => setShowClassList(false)}
+      />
+
+      {/* Invite Students Modal */}
+      <InviteStudentsModal
+        isOpen={showInviteModal}
+        onClose={() => setShowInviteModal(false)}
+        course={course}
       />
     </DashboardLayout>
   );
