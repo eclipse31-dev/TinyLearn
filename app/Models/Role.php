@@ -22,7 +22,9 @@ class Role extends Model
             User::class,
             'user_roles',
             'role_id',
-            'user_id'
+            'user_id',
+            'role_ID',
+            'user_ID'
         );
     }
 }

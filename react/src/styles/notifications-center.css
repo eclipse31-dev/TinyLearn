@@ -75,6 +75,12 @@
   margin: 0;
 }
 
+.notifications-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .mark-all-read {
   background: none;
   border: none;
@@ -89,6 +95,22 @@
 
 .mark-all-read:hover {
   background: #fef3f9;
+}
+
+.delete-all-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.delete-all-btn:hover {
+  background: #fee2e2;
 }
 
 .notifications-list {
@@ -157,13 +179,49 @@
   color: #a0aec0;
 }
 
-.unread-dot {
-  width: 8px;
-  height: 8px;
-  background: #ec4899;
-  border-radius: 50%;
+.notification-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   flex-shrink: 0;
-  margin-top: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.notification-item:hover .notification-actions {
+  opacity: 1;
+}
+
+.mark-read-btn {
+  background: none;
+  border: none;
+  color: #10b981;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.mark-read-btn:hover {
+  background: #d1fae5;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.delete-btn:hover {
+  background: #fee2e2;
 }
 
 .notifications-footer {
@@ -193,4 +251,140 @@
     width: 320px;
     right: -1rem;
   }
+}
+
+
+/* Invitation Actions */
+.invitation-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.btn-accept-invitation,
+.btn-reject-invitation {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-accept-invitation {
+  background: #10b981;
+  color: white;
+}
+
+.btn-accept-invitation:hover {
+  background: #059669;
+}
+
+.btn-reject-invitation {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-reject-invitation:hover {
+  background: #dc2626;
+}
+
+.unread-dot {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background: #ec4899;
+  border-radius: 50%;
+}
+
+/* Dark mode */
+.dark-mode .notifications-trigger:hover {
+  background: var(--bg-tertiary);
+}
+
+.dark-mode .notifications-dropdown {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .notifications-header {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dark-mode .notifications-header h3 {
+  color: var(--text-primary);
+}
+
+.dark-mode .mark-all-read {
+  color: #ec4899;
+}
+
+.dark-mode .mark-all-read:hover {
+  background: rgba(236, 72, 153, 0.1);
+}
+
+.dark-mode .delete-all-btn {
+  color: #ef4444;
+}
+
+.dark-mode .delete-all-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.dark-mode .notification-item {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dark-mode .notification-item:hover {
+  background: var(--bg-tertiary);
+}
+
+.dark-mode .notification-item.unread {
+  background: rgba(236, 72, 153, 0.1);
+}
+
+.dark-mode .notification-content h4 {
+  color: var(--text-primary);
+}
+
+.dark-mode .notification-content p {
+  color: var(--text-secondary);
+}
+
+.dark-mode .notification-time {
+  color: var(--text-muted);
+}
+
+.dark-mode .mark-read-btn {
+  color: #10b981;
+}
+
+.dark-mode .mark-read-btn:hover {
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.dark-mode .delete-btn {
+  color: #ef4444;
+}
+
+.dark-mode .delete-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.dark-mode .notifications-footer {
+  border-top: 1px solid var(--border-color);
+}
+
+.dark-mode .view-all-btn {
+  color: #ec4899;
+}
+
+.dark-mode .view-all-btn:hover {
+  background: rgba(236, 72, 153, 0.1);
 }

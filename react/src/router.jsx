@@ -1,8 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Login, Signup, NotFound, SettingsPage } from "./views/shared";
+import { Signup, NotFound, SettingsPage } from "./views/shared";
+import RoleSelection from "./views/shared/RoleSelection";
+import StudentLogin from "./views/shared/StudentLogin";
+import TeacherLogin from "./views/shared/TeacherLogin";
+import AdminLogin from "./views/shared/AdminLogin";
+import GoogleCallback from "./views/shared/GoogleCallback";
 import HomePage from "./views/HomePage";
 import { CoursesPage, CourseDetail, CreateCoursePage, EditCoursePage, CreateAnnouncementPage, CreateAssignmentPage, CreateResourcePage, GradeSubmissionsPage } from "./views/teacher";
 import { ResourcesPage, SchedulesPage, DiscussionPage, AssignmentsPage, SubmitAssignmentPage } from "./views/student";
+import { Dashboard as AdminDashboard, UserManagement } from "./views/admin";
 import { PrivateRoute } from "./components/PrivateRoute";
 
 
@@ -13,7 +19,23 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Login />,
+    element: <RoleSelection />,
+  },
+  {
+    path: "/login/student",
+    element: <StudentLogin />,
+  },
+  {
+    path: "/login/teacher",
+    element: <TeacherLogin />,
+  },
+  {
+    path: "/admin-login",
+    element: <AdminLogin />,
+  },
+  {
+    path: "/auth/google/callback",
+    element: <GoogleCallback />,
   },
   {
     path: "/signup",
@@ -21,7 +43,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <PrivateRoute><HomePage /></PrivateRoute>,
+    element: <HomePage />,
   },
   {
     path: "/courses",
@@ -78,6 +100,14 @@ const router = createBrowserRouter([
   {
     path: "/settings",
     element: <PrivateRoute><SettingsPage /></PrivateRoute>,
+  },
+  {
+    path: "/admin/dashboard",
+    element: <PrivateRoute><AdminDashboard /></PrivateRoute>,
+  },
+  {
+    path: "/admin/users",
+    element: <PrivateRoute><UserManagement /></PrivateRoute>,
   },
   {
     path: "*",

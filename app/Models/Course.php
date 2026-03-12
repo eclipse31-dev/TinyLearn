@@ -19,6 +19,7 @@ class Course extends Model
         'status',
         'created_by',
         'header_image_url',
+        'is_private',
     ];
     protected $casts = [
         'created_at' => 'datetime',

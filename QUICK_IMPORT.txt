@@ -1,0 +1,85 @@
+╔════════════════════════════════════════════════════════════════╗
+║                                                                ║
+║          XAMPP DATABASE IMPORT - QUICK REFERENCE               ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝
+
+📋 WHAT YOU NEED:
+   ✓ XAMPP installed
+   ✓ create_database.sql file (in your project folder)
+   ✓ 2 minutes of your time
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 QUICK STEPS:
+
+1. START XAMPP
+   → Open XAMPP Control Panel
+   → Start Apache
+   → Start MySQL
+
+2. OPEN phpMyAdmin
+   → Go to: http://localhost/phpmyadmin
+
+3. IMPORT FILE
+   → Click "Import" tab
+   → Choose File: create_database.sql
+   → Click "Go"
+
+4. VERIFY
+   → See "tinylearn" database in left sidebar
+   → See 25 tables
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ WHAT YOU GET:
+
+Database: tinylearn
+Tables: 25
+Users: 2 (admin + student)
+Roles: 3 (admin, teacher, student)
+Courses: 1 test course
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔑 TEST CREDENTIALS:
+
+Admin:
+  📧 admin@example.com
+  🔒 password
+
+Student:
+  📧 kusa_230000002006@uic.edu.ph
+  🔒 password
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚡ ALTERNATIVE (Command Line):
+
+C:\xampp\mysql\bin\mysql -u root tinylearn < create_database.sql
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 AFTER IMPORT:
+
+1. Update .env:
+   DB_DATABASE=tinylearn
+
+2. Start services:
+   php artisan serve
+   php artisan reverb:start
+   cd react && npm run dev
+
+3. Login:
+   http://localhost:5173
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🆘 HELP:
+
+Problem? Read: IMPORT_TO_XAMPP.md
+Detailed steps: XAMPP_IMPORT_STEPS.txt
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✨ READY TO USE! 🚀

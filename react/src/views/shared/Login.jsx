@@ -1,14 +1,18 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import GoogleLoginButton from '../../components/GoogleLoginButton';
 import '../../styles/login.css';
+import '../../styles/google-login.css';
 import backgroundImage from '../../assets/b_sakura-be-editors-637438-rel49a76f54.png';
 import logoImage from '../../assets/image-removebg-preview.png';
 
 export default function Login() {
+  const { role: roleParam } = useParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role] = useState(roleParam || 'student');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -23,8 +27,16 @@ export default function Login() {
     try {
       const response = await axios.post(
         'http://localhost:8000/api/login',
-        { email, password }
+        { email, password, role }
       );
+
+      // Verify the user has the selected role
+      const userRoles = response.data.user.roles.map(r => r.role.toLowerCase());
+      if (!userRoles.includes(role.toLowerCase())) {
+        setError(`You don't have ${role} access. Please select the correct role.`);
+        setLoading(false);
+        return;
+      }
 
       login(response.data.user, response.data.token);
       navigate('/dashboard');
@@ -36,6 +48,10 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getRoleTitle = () => {
+    return role.charAt(0).toUpperCase() + role.slice(1);
   };
 
   return (
@@ -52,7 +68,7 @@ export default function Login() {
             <div className="auth-logo">
               <img src={logoImage} alt="Logo" />
             </div>
-            <h1 className="auth-title">Login</h1>
+            <h1 className="auth-title">{getRoleTitle()} Login</h1>
             <p className="auth-subtitle">Welcome back</p>
           </div>
 
@@ -60,6 +76,10 @@ export default function Login() {
             {error && <p className="error-text">{error}</p>}
 
             <form onSubmit={handleSubmit} className="auth-form">
+              <GoogleLoginButton role={role} />
+
+              <div className="google-login-divider">or</div>
+
               <div className="form-group">
                 <label>Email</label>
                 <input
@@ -92,6 +112,12 @@ export default function Login() {
             Don't have an account?{' '}
             <Link to="/signup" className="auth-link">
               Sign up
+            </Link>
+          </p>
+
+          <p className="auth-footer">
+            <Link to="/login" className="auth-link">
+              Back to Login Options
             </Link>
           </p>
         </div>

@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\ModuleController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\AttachmentController;
+use App\Http\Controllers\Api\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+
+// Google OAuth API endpoint
+Route::get('/auth/google/data', [\App\Http\Controllers\Api\GoogleAuthController::class, 'getAuthData']);
 
 // Public course routes
 Route::get('/courses', [CourseController::class, 'index']);
@@ -175,4 +179,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/attachments/{id}', [AttachmentController::class, 'show']);
     Route::get('/attachments/{id}/download', [AttachmentController::class, 'download']);
     Route::delete('/attachments/{id}', [AttachmentController::class, 'destroy']);
+
+    // Notification routes
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::put('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy']);
+    Route::delete('/notifications', [NotificationController::class, 'destroyAll']);
 });

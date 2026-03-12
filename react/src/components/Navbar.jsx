@@ -11,6 +11,7 @@ export default function Navbar() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const dropdownRef = useRef(null);
 
   const firstName = useMemo(() => {
@@ -22,6 +23,13 @@ export default function Navbar() {
     if (user?.FName) return user.FName.charAt(0).toUpperCase();
     if (user?.username) return user.username.charAt(0).toUpperCase();
     return '?';
+  }, [user]);
+
+  const avatarImage = useMemo(() => {
+    // Prefer Google avatar if available
+    if (user?.google_avatar) return user.google_avatar;
+    if (user?.avatar) return user.avatar;
+    return null;
   }, [user]);
 
   const handleLogout = () => {
@@ -62,8 +70,18 @@ export default function Navbar() {
             <button 
               className="user-avatar-btn"
               onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              title={`${user.FName} ${user.LName}`}
             >
-              {avatarLetter}
+              {avatarImage && !imageError ? (
+                <img 
+                  src={avatarImage} 
+                  alt={`${user.FName} ${user.LName}`}
+                  className="user-avatar-image"
+                  onError={() => setImageError(true)}
+                />
+              ) : (
+                <span className="user-avatar-letter">{avatarLetter}</span>
+              )}
             </button>
 
             {isUserMenuOpen && (

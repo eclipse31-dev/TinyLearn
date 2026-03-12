@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // This will use the environment variable in production, or localhost in development
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 // Helper to get full API URL
 export const getApiUrl = (path) => {

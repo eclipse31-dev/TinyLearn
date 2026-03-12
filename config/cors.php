@@ -20,8 +20,7 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        'http://localhost:3000', 
-        'http://localhost:3001',
+        'http://localhost:5173',
         'https://vite-react-z6ty.vercel.app',
     ],
 

@@ -17,25 +17,57 @@ class CourseController extends Controller
     {
         try {
             $userId = Auth::id();
+            $user = Auth::user();
             
-            $courses = Course::with('creator')
-                ->withCount('enrollments')
-                ->orderBy('title')
-                ->get()
-                ->map(function ($course) use ($userId) {
-                    $isEnrolled = false;
-                    if ($userId) {
-                        $isEnrolled = \App\Models\Enrollment::where('course_ID', $course->course_ID)
-                            ->where('user_ID', $userId)
-                            ->exists();
-                    }
-                    
-                    return [
-                        ...$course->toArray(),
-                        'students_enrolled' => $course->enrollments_count,
-                        'is_enrolled' => $isEnrolled
-                    ];
-                });
+            // Teachers and admins see all courses
+            if ($user && ($user->hasRole('teacher') || $user->hasRole('admin'))) {
+                $courses = Course::with('creator')
+                    ->withCount('enrollments')
+                    ->orderBy('title')
+                    ->get()
+                    ->map(function ($course) use ($userId) {
+                        $isEnrolled = false;
+                        if ($userId) {
+                            $isEnrolled = \App\Models\Enrollment::where('course_ID', $course->course_ID)
+                                ->where('user_ID', $userId)
+                                ->whereIn('status', ['active', 'accepted'])
+                                ->exists();
+                        }
+                        
+                        return [
+                            ...$course->toArray(),
+                            'students_enrolled' => $course->enrollments_count,
+                            'is_enrolled' => $isEnrolled
+                        ];
+                    });
+            } else {
+                // Students only see public courses or courses they're invited to
+                $courses = Course::with('creator')
+                    ->withCount('enrollments')
+                    ->where(function ($query) use ($userId) {
+                        $query->where('is_private', false)
+                            ->orWhereHas('enrollments', function ($q) use ($userId) {
+                                $q->where('user_ID', $userId);
+                            });
+                    })
+                    ->orderBy('title')
+                    ->get()
+                    ->map(function ($course) use ($userId) {
+                        $isEnrolled = false;
+                        if ($userId) {
+                            $isEnrolled = \App\Models\Enrollment::where('course_ID', $course->course_ID)
+                                ->where('user_ID', $userId)
+                                ->whereIn('status', ['active', 'accepted'])
+                                ->exists();
+                        }
+                        
+                        return [
+                            ...$course->toArray(),
+                            'students_enrolled' => $course->enrollments_count,
+                            'is_enrolled' => $isEnrolled
+                        ];
+                    });
+            }
             
             return response()->json($courses);
         } catch (\Exception $e) {
@@ -69,6 +101,7 @@ class CourseController extends Controller
             'description' => 'nullable|string',
             'status' => 'nullable|in:draft,active,archived',
             'header_image_url' => 'nullable|string',
+            'is_private' => 'nullable|boolean',
             'has_schedule' => 'nullable|boolean',
             'days_of_week' => 'nullable|array',
             'start_time' => 'nullable|date_format:H:i',
@@ -94,6 +127,7 @@ class CourseController extends Controller
         $courseData['slug'] = Str::slug($courseData['title']);
         $courseData['course_code'] = 'C' . strtoupper(Str::random(6));
         $courseData['status'] = $courseData['status'] ?? 'draft';
+        $courseData['is_private'] = $courseData['is_private'] ?? true;
         $courseData['created_by'] = Auth::id();
 
         $course = Course::create($courseData);
@@ -130,6 +164,7 @@ class CourseController extends Controller
             'description' => 'nullable|string',
             'status' => 'nullable|in:draft,active,archived',
             'header_image_url' => 'nullable|string',
+            'is_private' => 'nullable|boolean',
             'has_schedule' => 'nullable|boolean',
             'days_of_week' => 'nullable|array',
             'start_time' => 'nullable|date_format:H:i',
@@ -316,7 +351,60 @@ class CourseController extends Controller
                 'course_ID' => $course->course_ID,
                 'user_ID' => $userId,
                 'enrollment_date' => now(),
-                'status' => 'active'
+                'status' => 'active',
+                'enrollment_type' => 'self'
+            ]);
+
+            return response()->json([
+                'message' => 'Successfully enrolled in course',
+                'course' => $course->load('creator'),
+                'enrolled' => true
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to enroll in course',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // Direct enroll endpoint (for accepting invitations)
+    public function enroll($id)
+    {
+        try {
+            $userId = Auth::id();
+            $course = Course::findOrFail($id);
+
+            // Check if already enrolled
+            $existingEnrollment = \App\Models\Enrollment::where('course_ID', $id)
+                ->where('user_ID', $userId)
+                ->first();
+
+            if ($existingEnrollment) {
+                if ($existingEnrollment->status === 'active' || $existingEnrollment->status === 'accepted') {
+                    return response()->json([
+                        'message' => 'You are already enrolled in this course',
+                        'course' => $course
+                    ], 400);
+                }
+                // If invited, update status to accepted
+                if ($existingEnrollment->status === 'invited') {
+                    $existingEnrollment->update(['status' => 'accepted']);
+                    return response()->json([
+                        'message' => 'Successfully accepted course invitation',
+                        'course' => $course->load('creator'),
+                        'enrolled' => true
+                    ]);
+                }
+            }
+
+            // Create enrollment
+            \App\Models\Enrollment::create([
+                'course_ID' => $id,
+                'user_ID' => $userId,
+                'enrolled_at' => now(),
+                'status' => 'active',
+                'enrollment_type' => 'self'
             ]);
 
             return response()->json([
@@ -362,43 +450,75 @@ class CourseController extends Controller
         }
     }
 
-    // Send course invitation via email
+    // Send course invitation via notification
     public function sendInvitation(Request $request, $id)
     {
         try {
             $validated = $request->validate([
-                'emails' => 'required|array',
-                'emails.*' => 'required|email'
+                'user_ids' => 'required|array',
+                'user_ids.*' => 'required|integer|exists:users,user_ID'
             ]);
 
             $course = Course::findOrFail($id);
             $teacher = Auth::user();
 
             // Check if user is the course creator or admin
-            if ($course->created_by !== $teacher->user_ID && !$teacher->roles->contains('role', 'admin')) {
+            if ($course->created_by !== $teacher->user_ID && !$teacher->hasRole('admin')) {
                 return response()->json([
                     'message' => 'You do not have permission to send invitations for this course'
                 ], 403);
             }
 
-            $inviteUrl = env('APP_URL', 'http://localhost:3000') . '/courses';
-            $sentCount = 0;
-            $failedEmails = [];
+            $invitedCount = 0;
+            $failedUsers = [];
 
-            foreach ($validated['emails'] as $email) {
+            foreach ($validated['user_ids'] as $userId) {
                 try {
-                    \Mail::to($email)->send(new \App\Mail\CourseInvitation($course, $teacher, $inviteUrl));
-                    $sentCount++;
+                    // Check if already enrolled
+                    $existingEnrollment = \App\Models\Enrollment::where('course_ID', $id)
+                        ->where('user_ID', $userId)
+                        ->first();
+
+                    if ($existingEnrollment) {
+                        $failedUsers[] = $userId;
+                        continue;
+                    }
+
+                    // Create invitation enrollment
+                    \App\Models\Enrollment::create([
+                        'course_ID' => $id,
+                        'user_ID' => $userId,
+                        'enrolled_at' => now(),
+                        'status' => 'invited',
+                        'enrollment_type' => 'invited'
+                    ]);
+
+                    // Create notification
+                    \App\Models\Notification::create([
+                        'user_id' => $userId,
+                        'type' => 'course_invitation',
+                        'title' => 'Course Invitation',
+                        'message' => "{$teacher->FName} {$teacher->LName} invited you to join {$course->title}",
+                        'action_url' => "/courses/{$id}",
+                        'data' => [
+                            'course_id' => $id,
+                            'course_title' => $course->title,
+                            'invited_by' => $teacher->user_ID,
+                            'invited_by_name' => "{$teacher->FName} {$teacher->LName}"
+                        ]
+                    ]);
+
+                    $invitedCount++;
                 } catch (\Exception $e) {
-                    $failedEmails[] = $email;
-                    \Log::error("Failed to send invitation to {$email}: " . $e->getMessage());
+                    $failedUsers[] = $userId;
+                    \Log::error("Failed to invite user {$userId}: " . $e->getMessage());
                 }
             }
 
             return response()->json([
-                'message' => "Invitations sent successfully to {$sentCount} recipient(s)",
-                'sent_count' => $sentCount,
-                'failed_emails' => $failedEmails
+                'message' => "Invitations sent successfully to {$invitedCount} student(s)",
+                'invited_count' => $invitedCount,
+                'failed_users' => $failedUsers
             ]);
         } catch (\Exception $e) {
             return response()->json([

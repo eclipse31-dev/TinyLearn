@@ -13,19 +13,24 @@ export function AuthProvider({ children }) {
     const savedToken = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
     
+    console.log('AuthContext: Initializing, savedToken:', savedToken ? 'exists' : 'missing');
+    
     if (savedToken && savedUser) {
+      console.log('AuthContext: Setting token and user from localStorage');
       setToken(savedToken);
       setUser(JSON.parse(savedUser));
       // Set the token in axios headers globally
       axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
     }
     
+    console.log('AuthContext: Setting loading to false');
     setLoading(false);
   }, []);
 
   // Update axios headers whenever token changes
   useEffect(() => {
     if (token) {
+      console.log('AuthContext: Token updated, setting axios headers');
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } else {
       delete axios.defaults.headers.common['Authorization'];
@@ -33,11 +38,13 @@ export function AuthProvider({ children }) {
   }, [token]);
 
   const login = (userData, authToken) => {
+    console.log('AuthContext: login() called with token:', authToken ? 'exists' : 'missing');
     setUser(userData);
     setToken(authToken);
     localStorage.setItem('token', authToken);
     localStorage.setItem('user', JSON.stringify(userData));
     axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
+    console.log('AuthContext: login() complete, token set');
   };
 
   const logout = () => {

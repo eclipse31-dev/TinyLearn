@@ -87,6 +87,19 @@
   color: #ec4899;
 }
 
+.dark-mode .user-avatar-btn {
+  background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+  border-color: var(--border-color);
+}
+
+.dark-mode .user-avatar-btn:hover {
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+}
+
+.dark-mode .user-avatar-image {
+  border: 2px solid var(--border-color);
+}
+
 .dark-mode .search-box {
   background-color: var(--bg-tertiary);
   border: 1px solid var(--border-color);
@@ -678,9 +691,50 @@
   color: var(--text-secondary);
 }
 
-/* Ensure all text is visible */
-.dark-mode * {
-  border-color: var(--border-color);
+/* Role Selection Page */
+.dark-mode .role-selection-page {
+  background: var(--bg-primary);
+}
+
+.dark-mode .role-selection-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .role-option {
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.dark-mode .role-option:hover {
+  border-color: #ec4899;
+  background: rgba(236, 72, 153, 0.1);
+}
+
+.dark-mode .role-option-icon {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .role-option:hover .role-option-icon {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.dark-mode .role-option-content h3 {
+  color: var(--text-primary);
+}
+
+.dark-mode .role-option-content p {
+  color: var(--text-secondary);
+}
+
+.dark-mode .role-option:hover .role-option-content h3 {
+  color: #ec4899;
+}
+
+.dark-mode .role-option:hover .role-option-content p {
+  color: var(--text-secondary);
 }
 
 .dark-mode a {
@@ -875,4 +929,437 @@
 .dark-mode .auth-page input[type="radio"] {
   background: white !important;
   border: 1px solid #cbd5e0 !important;
+}
+
+
+/* Google Login Button */
+.dark-mode .google-login-btn {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.dark-mode .google-login-btn:hover {
+  background: var(--bg-secondary);
+  border-color: #ec4899;
+}
+
+.dark-mode .google-login-divider {
+  color: var(--text-muted);
+}
+
+.dark-mode .google-login-divider::before,
+.dark-mode .google-login-divider::after {
+  background: var(--border-color);
+}
+
+/* Theme Toggle */
+.dark-mode .theme-toggle {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.dark-mode .theme-toggle:hover {
+  background: var(--bg-secondary);
+}
+
+/* Online Users */
+.dark-mode .online-users-btn {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.dark-mode .online-users-dropdown {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .online-user-item {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .online-user-name {
+  color: var(--text-primary);
+}
+
+.dark-mode .online-user-status {
+  color: var(--text-secondary);
+}
+
+/* Notifications Center */
+.dark-mode .notifications-btn {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.dark-mode .notifications-dropdown {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .notification-list-item {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .notification-list-item:hover {
+  background: var(--bg-secondary);
+}
+
+.dark-mode .notification-title {
+  color: var(--text-primary);
+}
+
+.dark-mode .notification-message {
+  color: var(--text-secondary);
+}
+
+.dark-mode .notification-time {
+  color: var(--text-muted);
+}
+
+/* Footer */
+.dark-mode .footer {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.dark-mode .footer a {
+  color: #ec4899;
+}
+
+.dark-mode .footer a:hover {
+  color: #db2777;
+}
+
+/* Ensure all text is visible */
+.dark-mode * {
+  border-color: var(--border-color);
+}
+
+.dark-mode a {
+  color: #ec4899;
+}
+
+.dark-mode a:hover {
+  color: #db2777;
+}
+
+
+/* Online Hours Statistics */
+.dark-mode .online-hours-stats {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .online-hours-stats h3 {
+  color: var(--text-primary);
+}
+
+.dark-mode .online-hours-stats p {
+  color: var(--text-secondary);
+}
+
+.dark-mode .online-hours-header {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dark-mode .online-hours-header h3 {
+  color: var(--text-primary);
+}
+
+.dark-mode .online-hours-header p {
+  color: var(--text-secondary);
+}
+
+.dark-mode .user-hours-item {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .user-hours-item:hover {
+  background: var(--bg-secondary);
+}
+
+.dark-mode .user-hours-name {
+  color: var(--text-primary);
+}
+
+.dark-mode .user-hours-role {
+  background: rgba(236, 72, 153, 0.1);
+  color: #ec4899;
+}
+
+.dark-mode .user-hours-sessions {
+  color: var(--text-secondary);
+}
+
+.dark-mode .user-hours-time {
+  color: #ec4899;
+}
+
+.dark-mode .user-hours-label {
+  color: var(--text-muted);
+}
+
+/* Filters Section */
+.dark-mode .filters-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .filters-section h3 {
+  color: var(--text-primary);
+}
+
+.dark-mode .filter-divider {
+  background: var(--border-color);
+}
+
+.dark-mode .filter-item {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .filter-item label {
+  color: var(--text-primary);
+}
+
+.dark-mode .filter-item input[type="checkbox"],
+.dark-mode .filter-item input[type="radio"] {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .filter-item input[type="text"],
+.dark-mode .filter-item input[type="date"],
+.dark-mode .filter-item select {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .filter-item input::placeholder {
+  color: var(--text-muted);
+}
+
+.dark-mode .filter-count {
+  color: var(--text-secondary);
+}
+
+/* Discussions Section */
+.dark-mode .discussions-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .discussions-section h3 {
+  color: var(--text-primary);
+}
+
+.dark-mode .no-discussions {
+  color: var(--text-muted);
+}
+
+.dark-mode .discussion-item {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .discussion-item:hover {
+  background: var(--bg-secondary);
+}
+
+.dark-mode .discussion-title {
+  color: var(--text-primary);
+}
+
+.dark-mode .discussion-author {
+  color: var(--text-secondary);
+}
+
+.dark-mode .discussion-date {
+  color: var(--text-muted);
+}
+
+.dark-mode .discussion-replies {
+  color: var(--text-secondary);
+}
+
+.dark-mode .discussion-icon {
+  color: var(--text-muted);
+}
+
+/* Schedules Section */
+.dark-mode .schedules-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .schedules-section h3 {
+  color: var(--text-primary);
+}
+
+.dark-mode .schedules-section p {
+  color: var(--text-secondary);
+}
+
+.dark-mode .schedule-header {
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dark-mode .schedule-header button {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .schedule-header button:hover {
+  background: var(--bg-tertiary);
+}
+
+.dark-mode .schedule-nav {
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dark-mode .schedule-nav button {
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+}
+
+.dark-mode .schedule-nav button:hover {
+  color: var(--text-primary);
+}
+
+.dark-mode .schedule-nav button.active {
+  color: #ec4899;
+  border-bottom: 2px solid #ec4899;
+}
+
+.dark-mode .schedule-grid {
+  background: var(--bg-secondary);
+}
+
+.dark-mode .schedule-time-slot {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.dark-mode .schedule-day-header {
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.dark-mode .schedule-day-number {
+  color: #ec4899;
+}
+
+.dark-mode .schedule-event {
+  background: rgba(236, 72, 153, 0.2);
+  border: 1px solid #ec4899;
+  color: var(--text-primary);
+}
+
+.dark-mode .schedule-event:hover {
+  background: rgba(236, 72, 153, 0.3);
+}
+
+.dark-mode .new-schedule-btn {
+  background: #ec4899;
+  color: white;
+  border: none;
+}
+
+.dark-mode .new-schedule-btn:hover {
+  background: #db2777;
+}
+
+/* Online Hours Chart */
+.dark-mode .online-hours-chart {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .chart-header {
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dark-mode .chart-header h3 {
+  color: var(--text-primary);
+}
+
+.dark-mode .chart-header p {
+  color: var(--text-secondary);
+}
+
+.dark-mode .chart-canvas {
+  background: var(--bg-secondary);
+}
+
+/* Period Selector */
+.dark-mode .period-selector {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .period-selector button {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.dark-mode .period-selector button:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.dark-mode .period-selector button.active {
+  background: #ec4899;
+  color: white;
+  border-color: #ec4899;
+}
+
+/* Live Status Badge */
+.dark-mode .live-badge {
+  background: #10b981;
+  color: white;
+}
+
+.dark-mode .live-dot {
+  background: #10b981;
+}
+
+/* User Avatar in Lists */
+.dark-mode .user-avatar {
+  background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+  color: white;
+}
+
+.dark-mode .user-avatar img {
+  border: 2px solid var(--border-color);
+}
+
+/* Empty State Messages */
+.dark-mode .empty-state-icon {
+  color: var(--text-muted);
+}
+
+.dark-mode .empty-state-text {
+  color: var(--text-secondary);
+}
+
+.dark-mode .empty-state-action {
+  color: #ec4899;
 }

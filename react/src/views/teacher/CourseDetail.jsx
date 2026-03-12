@@ -2,7 +2,6 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DashboardLayout from '../../components/DashboardLayout';
-import ClassList from '../../components/ClassList';
 import InviteStudentsModal from '../../components/InviteStudentsModal';
 import { AuthContext } from '../../context/AuthContext';
 import { ArrowLeft, BookOpen, Users, MapPin, Edit, Trash2, Copy, Check, Mail } from 'lucide-react';
@@ -21,7 +20,6 @@ export default function CourseDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('announcements');
-  const [showClassList, setShowClassList] = useState(false);
   const [deleting, setDeleting] = useState(null);
   const [copied, setCopied] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
@@ -185,19 +183,21 @@ export default function CourseDetail() {
             <div>
               <h1>{course.title}</h1>
               <div className="course-meta">
-                <span className="class-code-container">
-                  <BookOpen size={16} style={{ display: 'inline', marginRight: '4px', color: '#ec4899' }} />
-                  Class Code: <strong>{course.course_code || 'N/A'}</strong>
-                  {canEdit && course.course_code && (
-                    <button 
-                      className="btn-copy-code"
-                      onClick={handleCopyClassCode}
-                      title="Copy class code"
-                    >
-                      {copied ? <Check size={14} /> : <Copy size={14} />}
-                    </button>
-                  )}
-                </span>
+                {canEdit && (
+                  <span className="class-code-container">
+                    <BookOpen size={16} style={{ display: 'inline', marginRight: '4px', color: '#ec4899' }} />
+                    Class Code: <strong>{course.course_code || 'N/A'}</strong>
+                    {course.course_code && (
+                      <button 
+                        className="btn-copy-code"
+                        onClick={handleCopyClassCode}
+                        title="Copy class code"
+                      >
+                        {copied ? <Check size={14} /> : <Copy size={14} />}
+                      </button>
+                    )}
+                  </span>
+                )}
                 <span>
                   <Users size={16} style={{ display: 'inline', marginRight: '4px', color: '#ec4899' }} />
                   {course.students_enrolled || 0} Students
@@ -230,16 +230,7 @@ export default function CourseDetail() {
           <p>{course.description || 'No description provided.'}</p>
         </div>
 
-        {/* View Class Button */}
-        <div className="view-class-section">
-          <button 
-            className="btn-view-class"
-            onClick={() => setShowClassList(true)}
-          >
-            <Users size={20} style={{ marginRight: '8px' }} />
-            View Class
-          </button>
-        </div>
+
 
         {course.schedules && course.schedules.length > 0 && (
           <div className="course-schedules">
@@ -391,18 +382,12 @@ export default function CourseDetail() {
 
       </div>
 
-      {/* ClassList Modal */}
-      <ClassList 
-        courseId={id}
-        isOpen={showClassList}
-        onClose={() => setShowClassList(false)}
-      />
-
       {/* Invite Students Modal */}
       <InviteStudentsModal
         isOpen={showInviteModal}
         onClose={() => setShowInviteModal(false)}
-        course={course}
+        courseId={id}
+        onSuccess={() => alert('Invitations sent successfully!')}
       />
     </DashboardLayout>
   );

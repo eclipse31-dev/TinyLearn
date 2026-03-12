@@ -87,7 +87,7 @@
   width: clamp(36px, 8vw, 40px);
   height: clamp(36px, 8vw, 40px);
   border-radius: 50%;
-  border: none;
+  border: 2px solid white;
   color: white;
   font-weight: bold;
   font-size: clamp(0.85rem, 3vw, 1rem);
@@ -98,11 +98,31 @@
   box-shadow: 0 2px 8px rgba(233, 30, 140, 0.2);
   transition: all 0.2s ease;
   min-height: 36px;
+  padding: 0;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .user-avatar-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(233, 30, 140, 0.3);
+}
+
+.user-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.user-avatar-letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: inherit;
 }
 
 .user-dropdown {

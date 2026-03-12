@@ -65,46 +65,9 @@ export default function StudentDashboard() {
   return (
     <DashboardLayout>
       <div className="home-page">
-        {/* Page Header */}
-        <div className="page-header-welcome">
-          <div>
-            <p className="welcome-message">
-              <Hand size={24} className="waving-hand" color="#3b82f6" />
-              Welcome back, <span className="user-name-animated">{user?.FName} {user?.LName}</span>!
-            </p>
-            <h1>Student Dashboard</h1>
-          </div>
-          <button 
-            className="btn-join-class"
-            onClick={() => setShowJoinModal(true)}
-          >
-            <Plus size={20} />
-            Join Class
-          </button>
-        </div>
-
-        {/* Empty State for New Students */}
-        {hasNoEnrollments && (
-          <div className="empty-enrollment-state-simple">
-            <h1 className="empty-state-title-simple">Welcome to TinyLearn!</h1>
-            <p className="empty-state-text">You haven't enrolled in any courses yet.</p>
-            <p className="empty-state-text">Use a class code to join your first course!</p>
-            <button 
-              className="btn-join-class-simple"
-              onClick={() => setShowJoinModal(true)}
-            >
-              <Plus size={20} />
-              <span>Join Class</span>
-            </button>
-          </div>
-        )}
-
-        {/* Dashboard Content - Only show if enrolled in courses */}
-        {!hasNoEnrollments && (
-          <>
-            {/* Student Stats Cards */}
-            {!loading && dashboardStats && (
-              <div className="stats-cards">
+        {/* Student Stats Cards */}
+        {!loading && dashboardStats && (
+          <div className="stats-cards">
                 <div className="stat-card">
                   <div className="stat-icon">
                     <BookOpen size={32} color="#3b82f6" />
@@ -146,42 +109,40 @@ export default function StudentDashboard() {
               </div>
             )}
 
-            {/* Period Selector */}
-            <div className="period-selector">
-              <button 
-                className={`period-btn ${period === 'today' ? 'active' : ''}`}
-                onClick={() => setPeriod('today')}
-              >
-                Today
-              </button>
-              <button 
-                className={`period-btn ${period === 'week' ? 'active' : ''}`}
-                onClick={() => setPeriod('week')}
-              >
-                This Week
-              </button>
-              <button 
-                className={`period-btn ${period === 'month' ? 'active' : ''}`}
-                onClick={() => setPeriod('month')}
-              >
-                This Month
-              </button>
-            </div>
+        {/* Period Selector */}
+        <div className="period-selector">
+          <button 
+            className={`period-btn ${period === 'today' ? 'active' : ''}`}
+            onClick={() => setPeriod('today')}
+          >
+            Today
+          </button>
+          <button 
+            className={`period-btn ${period === 'week' ? 'active' : ''}`}
+            onClick={() => setPeriod('week')}
+          >
+            This Week
+          </button>
+          <button 
+            className={`period-btn ${period === 'month' ? 'active' : ''}`}
+            onClick={() => setPeriod('month')}
+          >
+            This Month
+          </button>
+        </div>
 
-            {/* Online Hours Dashboard */}
-            <div className="dashboard-content">
-              {/* Left Column - Bar Chart */}
-              <div className="left-column">
-                <OnlineHoursChart period={period} />
-              </div>
+        {/* Online Hours Dashboard */}
+        <div className="dashboard-content">
+          {/* Left Column - Bar Chart */}
+          <div className="left-column">
+            <OnlineHoursChart period={period} />
+          </div>
 
-              {/* Right Column - Statistics */}
-              <div className="right-column">
-                <OnlineHoursStats period={period} />
-              </div>
-            </div>
-          </>
-        )}
+          {/* Right Column - Statistics */}
+          <div className="right-column">
+            <OnlineHoursStats period={period} />
+          </div>
+        </div>
 
         {/* Join Class Modal */}
         <JoinClassModal

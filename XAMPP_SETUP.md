@@ -1,124 +1,278 @@
-# Run TinyLearn with XAMPP
+# TinyLearn - XAMPP Database Setup Guide
 
-Your app is already using XAMPP's MySQL database! Here's how to fully integrate with XAMPP:
+This guide will help you set up TinyLearn with MySQL in XAMPP.
 
-## Current Setup ✅
+## Prerequisites
 
-- **Database**: XAMPP MySQL (already connected)
-- **Backend**: Running with `php artisan serve` (port 8000)
-- **Frontend**: Running with `npm run dev` (port 3000)
+- XAMPP installed ([Download](https://www.apachefriends.org/))
+- PHP 8.2+ (included in XAMPP)
+- MySQL (included in XAMPP)
+- Composer installed
+- Node.js 18+ installed
 
-## Option 1: Keep Current Setup (Easiest)
+## Step 1: Start XAMPP Services
 
-This is what you're doing now - it works perfectly!
+1. Open XAMPP Control Panel
+2. Click **Start** for:
+   - Apache
+   - MySQL
+3. Wait for both to show "Running" status
 
-1. **Start XAMPP MySQL:**
-   - Open XAMPP Control Panel
-   - Click "Start" for MySQL
+## Step 2: Create Database
 
-2. **Start Backend:**
-   ```bash
-   php artisan serve --host=0.0.0.0 --port=8000
-   ```
+### Option A: Using phpMyAdmin (GUI)
 
-3. **Start Frontend:**
-   ```bash
-   cd react
-   npm run dev -- --host
-   ```
+1. Open browser and go to: `http://localhost/phpmyadmin`
+2. Click on **Databases** tab
+3. Under "Create new database", enter: `tinylearn`
+4. Select **utf8mb4_unicode_ci** as collation
+5. Click **Create**
 
-4. **Access:**
-   - Computer: `http://localhost:3000`
-   - Phone: `http://192.168.1.9:3000`
-
-## Option 2: Run Backend Through XAMPP Apache
-
-If you want to use XAMPP's Apache server instead:
-
-### Step 1: Create Symbolic Link to htdocs
+### Option B: Using Command Line
 
 ```bash
-# Run as Administrator
-New-Item -ItemType SymbolicLink -Path "C:\xampp\htdocs\tinylearn" -Target "C:\Users\Ken\Documents\laravel-react-bladerz"
+mysql -u root -p
 ```
 
-### Step 2: Configure Apache Virtual Host
+Then paste this SQL:
 
-Add to `C:\xampp\apache\conf\extra\httpd-vhosts.conf`:
-
-```apache
-<VirtualHost *:80>
-    DocumentRoot "C:/xampp/htdocs/tinylearn/public"
-    ServerName tinylearn.local
-    
-    <Directory "C:/xampp/htdocs/tinylearn/public">
-        AllowOverride All
-        Require all granted
-    </Directory>
-</VirtualHost>
+```sql
+CREATE DATABASE tinylearn CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-### Step 3: Update hosts file
+## Step 3: Configure Laravel
 
-Add to `C:\Windows\System32\drivers\etc\hosts`:
+The `.env` file is already configured for XAMPP MySQL:
 
 ```
-127.0.0.1 tinylearn.local
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=tinylearn
+DB_USERNAME=root
+DB_PASSWORD=
 ```
 
-### Step 4: Restart Apache
+## Step 4: Run Migrations
 
-In XAMPP Control Panel, restart Apache.
+Open command prompt/terminal in your project directory and run:
 
-### Step 5: Access
+```bash
+php artisan migrate:fresh --seed
+```
 
-- Backend: `http://tinylearn.local/api/login`
-- Frontend: Still use `npm run dev` on port 3000
+This will:
+- Create all database tables
+- Seed test data (admin, teacher, student users)
+- Set up relationships
 
-## Option 3: Use XAMPP for Everything
+## Step 5: Verify Database
 
-### Step 1: Build React Frontend
+### Check in phpMyAdmin
 
+1. Go to `http://localhost/phpmyadmin`
+2. Click on **tinylearn** database
+3. You should see 35+ tables:
+   - users
+   - courses
+   - enrollments
+   - announcements
+   - assignments
+   - submissions
+   - grades
+   - discussions
+   - messages
+   - notifications
+   - And more...
+
+### Check via Command Line
+
+```bash
+mysql -u root tinylearn -e "SHOW TABLES;"
+```
+
+## Step 6: Start the Application
+
+### Terminal 1 - Laravel Server
+```bash
+php artisan serve
+```
+Runs on: `http://localhost:8000`
+
+### Terminal 2 - Reverb WebSocket
+```bash
+php artisan reverb:start
+```
+Runs on: `ws://localhost:8080`
+
+### Terminal 3 - Queue Worker
+```bash
+php artisan queue:work
+```
+
+### Terminal 4 - React Dev Server
 ```bash
 cd react
-npm run build
+npm run dev
+```
+Runs on: `http://localhost:3000`
+
+## Step 7: Login
+
+Visit `http://localhost:3000` and use test credentials:
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@example.com | password |
+| Teacher | teacher@example.com | password |
+| Student | student@example.com | password |
+
+## Database Tables Overview
+
+### User Management
+- `users` - User accounts
+- `roles` - User roles (admin, teacher, student)
+- `user_roles` - User-role relationships
+- `permissions` - System permissions
+- `role_permissions` - Role-permission relationships
+
+### Course Management
+- `courses` - Course information
+- `enrollments` - Student enrollments
+- `modules` - Course modules
+- `schedules` - Class schedules
+
+### Content
+- `announcements` - Course announcements
+- `assessments` - Assignments/quizzes
+- `materials` - Course materials
+- `resources` - Course resources
+- `attachments` - File attachments
+
+### Submissions & Grading
+- `submissions` - Student submissions
+- `submission_files` - Submitted files
+- `grades` - Student grades
+
+### Communication
+- `discussions` - Discussion threads
+- `discussion_replies` - Discussion replies
+- `messages` - Direct messages
+- `conversations` - Message conversations
+- `notifications` - User notifications
+
+### Tracking
+- `activity_logs` - User activity
+- `attendance` - Class attendance
+- `progress` - Course progress
+- `user_sessions` - User sessions
+
+### System
+- `cache` - Cache entries
+- `jobs` - Queue jobs
+- `sessions` - Session data
+- `personal_access_tokens` - API tokens
+
+## Troubleshooting
+
+### MySQL Won't Start
+- Check if port 3306 is in use
+- Try: `netstat -ano | findstr :3306` (Windows)
+- Kill the process or use different port
+
+### Database Connection Error
+```
+SQLSTATE[HY000] [2002] No connection could be made
+```
+- Ensure MySQL is running in XAMPP
+- Check DB_HOST is `127.0.0.1` (not `localhost`)
+- Verify DB_DATABASE is `tinylearn`
+
+### Migration Errors
+```bash
+# Clear cache and retry
+php artisan cache:clear
+php artisan config:clear
+php artisan migrate:fresh --seed
 ```
 
-### Step 2: Copy build to Laravel public
+### Permission Denied
+```bash
+# Fix database permissions
+php artisan cache:clear
+php artisan config:cache
+```
+
+## Backup Database
+
+### Using phpMyAdmin
+1. Go to `http://localhost/phpmyadmin`
+2. Select `tinylearn` database
+3. Click **Export**
+4. Click **Go** to download SQL file
+
+### Using Command Line
+```bash
+mysqldump -u root tinylearn > backup.sql
+```
+
+## Restore Database
+
+### Using phpMyAdmin
+1. Go to `http://localhost/phpmyadmin`
+2. Click **Import**
+3. Select your SQL file
+4. Click **Go**
+
+### Using Command Line
+```bash
+mysql -u root tinylearn < backup.sql
+```
+
+## Reset Database
+
+To start fresh:
 
 ```bash
-Copy-Item -Path "react/dist/*" -Destination "public/react" -Recurse -Force
+# Drop and recreate
+php artisan migrate:fresh --seed
 ```
 
-### Step 3: Update Laravel routes
+Or manually:
 
-Serve React from Laravel (single server setup).
+```bash
+mysql -u root -e "DROP DATABASE tinylearn; CREATE DATABASE tinylearn CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+php artisan migrate:fresh --seed
+```
 
-### Step 4: Access
+## Performance Tips
 
-Everything runs on: `http://tinylearn.local`
+1. **Add Indexes** - Already included in migrations
+2. **Enable Query Caching** - Edit `my.ini` in XAMPP
+3. **Optimize Tables** - Run periodically:
+   ```bash
+   php artisan tinker
+   >>> DB::statement('OPTIMIZE TABLE users');
+   ```
+
+## Next Steps
+
+1. ✅ Database created and seeded
+2. ✅ Tables verified
+3. Start the application
+4. Log in with test credentials
+5. Create courses and content
+6. Invite students
+7. Test real-time features
+
+## Support
+
+If you encounter issues:
+1. Check XAMPP MySQL is running
+2. Verify `.env` database settings
+3. Check `storage/logs/laravel.log` for errors
+4. Run `php artisan migrate:status` to see migration status
 
 ---
 
-## Current Database Info
-
-- **Host**: 127.0.0.1 (localhost)
-- **Port**: 3306
-- **Database**: tinylearn
-- **Username**: root
-- **Password**: (empty)
-
-## Access phpMyAdmin
-
-Open XAMPP and click "Admin" next to MySQL, or visit:
-```
-http://localhost/phpmyadmin
-```
-
-You can view and manage your database there!
-
----
-
-## Recommendation
-
-**Keep your current setup (Option 1)** - it's working perfectly and is easier to develop with. XAMPP is already providing the MySQL database, which is the most important part!
+**Your TinyLearn database is now ready in XAMPP!** 🚀

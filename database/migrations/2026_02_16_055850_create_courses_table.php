@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id('course_ID');
             $table->string('title');
             $table->string('slug')->unique();
-            $table->string('course_code')->unique(); // New course code column
+            $table->string('course_code')->unique();
             $table->text('description')->nullable();
             $table->enum('status',['draft','active','archived'])->default('draft');
-            // Ensure this points to user_ID
+            $table->boolean('is_private')->default(true);
             $table->foreignId('created_by')->constrained('users', 'user_ID'); 
             $table->timestamps();
         });

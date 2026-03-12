@@ -20,7 +20,8 @@ return new class extends Migration
     $table->unsignedBigInteger('course_id');
     $table->foreign('course_id')->references('course_ID')->on('courses')->onDelete('cascade');
 
-    $table->enum('status',['active','dropped','completed'])->default('active');
+    $table->enum('status',['active','dropped','completed','invited','accepted'])->default('active');
+    $table->enum('enrollment_type',['self','invited'])->default('self');
     $table->date('enrolled_at')->useCurrent();
     $table->timestamps();
 });

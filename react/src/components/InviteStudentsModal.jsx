@@ -1,77 +1,97 @@
-import { useState } from 'react';
-import { X, Mail, Plus, Trash2 } from 'lucide-react';
+import { useState, useEffect, useContext } from 'react';
+import { X, Search } from 'lucide-react';
 import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 import '../styles/inviteStudentsModal.css';
 
-export default function InviteStudentsModal({ isOpen, onClose, course }) {
-  const [emails, setEmails] = useState(['']);
+export default function InviteStudentsModal({ isOpen, onClose, courseId, onSuccess }) {
+  const { token } = useContext(AuthContext);
+  const [students, setStudents] = useState([]);
+  const [selectedStudents, setSelectedStudents] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searching, setSearching] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
-  const handleAddEmail = () => {
-    setEmails([...emails, '']);
+  useEffect(() => {
+    if (isOpen) {
+      fetchStudents();
+    }
+  }, [isOpen]);
+
+  const fetchStudents = async () => {
+    try {
+      setSearching(true);
+      const response = await axios.get(
+        'http://localhost:8000/api/users',
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      // Filter only students
+      const studentList = response.data.filter(user => 
+        user.roles && user.roles.some(r => r.role === 'student')
+      );
+      
+      setStudents(studentList);
+      setError('');
+    } catch (err) {
+      setError('Failed to load students');
+      console.error(err);
+    } finally {
+      setSearching(false);
+    }
   };
 
-  const handleRemoveEmail = (index) => {
-    const newEmails = emails.filter((_, i) => i !== index);
-    setEmails(newEmails.length > 0 ? newEmails : ['']);
+  const filteredStudents = students.filter(student => {
+    const term = searchTerm.toLowerCase();
+    return (
+      student.FName.toLowerCase().includes(term) ||
+      student.LName.toLowerCase().includes(term) ||
+      student.email.toLowerCase().includes(term) ||
+      student.username.toLowerCase().includes(term)
+    );
+  });
+
+  const toggleStudent = (studentId) => {
+    setSelectedStudents(prev =>
+      prev.includes(studentId)
+        ? prev.filter(id => id !== studentId)
+        : [...prev, studentId]
+    );
   };
 
-  const handleEmailChange = (index, value) => {
-    const newEmails = [...emails];
-    newEmails[index] = value;
-    setEmails(newEmails);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-    setLoading(true);
-
-    // Filter out empty emails
-    const validEmails = emails.filter(email => email.trim() !== '');
-
-    if (validEmails.length === 0) {
-      setError('Please enter at least one email address');
-      setLoading(false);
+  const handleSendInvitations = async () => {
+    if (selectedStudents.length === 0) {
+      setError('Please select at least one student');
       return;
     }
 
+    setLoading(true);
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.post(
-        `http://localhost:8000/api/courses/${course.course_ID}/send-invitation`,
-        { emails: validEmails },
+        `http://localhost:8000/api/courses/${courseId}/send-invitation`,
+        { user_ids: selectedStudents },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setSuccess(response.data.message);
-      
-      // Show failed emails if any
-      if (response.data.failed_emails && response.data.failed_emails.length > 0) {
-        setError(`Failed to send to: ${response.data.failed_emails.join(', ')}`);
+      if (onSuccess) {
+        onSuccess(response.data);
       }
-
-      // Reset form after 2 seconds
-      setTimeout(() => {
-        setEmails(['']);
-        setSuccess('');
-        setError('');
-        onClose();
-      }, 2000);
+      
+      setSelectedStudents([]);
+      setSearchTerm('');
+      onClose();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to send invitations. Please try again.');
+      setError(err.response?.data?.message || 'Failed to send invitations');
     } finally {
       setLoading(false);
     }
   };
 
   const handleClose = () => {
-    setEmails(['']);
+    setSelectedStudents([]);
+    setSearchTerm('');
     setError('');
-    setSuccess('');
     onClose();
   };
 
@@ -79,98 +99,83 @@ export default function InviteStudentsModal({ isOpen, onClose, course }) {
 
   return (
     <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content invite-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content invite-students-modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <div>
-            <h2>Invite Students</h2>
-            <p className="course-name">{course?.title}</p>
-          </div>
+          <h2>Invite Students to Course</h2>
           <button className="modal-close-btn" onClick={handleClose}>
             <X size={24} />
           </button>
         </div>
 
         <div className="modal-body">
-          <div className="class-code-display">
-            <div className="class-code-label">Class Code</div>
-            <div className="class-code-value">{course?.course_code}</div>
-            <p className="class-code-hint">Students can also join using this code</p>
+          {error && (
+            <div className="error-message">
+              <span className="error-icon">⚠️</span>
+              {error}
+            </div>
+          )}
+
+          <div className="search-container">
+            <Search size={18} className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search students by name or email..."
+              className="search-input"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-section">
-              <label>Student Email Addresses</label>
-              <p className="form-hint">
-                Enter the email addresses of students you want to invite. They will receive an invitation link and the class code.
-              </p>
-
-              <div className="email-list">
-                {emails.map((email, index) => (
-                  <div key={index} className="email-input-group">
-                    <Mail size={18} className="email-icon" />
-                    <input
-                      type="email"
-                      className="form-input"
-                      placeholder="student@example.com"
-                      value={email}
-                      onChange={(e) => handleEmailChange(index, e.target.value)}
-                      required={index === 0}
-                    />
-                    {emails.length > 1 && (
-                      <button
-                        type="button"
-                        className="btn-remove-email"
-                        onClick={() => handleRemoveEmail(index)}
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              <button
-                type="button"
-                className="btn-add-email"
-                onClick={handleAddEmail}
-              >
-                <Plus size={16} />
-                Add Another Email
-              </button>
-            </div>
-
-            {error && (
-              <div className="error-message">
-                <span className="error-icon">⚠️</span>
-                {error}
-              </div>
+          <div className="students-list">
+            {searching ? (
+              <p className="loading-text">Loading students...</p>
+            ) : filteredStudents.length === 0 ? (
+              <p className="empty-text">No students found</p>
+            ) : (
+              filteredStudents.map(student => (
+                <div key={student.user_ID} className="student-item">
+                  <input
+                    type="checkbox"
+                    id={`student-${student.user_ID}`}
+                    checked={selectedStudents.includes(student.user_ID)}
+                    onChange={() => toggleStudent(student.user_ID)}
+                    className="student-checkbox"
+                  />
+                  <label htmlFor={`student-${student.user_ID}`} className="student-label">
+                    <div className="student-info">
+                      <div className="student-name">
+                        {student.FName} {student.LName}
+                      </div>
+                      <div className="student-email">{student.email}</div>
+                    </div>
+                  </label>
+                </div>
+              ))
             )}
+          </div>
 
-            {success && (
-              <div className="success-message">
-                <span className="success-icon">✓</span>
-                {success}
-              </div>
-            )}
-
-            <div className="modal-actions">
-              <button
-                type="button"
-                className="btn-secondary"
-                onClick={handleClose}
-                disabled={loading}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="btn-primary"
-                disabled={loading}
-              >
-                {loading ? 'Sending...' : 'Send Invitations'}
-              </button>
+          {selectedStudents.length > 0 && (
+            <div className="selected-count">
+              {selectedStudents.length} student(s) selected
             </div>
-          </form>
+          )}
+        </div>
+
+        <div className="modal-footer">
+          <button
+            className="btn-secondary"
+            onClick={handleClose}
+            disabled={loading}
+          >
+            Cancel
+          </button>
+          <button
+            className="btn-primary"
+            onClick={handleSendInvitations}
+            disabled={loading || selectedStudents.length === 0}
+          >
+            {loading ? 'Sending...' : 'Send Invitations'}
+          </button>
         </div>
       </div>
     </div>

@@ -181,21 +181,21 @@
 /* Footer Links */
 .auth-footer {
   text-align: center;
-  font-size: 0.9rem;
-  color: #6b7280;
+  font-size: 0.95rem;
+  color: #9ca3af;
   margin: 0;
+  font-weight: 500;
 }
 
 .auth-link {
   color: #ec4899;
-  text-decoration: none;
+  text-decoration: underline;
   font-weight: 600;
   transition: color 0.3s ease;
 }
 
 .auth-link:hover {
   color: #f472b6;
-  text-decoration: underline;
 }
 
 /* Responsive Design */
@@ -472,5 +472,56 @@
     flex-direction: column;
     gap: 0.25rem;
     text-align: center;
+  }
+}
+
+/* Role Selection Buttons */
+.role-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.role-btn {
+  padding: 0.85rem 1rem;
+  background-color: #f3f4f6;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.role-btn:hover {
+  border-color: #ec4899;
+  background-color: #fdf2f8;
+  color: #ec4899;
+}
+
+.role-btn.active {
+  background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+  border-color: #ec4899;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+}
+
+.role-btn.active:hover {
+  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+  .role-btn {
+    padding: 0.75rem 0.85rem;
+    font-size: 0.9rem;
+    min-height: 45px;
   }
 }

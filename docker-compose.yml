@@ -1,0 +1,201 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: tinylearn_postgres
+    environment:
+      POSTGRES_DB: tinylearn
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tinylearn_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # MySQL Database (Alternative)
+  mysql:
+    image: mysql:8.0
+    container_name: tinylearn_mysql
+    environment:
+      MYSQL_DATABASE: tinylearn
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: tinylearn
+      MYSQL_PASSWORD: tinylearn
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - tinylearn_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: tinylearn_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - tinylearn_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Laravel API
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tinylearn_api
+    environment:
+      APP_NAME: TinyLearn
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: http://localhost:8000
+      
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: tinylearn
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      
+      CACHE_DRIVER: redis
+      REDIS_HOST: redis
+      REDIS_PASSWORD: null
+      REDIS_PORT: 6379
+      
+      BROADCAST_CONNECTION: reverb
+      REVERB_HOST: localhost
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
+      
+      SANCTUM_STATEFUL_DOMAINS: localhost:5173
+      SESSION_DOMAIN: localhost
+      
+      MAIL_MAILER: smtp
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025
+      MAIL_USERNAME: null
+      MAIL_PASSWORD: null
+      MAIL_FROM_ADDRESS: noreply@tinylearn.app
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - /app/vendor
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - tinylearn_network
+    command: >
+      sh -c "php artisan migrate --force &&
+             php artisan serve --host=0.0.0.0 --port=8000"
+
+  # Reverb WebSocket Server
+  reverb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tinylearn_reverb
+    environment:
+      APP_NAME: TinyLearn
+      APP_ENV: production
+      APP_DEBUG: "false"
+      
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: tinylearn
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      
+      REVERB_HOST: 0.0.0.0
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - /app/vendor
+    depends_on:
+      - postgres
+    networks:
+      - tinylearn_network
+    command: php artisan reverb:start --host=0.0.0.0 --port=8080
+
+  # React Frontend
+  frontend:
+    image: node:18-alpine
+    container_name: tinylearn_frontend
+    working_dir: /app/react
+    environment:
+      VITE_API_URL: http://localhost:8000
+      VITE_REVERB_APP_KEY: zuonhgpz9bawpswpcnhp
+      VITE_REVERB_HOST: localhost
+      VITE_REVERB_PORT: 8080
+      VITE_REVERB_SCHEME: http
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./react:/app/react
+      - /app/react/node_modules
+    networks:
+      - tinylearn_network
+    command: npm run dev
+
+  # Mailhog (Email Testing)
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: tinylearn_mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - tinylearn_network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: tinylearn_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./public:/app/public:ro
+    depends_on:
+      - api
+      - frontend
+    networks:
+      - tinylearn_network
+
+volumes:
+  postgres_data:
+  mysql_data:
+  redis_data:
+
+networks:
+  tinylearn_network:
+    driver: bridge
