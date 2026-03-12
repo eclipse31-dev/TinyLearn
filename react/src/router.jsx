@@ -4,7 +4,6 @@ import RoleSelection from "./views/shared/RoleSelection";
 import StudentLogin from "./views/shared/StudentLogin";
 import TeacherLogin from "./views/shared/TeacherLogin";
 import AdminLogin from "./views/shared/AdminLogin";
-import GoogleCallback from "./views/shared/GoogleCallback";
 import HomePage from "./views/HomePage";
 import { CoursesPage, CourseDetail, CreateCoursePage, EditCoursePage, CreateAnnouncementPage, CreateAssignmentPage, CreateResourcePage, GradeSubmissionsPage } from "./views/teacher";
 import { ResourcesPage, SchedulesPage, DiscussionPage, AssignmentsPage, SubmitAssignmentPage } from "./views/student";
@@ -32,10 +31,6 @@ const router = createBrowserRouter([
   {
     path: "/admin-login",
     element: <AdminLogin />,
-  },
-  {
-    path: "/auth/google/callback",
-    element: <GoogleCallback />,
   },
   {
     path: "/signup",

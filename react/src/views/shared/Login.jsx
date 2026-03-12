@@ -2,9 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link, useParams } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import GoogleLoginButton from '../../components/GoogleLoginButton';
 import '../../styles/login.css';
-import '../../styles/google-login.css';
 import backgroundImage from '../../assets/b_sakura-be-editors-637438-rel49a76f54.png';
 import logoImage from '../../assets/image-removebg-preview.png';
 
@@ -76,10 +74,6 @@ export default function Login() {
             {error && <p className="error-text">{error}</p>}
 
             <form onSubmit={handleSubmit} className="auth-form">
-              <GoogleLoginButton role={role} />
-
-              <div className="google-login-divider">or</div>
-
               <div className="form-group">
                 <label>Email</label>
                 <input
