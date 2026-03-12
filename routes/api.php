@@ -45,9 +45,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
-// Google OAuth API endpoint
-Route::get('/auth/google/data', [\App\Http\Controllers\Api\GoogleAuthController::class, 'getAuthData']);
-
 // Public course routes
 Route::get('/courses', [CourseController::class, 'index']);
 Route::get('/courses/{id}', [CourseController::class, 'show']);
