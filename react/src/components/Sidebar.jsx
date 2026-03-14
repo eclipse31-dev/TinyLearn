@@ -1,7 +1,7 @@
 import React, { useContext, useMemo, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { LayoutDashboard, BookOpen, FolderOpen, MessageSquare, Calendar, Settings, LogOut, GraduationCap, Briefcase, Menu, X } from 'lucide-react';
+import { LayoutDashboard, BookOpen, FolderOpen, MessageSquare, Calendar, Settings, LogOut, GraduationCap, Briefcase, Menu, X, Users, BarChart3 } from 'lucide-react';
 import '../styles/sidebar.css';
 
 export default function Sidebar() {
@@ -16,6 +16,14 @@ export default function Sidebar() {
     { name: 'Materials', path: '/resources', icon: FolderOpen },
     { name: 'Discussion', path: '/discussion', icon: MessageSquare },
     { name: 'Schedules', path: '/schedules', icon: Calendar },
+    { name: 'Settings', path: '/settings', icon: Settings },
+  ];
+
+  const adminMenuItems = [
+    { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
+    { name: 'Users', path: '/admin/users', icon: Users },
+    { name: 'Courses', path: '/admin/courses', icon: BookOpen },
+    { name: 'Analytics', path: '/admin/analytics', icon: BarChart3 },
     { name: 'Settings', path: '/settings', icon: Settings },
   ];
 
@@ -41,6 +49,7 @@ export default function Sidebar() {
   }, [user]);
 
   const roleColor = roleName === 'teacher' || roleName === 'admin' ? '#ec4899' : '#3b82f6';
+  const currentMenuItems = roleName === 'admin' ? adminMenuItems : menuItems;
 
   return (
     <>
@@ -75,7 +84,7 @@ export default function Sidebar() {
 
         <nav className="sidebar-nav">
           <ul className="sidebar-menu">
-            {menuItems.map(item => {
+            {currentMenuItems.map(item => {
               const IconComponent = item.icon;
               return (
                 <li key={item.path}>

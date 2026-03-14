@@ -10,31 +10,29 @@ class Enrollment extends Model
     use HasFactory;
 
     protected $table = 'enrollments';
+    protected $primaryKey = 'enrollment_ID';
 
     protected $fillable = [
-        'user_id',
-        'course_id',
+        'user_ID',
+        'course_ID',
         'status',
-        'enrolled_at',
+        'grade_letter',
+        'final_score',
     ];
 
     protected $casts = [
-        'enrolled_at' => 'datetime',
+        'enrollment_date' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
-    /**
-     * Get the user for this enrollment.
-     */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_ID', 'user_ID');
     }
 
-    /**
-     * Get the course for this enrollment.
-     */
     public function course()
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Course::class, 'course_ID', 'course_ID');
     }
 }

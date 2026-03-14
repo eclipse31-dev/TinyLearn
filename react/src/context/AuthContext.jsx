@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 export const AuthContext = createContext();
@@ -9,51 +9,48 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is already logged in on component mount
+    // Initialize from localStorage
     const savedToken = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
     
-    console.log('AuthContext: Initializing, savedToken:', savedToken ? 'exists' : 'missing');
-    
     if (savedToken && savedUser) {
-      console.log('AuthContext: Setting token and user from localStorage');
-      setToken(savedToken);
-      setUser(JSON.parse(savedUser));
-      // Set the token in axios headers globally
-      axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
+      try {
+        const parsedUser = JSON.parse(savedUser);
+        setToken(savedToken);
+        setUser(parsedUser);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
+      } catch (e) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
     }
     
-    console.log('AuthContext: Setting loading to false');
     setLoading(false);
   }, []);
 
-  // Update axios headers whenever token changes
   useEffect(() => {
     if (token) {
-      console.log('AuthContext: Token updated, setting axios headers');
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } else {
       delete axios.defaults.headers.common['Authorization'];
     }
   }, [token]);
 
-  const login = (userData, authToken) => {
-    console.log('AuthContext: login() called with token:', authToken ? 'exists' : 'missing');
-    setUser(userData);
-    setToken(authToken);
+  const login = useCallback((userData, authToken) => {
     localStorage.setItem('token', authToken);
     localStorage.setItem('user', JSON.stringify(userData));
+    setToken(authToken);
+    setUser(userData);
     axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
-    console.log('AuthContext: login() complete, token set');
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null);
     setToken(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     delete axios.defaults.headers.common['Authorization'];
-  };
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, token, loading, login, logout }}>

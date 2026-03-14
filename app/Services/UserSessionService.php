@@ -23,14 +23,18 @@ class UserSessionService
             'is_active' => true,
         ]);
 
-        // Broadcast login event
-        $user = User::find($userId);
-        if ($user) {
-            broadcast(new UserSessionUpdated(
-                $userId,
-                $user->FName . ' ' . $user->LName,
-                'login'
-            ))->toOthers();
+        // Broadcast login event (wrapped in try-catch for local development)
+        try {
+            $user = User::find($userId);
+            if ($user) {
+                broadcast(new UserSessionUpdated(
+                    $userId,
+                    $user->FName . ' ' . $user->LName,
+                    'login'
+                ))->toOthers();
+            }
+        } catch (\Exception $e) {
+            \Log::warning('Failed to broadcast user session update: ' . $e->getMessage());
         }
 
         return $session;
@@ -47,13 +51,17 @@ class UserSessionService
                 $session->endSession();
             });
 
-        // Broadcast logout event
-        if ($user) {
-            broadcast(new UserSessionUpdated(
-                $userId,
-                $user->FName . ' ' . $user->LName,
-                'logout'
-            ))->toOthers();
+        // Broadcast logout event (wrapped in try-catch for local development)
+        try {
+            if ($user) {
+                broadcast(new UserSessionUpdated(
+                    $userId,
+                    $user->FName . ' ' . $user->LName,
+                    'logout'
+                ))->toOthers();
+            }
+        } catch (\Exception $e) {
+            \Log::warning('Failed to broadcast user session update: ' . $e->getMessage());
         }
     }
 

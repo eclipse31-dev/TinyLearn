@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('courses', function (Blueprint $table) {
-            // Change header_image_url from varchar(255) to longText to support base64 images
-            $table->longText('header_image_url')->nullable()->change();
+            // Add header_image_url column if it doesn't exist
+            if (!Schema::hasColumn('courses', 'header_image_url')) {
+                $table->longText('header_image_url')->nullable();
+            }
         });
     }
 
@@ -23,7 +25,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('courses', function (Blueprint $table) {
-            $table->string('header_image_url', 255)->nullable()->change();
+            if (Schema::hasColumn('courses', 'header_image_url')) {
+                $table->dropColumn('header_image_url');
+            }
         });
     }
 };

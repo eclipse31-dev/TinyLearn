@@ -1,4 +1,4 @@
-import '../styles/empty-state.css';
+      import '../styles/empty-state.css';
 
 export default function EmptyState({ 
   icon = '📭', 

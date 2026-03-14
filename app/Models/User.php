@@ -43,8 +43,8 @@ class User extends Authenticatable
         return $this->belongsToMany(
             Role::class,
             'user_roles',
-            'user_id',
-            'role_id',
+            'user_ID',
+            'role_ID',
             'user_ID',
             'role_ID'
         );
@@ -52,6 +52,6 @@ class User extends Authenticatable
 
     public function hasRole($roleName)
     {
-        return $this->roles()->where('role', $roleName)->exists();
+        return $this->roles()->where('roles.role', $roleName)->exists();
     }
 }

@@ -1,11 +1,187 @@
 /* Auth Pages - Login & Signup Shared Styles */
 
-/* Container with split layout */
+/* Force light mode for auth pages - exclude from dark mode */
 .auth-container {
   display: flex;
   min-height: 100vh;
   width: 100%;
   background-color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  font-variant: normal;
+  font-feature-settings: normal;
+}
+
+/* Override dark mode for auth pages */
+.dark-mode .auth-container {
+  background-color: #ffffff;
+  color: #1f2937;
+}
+
+.dark-mode .auth-form-side {
+  background: linear-gradient(135deg, #fdf2f8 0%, #fff 50%, #fef5fb 100%);
+}
+
+.dark-mode .auth-card {
+  background-color: #ffffff;
+  color: #1f2937;
+}
+
+.dark-mode .auth-title {
+  color: #1f2937;
+}
+
+.dark-mode .auth-subtitle {
+  color: #6b7280;
+}
+
+.dark-mode .form-input {
+  background-color: #fdf2f8;
+  border-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.dark-mode .form-input:focus {
+  background-color: #ffffff;
+  border-color: #ec4899;
+}
+
+.dark-mode .form-input::placeholder {
+  color: #9ca3af;
+}
+
+.dark-mode .form-label {
+  color: #374151;
+}
+
+.dark-mode .divider {
+  color: #9ca3af;
+}
+
+.dark-mode .divider::before {
+  background-color: #e5e7eb;
+}
+
+.dark-mode .divider span {
+  background-color: #ffffff;
+}
+
+.dark-mode .password-toggle {
+  color: #6b7280;
+}
+
+.dark-mode .password-toggle:hover,
+.dark-mode .password-toggle:focus {
+  color: #ec4899;
+}
+
+.dark-mode .auth-footer {
+  color: #9ca3af;
+}
+
+.dark-mode .auth-link {
+  color: #ec4899;
+}
+
+.dark-mode .auth-link:hover {
+  color: #f472b6;
+}
+
+.dark-mode .error-text {
+  color: #991b1b;
+}
+
+.dark-mode .error-message {
+  background-color: #fee2e2;
+  border-color: #fecaca;
+}
+
+.dark-mode .role-btn {
+  background-color: #f3f4f6;
+  border-color: #e5e7eb;
+  color: #6b7280;
+}
+
+.dark-mode .role-btn:hover {
+  border-color: #ec4899;
+  background-color: #fdf2f8;
+  color: #ec4899;
+}
+
+.dark-mode .role-btn.active {
+  background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+  border-color: #ec4899;
+  color: #ffffff;
+}
+
+/* Divider between form sections */
+.divider {
+  text-align: center;
+  margin: 1.25rem 0;
+  color: #9ca3af;
+  font-size: 0.875rem;
+  position: relative;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background-color: #e5e7eb;
+  z-index: 0;
+}
+
+.divider span {
+  position: relative;
+  z-index: 1;
+  background-color: #ffffff;
+  padding: 0 0.5rem;
+}
+
+/* Password Input Wrapper */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper .form-input {
+  width: 100%;
+  padding-right: 2.75rem;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  transition: color 0.2s ease;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.password-toggle:hover {
+  color: #ec4899;
+}
+
+.password-toggle:focus {
+  outline: none;
+  color: #ec4899;
+}
+
+.password-toggle svg {
+  width: 20px;
+  height: 20px;
 }
 
 /* Left side - Background image */
@@ -105,9 +281,14 @@
   border: 1.5px solid #e5e7eb;
   border-radius: 8px;
   font-size: clamp(0.9rem, 4vw, 0.95rem);
-  font-family: inherit;
   transition: all 0.3s ease;
   min-height: 44px;
+  text-transform: none;
+  font-variant: normal;
+  font-feature-settings: normal;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
 }
 
 .form-input:focus {
@@ -303,175 +484,20 @@
     margin-top: 0.5rem;
     font-size: 0.85rem;
   }
-}
 
-/* Demo Credentials Section */
-.demo-credentials {
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-  border: 2px solid #fbbf24;
-  border-radius: 12px;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.demo-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #92400e;
-  margin-bottom: 0.75rem;
-}
-
-.demo-accounts {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.demo-account {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.7);
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-}
-
-.demo-role {
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.demo-role.student {
-  color: #2563eb;
-}
-
-.demo-role.teacher {
-  color: #ec4899;
-}
-
-.demo-role.admin {
-  color: #7c3aed;
-}
-
-.demo-email {
-  color: #374151;
-  font-family: 'Courier New', monospace;
-  font-size: 0.8rem;
-}
-
-.demo-password {
-  font-size: 0.85rem;
-  color: #92400e;
-  margin: 0;
-}
-
-.demo-password strong {
-  color: #78350f;
-  font-family: 'Courier New', monospace;
-  background: rgba(255, 255, 255, 0.5);
-  padding: 0.15rem 0.4rem;
-  border-radius: 4px;
-}
-
-/* Responsive adjustments for demo credentials */
-@media (max-width: 480px) {
-  .demo-account {
-    flex-direction: column;
-    gap: 0.25rem;
-    text-align: center;
+  .password-input-wrapper .form-input {
+    padding-right: 2.5rem;
   }
-  
-  .demo-email {
-    font-size: 0.75rem;
+
+  .password-toggle {
+    right: 0.5rem;
+    min-height: 40px;
+    min-width: 40px;
   }
-}
 
-/* Demo Mode Section */
-.demo-mode-info {
-  margin-top: 2rem;
-  padding: 1rem;
-  background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
-  border: 2px dashed #3b82f6;
-  border-radius: 12px;
-  text-align: center;
-}
-
-.demo-mode-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #1e40af;
-  margin-bottom: 0.75rem;
-}
-
-.demo-credentials-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.demo-cred-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: white;
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-}
-
-.demo-role-badge {
-  font-weight: 600;
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-  font-size: 0.75rem;
-}
-
-.demo-role-badge.student {
-  background: #dbeafe;
-  color: #1e40af;
-}
-
-.demo-role-badge.teacher {
-  background: #fce7f3;
-  color: #be185d;
-}
-
-.demo-role-badge.admin {
-  background: #ede9fe;
-  color: #6b21a8;
-}
-
-.demo-email-text {
-  font-family: 'Courier New', monospace;
-  font-size: 0.8rem;
-  color: #374151;
-}
-
-.demo-password-text {
-  font-size: 0.85rem;
-  color: #1e40af;
-  margin: 0;
-}
-
-.demo-password-text code {
-  background: white;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-weight: 600;
-  color: #1e40af;
-}
-
-@media (max-width: 480px) {
-  .demo-cred-item {
-    flex-direction: column;
-    gap: 0.25rem;
-    text-align: center;
+  .password-toggle svg {
+    width: 18px;
+    height: 18px;
   }
 }
 
@@ -492,7 +518,6 @@
   color: #6b7280;
   cursor: pointer;
   transition: all 0.3s ease;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
   min-height: 50px;
   display: flex;
@@ -525,3 +550,42 @@
     min-height: 45px;
   }
 }
+
+/* Google Login Button */
+.google-login-container {
+  margin-bottom: 1rem;
+}
+
+.google-login-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #ffffff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 44px;
+}
+
+.google-login-btn:hover:not(:disabled) {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.google-login-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+}
+

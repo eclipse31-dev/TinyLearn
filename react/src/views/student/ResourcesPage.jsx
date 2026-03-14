@@ -26,6 +26,7 @@ export default function ResourcesPage() {
   const fetchMaterials = async () => {
     try {
       setLoading(true);
+      setError(null);
       
       // First, get all courses
       const coursesResponse = await fetch(`${API_BASE_URL}/api/courses`, {
@@ -36,14 +37,22 @@ export default function ResourcesPage() {
       });
 
       if (!coursesResponse.ok) {
-        throw new Error('Failed to fetch courses');
+        const errorData = await coursesResponse.json().catch(() => ({}));
+        throw new Error(errorData.message || `Server error: ${coursesResponse.status}`);
       }
 
       const coursesData = await coursesResponse.json();
       
       // Filter only enrolled courses for students
-      const enrolledCourses = coursesData.filter(c => c.is_enrolled);
+      const enrolledCourses = Array.isArray(coursesData) ? coursesData.filter(c => c.is_enrolled) : [];
       setCourses(enrolledCourses);
+
+      // If no enrolled courses, set empty materials and clear error
+      if (enrolledCourses.length === 0) {
+        setMaterials([]);
+        setError(null);
+        return;
+      }
 
       // Fetch materials for each enrolled course
       const materialsPromises = enrolledCourses.map(course =>
@@ -69,8 +78,8 @@ export default function ResourcesPage() {
       setMaterials(allMaterials);
       setError(null);
     } catch (err) {
-      setError(err.message);
       console.error('Error fetching materials:', err);
+      setError(err.message || 'Failed to load courses. Please try refreshing the page.');
     } finally {
       setLoading(false);
     }
@@ -188,7 +197,7 @@ export default function ResourcesPage() {
                 <option value="all">All Courses</option>
                 {courses.map(course => (
                   <option key={course.course_ID} value={course.course_ID}>
-                    {course.title}
+                    {course.course_name || course.title}
                   </option>
                 ))}
               </select>
@@ -219,7 +228,7 @@ export default function ResourcesPage() {
 
                     <div className="resource-meta">
                       <span className="course-name">
-                        {material.course?.title || 'Unknown Course'}
+                        {material.course?.course_name || material.course?.title || 'Unknown Course'}
                       </span>
                       {material.module?.title && (
                         <span className="module-name">

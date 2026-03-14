@@ -21,6 +21,9 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\AttachmentController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\AdminDashboardController;
+use App\Http\Controllers\Api\AdminCourseController;
+use App\Http\Controllers\Api\SupabaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +48,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
+// Google OAuth API endpoint
+Route::get('/auth/google/data', [\App\Http\Controllers\Api\GoogleAuthController::class, 'getAuthData']);
+Route::get('/auth/google/user', [\App\Http\Controllers\Api\GoogleAuthController::class, 'getUser']);
+
 // Public course routes
 Route::get('/courses', [CourseController::class, 'index']);
 Route::get('/courses/{id}', [CourseController::class, 'show']);
@@ -54,8 +61,24 @@ Route::get('/courses/{id}/assignments', [CourseController::class, 'getAssignment
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    // Activity Log routes
+    Route::get('/activity-logs', [ActivityLogController::class, 'index']);
+    Route::get('/activity-logs/user', [ActivityLogController::class, 'userActivity']);
+    Route::get('/activity-logs/model', [ActivityLogController::class, 'modelActivity']);
+    Route::get('/activity-logs/statistics', [ActivityLogController::class, 'statistics']);
+    Route::get('/activity-logs/action-type', [ActivityLogController::class, 'byActionType']);
+    Route::get('/activity-logs/date-range', [ActivityLogController::class, 'dateRange']);
+    Route::get('/activity-logs/{id}', [ActivityLogController::class, 'show']);
+
     // User routes
     Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    Route::post('/users/{id}/toggle-status', [UserController::class, 'toggleStatus']);
+    Route::post('/users/{id}/reset-password', [UserController::class, 'resetPassword']);
+    Route::post('/users/{id}/assign-role', [UserController::class, 'assignRole']);
+    Route::post('/users/{id}/remove-role', [UserController::class, 'removeRole']);
 
     // Dashboard routes
     Route::get('/dashboard/overview', [DashboardController::class, 'overview']);
@@ -183,4 +206,27 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
     Route::delete('/notifications/{id}', [NotificationController::class, 'destroy']);
     Route::delete('/notifications', [NotificationController::class, 'destroyAll']);
+
+    // Admin Dashboard routes
+    Route::get('/admin/stats', [AdminDashboardController::class, 'stats']);
+    Route::get('/admin/user-stats', [AdminDashboardController::class, 'userStats']);
+    Route::get('/admin/course-stats', [AdminDashboardController::class, 'courseStats']);
+    Route::get('/admin/activity-logs', [AdminDashboardController::class, 'activityLog']);
+
+    // Admin Course Management routes
+    Route::get('/admin/courses', [AdminCourseController::class, 'index']);
+    Route::get('/admin/courses/{id}', [AdminCourseController::class, 'show']);
+    Route::post('/admin/courses', [AdminCourseController::class, 'store']);
+    Route::put('/admin/courses/{id}', [AdminCourseController::class, 'update']);
+    Route::delete('/admin/courses/{id}', [AdminCourseController::class, 'destroy']);
+    Route::get('/admin/courses/{id}/enrollments', [AdminCourseController::class, 'enrollments']);
+    Route::delete('/admin/enrollments/{id}', [AdminCourseController::class, 'removeEnrollment']);
+    Route::post('/admin/courses/bulk-status', [AdminCourseController::class, 'bulkStatusUpdate']);
+
+    // Supabase Integration routes
+    Route::post('/supabase/backup', [SupabaseController::class, 'backupDatabase']);
+    Route::post('/supabase/sync', [SupabaseController::class, 'syncData']);
+    Route::post('/supabase/upload', [SupabaseController::class, 'uploadFile']);
+    Route::get('/supabase/file-url', [SupabaseController::class, 'getFileUrl']);
+    Route::get('/supabase/table', [SupabaseController::class, 'getTableData']);
 });

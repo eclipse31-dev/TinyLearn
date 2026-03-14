@@ -19,6 +19,8 @@ class CourseController extends Controller
             $userId = Auth::id();
             $user = Auth::user();
             
+            \Log::info('CourseController@index - User ID: ' . $userId . ', User: ' . ($user ? $user->email : 'null'));
+            
             // Teachers and admins see all courses
             if ($user && ($user->hasRole('teacher') || $user->hasRole('admin'))) {
                 $courses = Course::with('creator')
@@ -69,9 +71,11 @@ class CourseController extends Controller
                     });
             }
             
+            \Log::info('CourseController@index - Returning ' . count($courses) . ' courses');
             return response()->json($courses);
         } catch (\Exception $e) {
             \Log::error('Error fetching courses: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
             return response()->json([
                 'message' => 'Failed to fetch courses',
                 'error' => $e->getMessage()

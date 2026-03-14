@@ -4,10 +4,11 @@ import RoleSelection from "./views/shared/RoleSelection";
 import StudentLogin from "./views/shared/StudentLogin";
 import TeacherLogin from "./views/shared/TeacherLogin";
 import AdminLogin from "./views/shared/AdminLogin";
+import GoogleCallback from "./views/shared/GoogleCallback";
 import HomePage from "./views/HomePage";
 import { CoursesPage, CourseDetail, CreateCoursePage, EditCoursePage, CreateAnnouncementPage, CreateAssignmentPage, CreateResourcePage, GradeSubmissionsPage } from "./views/teacher";
 import { ResourcesPage, SchedulesPage, DiscussionPage, AssignmentsPage, SubmitAssignmentPage } from "./views/student";
-import { Dashboard as AdminDashboard, UserManagement } from "./views/admin";
+import { Dashboard as AdminDashboard, UserManagement, CourseManagement, AnalyticsDashboard } from "./views/admin";
 import { PrivateRoute } from "./components/PrivateRoute";
 
 
@@ -33,12 +34,16 @@ const router = createBrowserRouter([
     element: <AdminLogin />,
   },
   {
+    path: "/auth/google/callback",
+    element: <GoogleCallback />,
+  },
+  {
     path: "/signup",
     element: <Signup />,
   },
   {
     path: "/dashboard",
-    element: <HomePage />,
+    element: <PrivateRoute><HomePage /></PrivateRoute>,
   },
   {
     path: "/courses",
@@ -103,6 +108,14 @@ const router = createBrowserRouter([
   {
     path: "/admin/users",
     element: <PrivateRoute><UserManagement /></PrivateRoute>,
+  },
+  {
+    path: "/admin/courses",
+    element: <PrivateRoute><CourseManagement /></PrivateRoute>,
+  },
+  {
+    path: "/admin/analytics",
+    element: <PrivateRoute><AnalyticsDashboard /></PrivateRoute>,
   },
   {
     path: "*",

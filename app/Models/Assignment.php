@@ -9,54 +9,34 @@ class Assignment extends Model
 {
     use HasFactory;
 
-    protected $table = 'assessments';
-    protected $primaryKey = 'assessment_ID';
+    protected $table = 'assignments';
+    protected $primaryKey = 'assignment_ID';
 
     protected $fillable = [
-        'module_ID',
-        'attachment_ID',
-        'status',
-        'due_date',
-        'created_by',
-        'title',
+        'course_ID',
+        'assignment_name',
         'description',
+        'due_date',
+        'total_points',
+        'allow_late_submission',
+        'late_penalty_percent',
+        'allow_file_upload',
+        'max_file_size_mb',
     ];
 
     protected $casts = [
-        'due_date' => 'date',
+        'due_date' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
-    public function module()
-    {
-        return $this->belongsTo(Module::class, 'module_ID', 'module_ID');
-    }
-
     public function course()
     {
-        return $this->hasOneThrough(
-            Course::class,
-            Module::class,
-            'module_ID',
-            'course_ID',
-            'module_ID',
-            'course_ID'
-        );
+        return $this->belongsTo(Course::class, 'course_ID', 'course_ID');
     }
 
     public function submissions()
     {
-        return $this->hasMany(Submission::class, 'assessment_id', 'assessment_ID');
-    }
-
-    public function attachment()
-    {
-        return $this->belongsTo(Attachment::class, 'attachment_ID', 'attachment_ID');
-    }
-
-    public function creator()
-    {
-        return $this->belongsTo(User::class, 'created_by', 'user_ID');
+        return $this->hasMany(Submission::class, 'assignment_ID', 'assignment_ID');
     }
 }

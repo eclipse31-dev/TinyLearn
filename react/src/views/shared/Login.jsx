@@ -1,8 +1,11 @@
 import { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link, useParams } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import { AuthContext } from '../../context/AuthContext';
+import GoogleLoginButton from '../../components/GoogleLoginButton';
 import '../../styles/login.css';
+import '../../styles/google-login.css';
 import backgroundImage from '../../assets/b_sakura-be-editors-637438-rel49a76f54.png';
 import logoImage from '../../assets/image-removebg-preview.png';
 
@@ -10,6 +13,7 @@ export default function Login() {
   const { role: roleParam } = useParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [role] = useState(roleParam || 'student');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -87,19 +91,39 @@ export default function Login() {
 
               <div className="form-group">
                 <label>Password</label>
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="form-input"
-                />
+                <div className="password-input-wrapper">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="form-input"
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? (
+                      <EyeOff size={20} />
+                    ) : (
+                      <Eye size={20} />
+                    )}
+                  </button>
+                </div>
               </div>
 
               <button type="submit" disabled={loading} className="auth-button">
                 {loading ? 'Logging in...' : 'Login'}
               </button>
             </form>
+
+            <div className="divider">
+              <span>or</span>
+            </div>
+
+            <GoogleLoginButton />
           </div>
 
           <p className="auth-footer">

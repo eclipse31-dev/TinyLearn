@@ -9,30 +9,31 @@ class Submission extends Model
 {
     use HasFactory;
 
+    protected $table = 'submissions';
     protected $primaryKey = 'submission_ID';
 
     protected $fillable = [
-        'assessment_id',
-        'user_id',
-        'attachment_ID',
+        'assignment_ID',
+        'user_ID',
+        'submission_text',
         'status',
-        'notes',
-        'submitted_at',
+        'is_late',
     ];
 
     protected $casts = [
+        'submitted_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
-    public function assessment()
+    public function assignment()
     {
-        return $this->belongsTo(Assessment::class, 'assessment_id', 'assessment_ID');
+        return $this->belongsTo(Assignment::class, 'assignment_ID', 'assignment_ID');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'user_ID');
+        return $this->belongsTo(User::class, 'user_ID', 'user_ID');
     }
 
     public function files()
@@ -40,27 +41,13 @@ class Submission extends Model
         return $this->hasMany(SubmissionFile::class, 'submission_ID', 'submission_ID');
     }
 
-    /**
-     * Get the grades for this submission.
-     */
     public function grades()
     {
         return $this->hasMany(Grade::class, 'submission_ID', 'submission_ID');
     }
 
-    /**
-     * Get the latest grade for this submission.
-     */
     public function latestGrade()
     {
         return $this->hasOne(Grade::class, 'submission_ID', 'submission_ID')->latest();
-    }
-
-    /**
-     * Get the attachment for this submission.
-     */
-    public function attachment()
-    {
-        return $this->belongsTo(Attachment::class, 'attachment_ID', 'attachment_ID');
     }
 }

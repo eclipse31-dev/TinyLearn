@@ -65,37 +65,31 @@ class DashboardAnalyticsController extends Controller
 
     protected function getTeacherStats(int $teacherId): array
     {
-        $courses = Course::where('created_by', $teacherId)->pluck('course_ID');
+        $courses = Course::where('instructor_ID', $teacherId)->pluck('course_ID');
 
         return [
             'my_courses' => $courses->count(),
-            'total_students' => Enrollment::whereIn('course_ID', $courses)->distinct('user_id')->count(),
-            'pending_submissions' => Submission::whereHas('assessment', function ($query) use ($courses) {
-                $query->whereHas('module', function ($q) use ($courses) {
-                    $q->whereIn('course_ID', $courses);
-                });
+            'total_students' => Enrollment::whereIn('course_ID', $courses)->distinct('user_ID')->count(),
+            'pending_submissions' => Submission::whereHas('assignment', function ($query) use ($courses) {
+                $query->whereIn('course_ID', $courses);
             })->where('status', 'submitted')->count(),
             
-            'total_assignments' => Assignment::whereHas('module', function ($query) use ($courses) {
-                $query->whereIn('course_ID', $courses);
-            })->count(),
+            'total_assignments' => Assignment::whereIn('course_ID', $courses)->count(),
             
-            'recent_submissions' => Submission::whereHas('assessment', function ($query) use ($courses) {
-                $query->whereHas('module', function ($q) use ($courses) {
-                    $q->whereIn('course_ID', $courses);
-                });
+            'recent_submissions' => Submission::whereHas('assignment', function ($query) use ($courses) {
+                $query->whereIn('course_ID', $courses);
             })
-            ->with(['user', 'assessment'])
+            ->with(['user', 'assignment'])
             ->latest()
             ->limit(5)
             ->get(),
             
-            'course_enrollments' => Course::where('created_by', $teacherId)
+            'course_enrollments' => Course::where('instructor_ID', $teacherId)
                 ->withCount('enrollments')
                 ->get()
                 ->map(function ($course) {
                     return [
-                        'course' => $course->title,
+                        'course' => $course->course_name,
                         'enrollments' => $course->enrollments_count,
                     ];
                 }),
@@ -104,43 +98,39 @@ class DashboardAnalyticsController extends Controller
 
     protected function getStudentStats(int $studentId): array
     {
-        $enrolledCourses = Enrollment::where('user_id', $studentId)->pluck('course_ID');
+        $enrolledCourses = Enrollment::where('user_ID', $studentId)->pluck('course_ID');
 
         return [
             'enrolled_courses' => $enrolledCourses->count(),
             
-            'pending_assignments' => Assignment::whereHas('module', function ($query) use ($enrolledCourses) {
-                $query->whereIn('course_ID', $enrolledCourses);
-            })
-            ->where('due_date', '>=', now())
-            ->whereDoesntHave('submissions', function ($query) use ($studentId) {
-                $query->where('user_id', $studentId);
-            })
-            ->count(),
+            'pending_assignments' => Assignment::whereIn('course_ID', $enrolledCourses)
+                ->where('due_date', '>=', now())
+                ->whereDoesntHave('submissions', function ($query) use ($studentId) {
+                    $query->where('user_ID', $studentId);
+                })
+                ->count(),
             
-            'submitted_assignments' => Submission::where('user_id', $studentId)->count(),
+            'submitted_assignments' => Submission::where('user_ID', $studentId)->count(),
             
-            'average_grade' => DB::table('grade')
-                ->join('submissions', 'grade.submission_ID', '=', 'submissions.submission_ID')
-                ->where('submissions.user_id', $studentId)
-                ->avg('grade.score'),
+            'average_grade' => DB::table('grades')
+                ->join('submissions', 'grades.grade_ID', '=', 'submissions.submission_ID')
+                ->where('submissions.user_ID', $studentId)
+                ->avg('grades.grade_percentage'),
             
-            'upcoming_assignments' => Assignment::whereHas('module', function ($query) use ($enrolledCourses) {
-                $query->whereIn('course_ID', $enrolledCourses);
-            })
-            ->where('due_date', '>=', now())
-            ->where('due_date', '<=', now()->addDays(7))
-            ->with('module.course')
-            ->orderBy('due_date')
-            ->limit(5)
-            ->get(),
+            'upcoming_assignments' => Assignment::whereIn('course_ID', $enrolledCourses)
+                ->where('due_date', '>=', now())
+                ->where('due_date', '<=', now()->addDays(7))
+                ->with('course')
+                ->orderBy('due_date')
+                ->limit(5)
+                ->get(),
             
-            'recent_grades' => DB::table('grade')
-                ->join('submissions', 'grade.submission_ID', '=', 'submissions.submission_ID')
-                ->join('assessments', 'submissions.assessment_id', '=', 'assessments.assessment_ID')
-                ->where('submissions.user_id', $studentId)
-                ->select('assessments.*', 'grade.score', 'grade.feedback', 'grade.created_at as graded_at')
-                ->latest('grade.created_at')
+            'recent_grades' => DB::table('grades')
+                ->join('submissions', 'grades.grade_ID', '=', 'submissions.submission_ID')
+                ->join('assignments', 'submissions.assignment_ID', '=', 'assignments.assignment_ID')
+                ->where('submissions.user_ID', $studentId)
+                ->select('assignments.*', 'grades.grade_percentage', 'grades.feedback', 'grades.graded_at')
+                ->latest('grades.graded_at')
                 ->limit(5)
                 ->get(),
             
@@ -166,22 +156,18 @@ class DashboardAnalyticsController extends Controller
         $progress = [];
 
         foreach ($courseIds as $courseId) {
-            $totalAssignments = Assignment::whereHas('module', function ($query) use ($courseId) {
-                $query->where('course_ID', $courseId);
-            })->count();
+            $totalAssignments = Assignment::where('course_ID', $courseId)->count();
 
-            $completedAssignments = Submission::where('user_id', $studentId)
-                ->whereHas('assessment', function ($query) use ($courseId) {
-                    $query->whereHas('module', function ($q) use ($courseId) {
-                        $q->where('course_ID', $courseId);
-                    });
+            $completedAssignments = Submission::where('user_ID', $studentId)
+                ->whereHas('assignment', function ($query) use ($courseId) {
+                    $query->where('course_ID', $courseId);
                 })
                 ->count();
 
             $course = Course::find($courseId);
 
             $progress[] = [
-                'course' => $course->title,
+                'course' => $course->course_name,
                 'total' => $totalAssignments,
                 'completed' => $completedAssignments,
                 'percentage' => $totalAssignments > 0 ? round(($completedAssignments / $totalAssignments) * 100, 2) : 0,
