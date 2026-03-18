@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -17,12 +18,9 @@ return new class extends Migration
 
         // Update enrollments table to add new statuses and enrollment_type
         if (Schema::hasColumn('enrollments', 'status')) {
-            Schema::table('enrollments', function (Blueprint $table) {
-                // Modify the enum to include new statuses
-                $table->enum('status', ['active', 'dropped', 'completed', 'invited', 'accepted'])
-                    ->default('active')
-                    ->change();
-            });
+            // For PostgreSQL, we need to use raw SQL to modify enum
+            DB::statement("ALTER TABLE enrollments DROP CONSTRAINT IF EXISTS enrollments_status_check");
+            DB::statement("ALTER TABLE enrollments ADD CONSTRAINT enrollments_status_check CHECK (status IN ('active', 'dropped', 'completed', 'invited', 'accepted'))");
         }
 
         if (!Schema::hasColumn('enrollments', 'enrollment_type')) {
